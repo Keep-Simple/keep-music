@@ -10,22 +10,18 @@ import session from 'express-session'
 import Redis from 'ioredis'
 import { buildSchema } from 'type-graphql'
 import { COOKIE_NAME, __prod__ } from './constants'
-import { PostResolver } from './resolvers/post'
 import { UserResolver } from './resolvers/user'
-import { Post } from './entities/Post'
-import { User } from './entities/User'
 import path from 'path'
-import { Updoot } from './entities/Updoot'
 import { createUserLoader } from './utils/createUserLoader'
-import { createUpdootLoader } from './utils/createUpdootLoader'
 
 const main = async () => {
+    console.log(__prod__)
     const dbConnection = await createConnection({
         type: 'postgres',
         url: process.env.DATABASE_URL,
         logging: true,
-        // synchronize: !__prod__,
-        entities: [User, Post, Updoot],
+        synchronize: !__prod__,
+        entities: [path.join(__dirname, './entities/*.js')],
         migrations: [path.join(__dirname, './migrations/*')],
     })
 
@@ -36,6 +32,7 @@ const main = async () => {
 
     const app = express()
 
+    // for deployment
     app.set('trust proxy', 1)
 
     app.use(
@@ -67,7 +64,7 @@ const main = async () => {
 
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
-            resolvers: [PostResolver, UserResolver],
+            resolvers: [UserResolver],
             validate: false,
         }),
         context: ({ req, res }) => ({
@@ -75,7 +72,6 @@ const main = async () => {
             res,
             redis,
             userLoader: createUserLoader(),
-            updootLoader: createUpdootLoader(),
         }),
     })
 
@@ -88,4 +84,5 @@ const main = async () => {
         console.log(`server started on port ${process.env.PORT}`)
     )
 }
+
 main()

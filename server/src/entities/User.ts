@@ -6,34 +6,25 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     BaseEntity,
-    OneToMany,
 } from 'typeorm'
-import { Post } from './Post'
-import { Updoot } from './Updoot'
 
 @ObjectType()
 @Entity()
 export class User extends BaseEntity {
     @Field()
     @PrimaryGeneratedColumn()
-    id!: number
+    id: number
 
     @Field()
     @Column({ unique: true })
-    username!: string
+    username: string
 
     @Field()
     @Column({ unique: true })
-    email!: string
+    email: string
 
     @Column()
-    password!: string
-
-    @OneToMany(() => Post, (post) => post.creator)
-    posts: Post[]
-
-    @OneToMany(() => Updoot, (updoot) => updoot.user)
-    updoots: Updoot[]
+    password: string
 
     @Field(() => String)
     @CreateDateColumn()
