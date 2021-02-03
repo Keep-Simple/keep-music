@@ -29,7 +29,7 @@ export class Author extends BaseEntity {
     avatar?: string
 
     @Field(() => [String], { nullable: true })
-    @Column(() => String)
+    @Column('text', { array: true, default: {} })
     photos?: string[]
 
     @Field(() => [Album])
