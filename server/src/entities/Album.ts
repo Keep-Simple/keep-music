@@ -28,6 +28,10 @@ export class Album extends BaseEntity {
     @Column()
     name: string
 
+    @Field(() => String)
+    @Column()
+    realeaseDate: Date
+
     @Field()
     @Column()
     authorId: number
@@ -36,7 +40,6 @@ export class Album extends BaseEntity {
     @ManyToOne(() => Author, (author) => author.albums)
     author: Author
 
-    @Field(() => [Song])
     @OneToMany(() => Song, (song) => song.album)
     songs: Song[]
 }

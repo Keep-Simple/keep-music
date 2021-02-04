@@ -6,6 +6,7 @@
     "scripts": {
         "build": "rm -rf dist && tsc",
         "dev": "concurrently \"tsc -w\" \"nodemon dist/index.js\"",
+        "reset": "rm -rf dist",
         "start": "tsc && node dist/index.js",
         "gen-envs": "gen-env-types .env -o src/env.d.ts -e ."
     },

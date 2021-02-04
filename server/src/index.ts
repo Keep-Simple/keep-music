@@ -13,6 +13,10 @@ import { COOKIE_NAME, __prod__ } from './constants'
 import { UserResolver } from './resolvers/user'
 import path from 'path'
 import { createUserLoader } from './utils/createUserLoader'
+import { SongResolver } from './resolvers/song'
+import { AlbumResolver } from './resolvers/album'
+import { createAuthorLoader } from './utils/createAuthorLoader'
+import { AuthorResolver } from './resolvers/author'
 
 const main = async () => {
     console.log(__prod__)
@@ -64,7 +68,7 @@ const main = async () => {
 
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
-            resolvers: [UserResolver],
+            resolvers: [path.join(__dirname, './resolvers/*.js')],
             validate: false,
         }),
         context: ({ req, res }) => ({
@@ -72,6 +76,7 @@ const main = async () => {
             res,
             redis,
             userLoader: createUserLoader(),
+            authorLoader: createAuthorLoader(),
         }),
     })
 
