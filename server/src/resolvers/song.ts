@@ -1,5 +1,7 @@
 import {
     Arg,
+    Field,
+    InputType,
     Int,
     Mutation,
     Query,
@@ -9,16 +11,63 @@ import {
 import { Song } from '../entities/Song'
 import { isAuth } from '../middleware/isAuth'
 
+@InputType()
+export class SongInputWithAuthorId {
+    @Field()
+    authorId: number
+
+    @Field()
+    name: string
+
+    @Field()
+    link: string
+
+    @Field()
+    duration: number
+
+    @Field()
+    order: number
+
+    @Field({ nullable: true })
+    cover?: string
+
+    @Field({ nullable: true })
+    quality?: string
+}
+@InputType()
+export class SongInputBase {
+    @Field()
+    name: string
+
+    @Field()
+    link: string
+
+    @Field()
+    duration: number
+
+    @Field()
+    order: number
+
+    @Field({ nullable: true })
+    cover?: string
+
+    @Field({ nullable: true })
+    quality?: string
+}
+// @InputType()
+// class SongInput extends SongInputBase {
+//     @Field()
+//     authorId: number
+
+//     @Field()
+//     albumId: number
+// }
+
 @Resolver(Song)
 export class SongResolver {
     @Query(() => Song, { nullable: true })
     song(@Arg('id', () => Int) id: number) {
         return Song.findOne(id)
-    }
-
-    @Query(() => [Song], { nullable: true })
-    songsInAlbum(@Arg('albumId', () => Int) albumId: number) {
-        return Song.find({ where: { albumId }, order: { order: 'ASC' } })
     }
 
     @Mutation(() => Boolean)

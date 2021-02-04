@@ -6,6 +6,7 @@ import {
     OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm'
+import { DEFAULT_AVATAR_URL } from '../constants'
 import { Album } from './Album'
 import { Song } from './Song'
 
@@ -21,22 +22,22 @@ export class Author extends BaseEntity {
     name: string
 
     @Field()
-    @Column()
+    @Column({ default: 'No info about this author' })
     info: string
 
-    @Field({ nullable: true })
-    @Column()
-    avatar?: string
+    @Field()
+    @Column({ default: DEFAULT_AVATAR_URL })
+    avatar: string
 
-    @Field(() => [String], { nullable: true })
+    @Field(() => [String])
     @Column('text', { array: true, default: {} })
-    photos?: string[]
+    photos: string[]
 
-    @Field(() => [Album])
+    @Field(() => [Album], { nullable: true })
     @OneToMany(() => Album, (album) => album.author)
-    albums: Album[]
+    albums?: Album[]
 
-    @Field(() => [Song])
+    @Field(() => [Song], { nullable: true })
     @OneToMany(() => Song, (song) => song.album)
-    songs: Song[]
+    songs?: Song[]
 }

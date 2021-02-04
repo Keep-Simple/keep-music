@@ -1,8 +1,8 @@
-import { Author } from './../entities/Author'
 import {
     Arg,
-    Ctx,
+    Field,
     FieldResolver,
+    InputType,
     Int,
     Mutation,
     Query,
@@ -13,37 +13,52 @@ import {
 import { Album } from '../entities/Album'
 import { Song } from '../entities/Song'
 import { isAuth } from '../middleware/isAuth'
-import { MyContext } from '../types'
+import { SongInputWithAuthorId } from './song'
+
+@InputType()
+class AlbumInput {
+    @Field()
+    name: string
+
+    @Field()
+    authorId: number
+
+    @Field(() => [SongInputWithAuthorId], { nullable: true })
+    songs?: SongInputWithAuthorId[]
+
+    @Field({ nullable: true })
+    cover?: string
+
+    @Field(() => String, { nullable: true })
+    realeaseDate?: Date
+
+    @Field({ nullable: true })
+    info?: string
+}
 
 @Resolver(Album)
 export class AlbumResolver {
-    @FieldResolver(() => Author)
-    author(@Root() album: Album, @Ctx() { authorLoader }: MyContext) {
-        return authorLoader.load(album.authorId)
+    @FieldResolver(() => [Song], { nullable: true })
+    songs(@Root() album: Album) {
+        return Song.find({
+            where: { albumId: album.id },
+            order: { order: 'ASC' },
+        })
     }
 
     @Query(() => Album, { nullable: true })
     album(@Arg('id', () => Int) id: number) {
-        return Album.findOne(id)
-    }
-
-    @Query(() => [Album], { nullable: true })
-    authorAlbums(@Arg('authorId', () => Int) authorId: number) {
         return Album.createQueryBuilder('a')
-            .loadRelationCountAndMap('a."tracksNumber"', 'a.songs')
-            .where('a."authorId" = :authorId', { authorId })
-            .getMany()
+            .loadRelationCountAndMap('a.tracksNumber', 'a.songs')
+            .where('a.id = :id', { id })
+            .getOne()
     }
 
-    @Mutation(() => Boolean)
+    @Mutation(() => Album)
     @UseMiddleware(isAuth)
-    async viewSong(@Arg('id', () => Int) id: number) {
-        const song = await Song.findOne(id)
-        if (!song) {
-            return false
-        }
-        song.views += 1
-        Song.save(song)
-        return true
+    async createAlbum(@Arg('input') input: AlbumInput) {
+        const album = await Album.create({ ...input }).save()
+
+        return this.album(album.id)
     }
 }

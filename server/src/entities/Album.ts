@@ -7,6 +7,7 @@ import {
     OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm'
+import { DEFAULT_COVER } from '../constants'
 import { Author } from './Author'
 import { Song } from './Song'
 
@@ -21,25 +22,31 @@ export class Album extends BaseEntity {
     tracksNumber: number
 
     @Field()
-    @Column()
+    @Column({ default: DEFAULT_COVER })
     cover: string
 
     @Field()
     @Column()
     name: string
 
-    @Field(() => String)
-    @Column()
-    realeaseDate: Date
+    @Field()
+    @Column({ default: 'Album does not have description' })
+    info: string
+
+    @Field(() => String, { nullable: true })
+    @Column({ nullable: true })
+    realeaseDate?: Date
 
     @Field()
     @Column()
     authorId: number
 
-    @Field(() => Author)
     @ManyToOne(() => Author, (author) => author.albums)
     author: Author
 
-    @OneToMany(() => Song, (song) => song.album)
-    songs: Song[]
+    @Field(() => [Song], { nullable: true })
+    @OneToMany(() => Song, (song) => song.album, {
+        cascade: ['insert', 'update'],
+    })
+    songs?: Song[]
 }

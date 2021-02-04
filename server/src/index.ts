@@ -1,22 +1,18 @@
 // sticking envs and will fail if not all of them existing
-import 'dotenv-safe/config'
-import 'reflect-metadata'
-import { createConnection } from 'typeorm'
 import { ApolloServer } from 'apollo-server-express'
 import connectRedis from 'connect-redis'
 import cors from 'cors'
+import 'dotenv-safe/config'
 import express from 'express'
 import session from 'express-session'
 import Redis from 'ioredis'
-import { buildSchema } from 'type-graphql'
-import { COOKIE_NAME, __prod__ } from './constants'
-import { UserResolver } from './resolvers/user'
 import path from 'path'
-import { createUserLoader } from './utils/createUserLoader'
-import { SongResolver } from './resolvers/song'
-import { AlbumResolver } from './resolvers/album'
+import 'reflect-metadata'
+import { buildSchema } from 'type-graphql'
+import { createConnection } from 'typeorm'
+import { COOKIE_NAME, __prod__ } from './constants'
 import { createAuthorLoader } from './utils/createAuthorLoader'
-import { AuthorResolver } from './resolvers/author'
+import { createUserLoader } from './utils/createUserLoader'
 
 const main = async () => {
     console.log(__prod__)

@@ -1,8 +1,8 @@
-import { Author } from './../entities/Author'
 import {
     Arg,
-    Ctx,
+    Field,
     FieldResolver,
+    InputType,
     Int,
     Mutation,
     Query,
@@ -13,32 +13,45 @@ import {
 import { Album } from '../entities/Album'
 import { Song } from '../entities/Song'
 import { isAuth } from '../middleware/isAuth'
-import { MyContext } from '../types'
+import { Author } from './../entities/Author'
+@InputType()
+class AuthorInput {
+    @Field()
+    name: string
+
+    @Field({ nullable: true })
+    info?: string
+
+    @Field({ nullable: true })
+    avatar?: string
+
+    @Field(() => [String], { nullable: true })
+    photos?: string[]
+}
 
 @Resolver(Author)
 export class AuthorResolver {
+    @FieldResolver(() => [Album], { nullable: true })
+    albums(@Root() author: Author) {
+        return Album.createQueryBuilder('a')
+            .loadRelationCountAndMap('a.tracksNumber', 'a.songs')
+            .where('a."authorId" = :authorId', { authorId: author.id })
+            .getMany()
+    }
+
+    @FieldResolver(() => [Song], { nullable: true })
+    songs(@Root() author: Author) {
+        return Song.find({ where: { authorId: author.id } })
+    }
+
     @Query(() => Author, { nullable: true })
     author(@Arg('id', () => Int) id: number) {
         return Author.findOne(id)
     }
 
-    @Query(() => [Album], { nullable: true })
-    authorAlbums(@Arg('authorId', () => Int) authorId: number) {
-        return Album.createQueryBuilder('a')
-            .loadRelationCountAndMap('a."tracksNumber"', 'a.songs')
-            .where('a."authorId" = :authorId', { authorId })
-            .getMany()
-    }
-
-    @Mutation(() => Boolean)
+    @Mutation(() => Author)
     @UseMiddleware(isAuth)
-    async viewSong(@Arg('id', () => Int) id: number) {
-        const song = await Song.findOne(id)
-        if (!song) {
-            return false
-        }
-        song.views += 1
-        Song.save(song)
-        return true
+    async createAuthor(@Arg('input') input: AuthorInput) {
+        return Author.create({ ...input }).save()
     }
 }

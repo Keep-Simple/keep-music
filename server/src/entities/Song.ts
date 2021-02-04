@@ -6,6 +6,7 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm'
+import { DEFAULT_COVER } from '../constants'
 import { Album } from './Album'
 import { Author } from './Author'
 
@@ -25,8 +26,12 @@ export class Song extends BaseEntity {
     link: string
 
     @Field({ nullable: true })
-    @Column()
-    cover?: string
+    @Column({ nullable: true })
+    byteSize?: number
+
+    @Field()
+    @Column({ default: DEFAULT_COVER })
+    cover: string
 
     @Field()
     @Column()
@@ -40,8 +45,8 @@ export class Song extends BaseEntity {
     @Column()
     order: number
 
-    @Field()
-    @Column({ length: 10 })
+    @Field({ nullable: true })
+    @Column({ length: 10, nullable: true })
     quality?: string
 
     @Field()
@@ -52,11 +57,9 @@ export class Song extends BaseEntity {
     @Column()
     authorId: number
 
-    @Field(() => Author)
     @ManyToOne(() => Author, (author) => author.songs)
     author: Author
 
-    @Field(() => Album)
-    @ManyToOne(() => Album, (album) => album.songs)
+    @ManyToOne(() => Album, (album) => album.songs, { onDelete: 'CASCADE' })
     album: Album
 }
