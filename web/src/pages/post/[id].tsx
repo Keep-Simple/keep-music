@@ -1,4 +1,4 @@
-import { Heading } from '@chakra-ui/core'
+import { Heading } from '@chakra-ui/react'
 import React from 'react'
 import AlertUI from '../../components/Alert'
 import { EditDeletePostButtons } from '../../components/EditDeletePostButtons'

@@ -1,10 +1,10 @@
-import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/core'
+import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/react'
 import { Layout } from '../components/Layout'
 import { usePostsQuery } from '../generated/graphql'
 import NextLink from 'next/link'
 import AlertUI from '../components/Alert'
 import { Loading } from '../components/Loading'
-import { NextChakraLink } from '../components/NextChakraLink'
+import { StyledLink } from '../components/StyledLink'
 import { EditDeletePostButtons } from '../components/EditDeletePostButtons'
 import { UpdootSection } from '../components/UpdootSection'
 import { withApollo } from '../utils/withApollo'
@@ -53,13 +53,11 @@ const Index = () => {
                                     >
                                         <UpdootSection post={p} />
                                         <Box w="100%">
-                                            <NextChakraLink
-                                                href={`/post/${id}`}
-                                            >
+                                            <StyledLink href={`/post/${id}`}>
                                                 <Heading fontSize="xl">
                                                     {title}
                                                 </Heading>
-                                            </NextChakraLink>
+                                            </StyledLink>
 
                                             <Text color="blue.400">
                                                 posted by {creator.username}

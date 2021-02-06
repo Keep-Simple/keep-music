@@ -1,11 +1,11 @@
-import { Alert, AlertIcon, IAlert } from '@chakra-ui/core/dist/Alert'
+import { Alert, AlertIcon, AlertProps } from '@chakra-ui/react'
 
-interface AlertProps {
+interface AlertUIProps {
     message?: string | JSX.Element
-    status?: IAlert['status']
+    status?: AlertProps['status']
 }
 
-const AlertUI: React.FC<AlertProps> = ({ message, status = 'error' }) => {
+const AlertUI: React.FC<AlertUIProps> = ({ message, status = 'error' }) => {
     if (!message) return null
 
     return (

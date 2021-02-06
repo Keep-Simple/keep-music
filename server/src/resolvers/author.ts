@@ -35,7 +35,7 @@ export class AuthorResolver {
     albums(@Root() author: Author) {
         return Album.createQueryBuilder('a')
             .loadRelationCountAndMap('a.tracksNumber', 'a.songs')
-            .where('a."authorId" = :authorId', { authorId: author.id })
+            .where('a.authorId = :authorId', { authorId: author.id })
             .getMany()
     }
 

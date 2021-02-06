@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { Button } from '@chakra-ui/core'
+import { Button } from '@chakra-ui/react'
 import { Formik, Form } from 'formik'
 
 import AlertUI from '../../components/Alert'

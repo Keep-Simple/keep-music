@@ -1,4 +1,4 @@
-import { Button, Link } from '@chakra-ui/core'
+import { Button, Link } from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import React, { useState } from 'react'
 import AlertUI from '../components/Alert'

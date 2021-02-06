@@ -1,6 +1,6 @@
-import { Box, Button, Flex, Heading, Spinner } from '@chakra-ui/core'
+import { Box, Button, Flex, Heading, Spinner } from '@chakra-ui/react'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
-import { NextChakraLink } from './NextChakraLink'
+import { StyledLink } from './StyledLink'
 import { useApolloClient } from '@apollo/client'
 
 export const NavBar: React.FC = () => {
@@ -15,12 +15,12 @@ export const NavBar: React.FC = () => {
     } else if (!data?.me) {
         body = (
             <>
-                <NextChakraLink href="/login" mr={2}>
+                <StyledLink href="/login" mr={2}>
                     Sign In
-                </NextChakraLink>
-                <NextChakraLink href="/register" mr={2}>
+                </StyledLink>
+                <StyledLink href="/register" mr={2}>
                     Sign Up
-                </NextChakraLink>
+                </StyledLink>
             </>
         )
     } else {
@@ -49,9 +49,9 @@ export const NavBar: React.FC = () => {
             zIndex={10}
         >
             <Flex flex={1} maxW={800} justifyContent="space-between">
-                <NextChakraLink href="/">
+                <StyledLink href="/">
                     <Heading>keep-music</Heading>
-                </NextChakraLink>
+                </StyledLink>
                 <Flex alignItems="center">{body}</Flex>
             </Flex>
         </Flex>
