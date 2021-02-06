@@ -1,5 +1,5 @@
 import DataLoader from 'dataloader'
-import { Author } from '../entities/Author'
+import { Author } from '../../entities/Author'
 
 export const createAuthorLoader = () =>
     new DataLoader<number, Author>(async (authorIds) => {

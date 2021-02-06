@@ -33,6 +33,8 @@ class AuthorInput {
 export class AuthorResolver {
     @FieldResolver(() => [Album], { nullable: true })
     albums(@Root() author: Author) {
+        if (author.albums) return author.albums;
+
         return Album.createQueryBuilder('a')
             .loadRelationCountAndMap('a.tracksNumber', 'a.songs')
             .where('a.authorId = :authorId', { authorId: author.id })
@@ -41,6 +43,8 @@ export class AuthorResolver {
 
     @FieldResolver(() => [Song], { nullable: true })
     songs(@Root() author: Author) {
+        if (author.songs) return author.songs;
+
         return Song.find({ where: { authorId: author.id } })
     }
 
@@ -52,6 +56,6 @@ export class AuthorResolver {
     @Mutation(() => Author)
     @UseMiddleware(isAuth)
     async createAuthor(@Arg('input') input: AuthorInput) {
-        return Author.create({ ...input }).save()
+        return Author.create({ ...input, songs: [], albums: [] }).save()
     }
 }

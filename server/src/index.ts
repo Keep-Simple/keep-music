@@ -11,8 +11,7 @@ import 'reflect-metadata'
 import { buildSchema } from 'type-graphql'
 import { createConnection } from 'typeorm'
 import { COOKIE_NAME, __prod__ } from './constants'
-import { createAuthorLoader } from './utils/createAuthorLoader'
-import { createUserLoader } from './utils/createUserLoader'
+import { createLoaders } from './utils/loaders'
 
 const main = async () => {
     console.log(__prod__)
@@ -71,8 +70,7 @@ const main = async () => {
             req,
             res,
             redis,
-            userLoader: createUserLoader(),
-            authorLoader: createAuthorLoader(),
+            loaders: createLoaders(),
         }),
     })
 

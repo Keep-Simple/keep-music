@@ -1,5 +1,6 @@
 import {
     Arg,
+    Ctx,
     Field,
     FieldResolver,
     InputType,
@@ -13,7 +14,8 @@ import {
 import { Album } from '../entities/Album'
 import { Song } from '../entities/Song'
 import { isAuth } from '../middleware/isAuth'
-import { SongInputWithAuthorId } from './song'
+import { MyContext } from '../types'
+import { SongInputBase } from './song'
 
 @InputType()
 class AlbumInput {
@@ -23,8 +25,8 @@ class AlbumInput {
     @Field()
     authorId: number
 
-    @Field(() => [SongInputWithAuthorId], { nullable: true })
-    songs?: SongInputWithAuthorId[]
+    @Field(() => [SongInputBase], { nullable: true })
+    songs?: SongInputBase[]
 
     @Field({ nullable: true })
     cover?: string
@@ -36,14 +38,24 @@ class AlbumInput {
     info?: string
 }
 
+export type SongsOrdering = 'track' | 'views'
+
 @Resolver(Album)
 export class AlbumResolver {
     @FieldResolver(() => [Song], { nullable: true })
-    songs(@Root() album: Album) {
-        return Song.find({
-            where: { albumId: album.id },
-            order: { order: 'ASC' },
-        })
+    songs(
+        @Root() album: Album,
+        @Arg('orderBy', { nullable: true}) orderBy: SongsOrdering = 'track',
+        @Ctx() { loaders }: MyContext
+    ) {
+        if (album.songs) return album.songs
+
+        switch (orderBy) {
+            case 'track':
+                return loaders.songsByAlbumOrderByTrack.load(album.id)
+            case 'views':
+                return loaders.songsByAlbumOrderByViews.load(album.id)
+        }
     }
 
     @Query(() => Album, { nullable: true })
@@ -54,11 +66,26 @@ export class AlbumResolver {
             .getOne()
     }
 
+    @Query(() => [Album], { nullable: true })
+    albums(): Promise<Album[]> {
+        return Album.createQueryBuilder('a')
+            .loadRelationCountAndMap('a.tracksNumber', 'a.songs')
+            .getMany()
+    }
+
     @Mutation(() => Album)
     @UseMiddleware(isAuth)
-    async createAlbum(@Arg('input') input: AlbumInput) {
+    async createAlbum(@Arg('input') input: AlbumInput): Promise<Album> {
+        const {authorId, songs} = input
+
+        if (songs) {
+            input.songs = songs.map(s => ({...s, authorId}))
+        }
+
         const album = await Album.create({ ...input }).save()
 
-        return this.album(album.id)
+        album.tracksNumber = album.songs?.length ?? 0
+
+        return album
     }
 }
