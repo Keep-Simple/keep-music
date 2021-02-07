@@ -273,6 +273,27 @@ export type RegisterMutation = (
   ) }
 );
 
+export type AlbumQueryVariables = Exact<{
+  id: Scalars['Int'];
+  orderBy?: Maybe<Scalars['String']>;
+}>;
+
+
+export type AlbumQuery = (
+  { __typename?: 'Query' }
+  & { album?: Maybe<(
+    { __typename?: 'Album' }
+    & Pick<Album, 'id' | 'name' | 'tracksNumber' | 'cover' | 'realeaseDate'>
+    & { author: (
+      { __typename?: 'Author' }
+      & Pick<Author, 'id' | 'name'>
+    ), songs?: Maybe<Array<(
+      { __typename?: 'Song' }
+      & Pick<Song, 'id' | 'order' | 'duration' | 'name' | 'views' | 'quality'>
+    )>> }
+  )> }
+);
+
 export type AlbumsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -479,6 +500,56 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const AlbumDocument = gql`
+    query Album($id: Int!, $orderBy: String) {
+  album(id: $id) {
+    id
+    name
+    tracksNumber
+    cover
+    realeaseDate
+    author {
+      id
+      name
+    }
+    songs(orderBy: $orderBy) {
+      id
+      order
+      duration
+      name
+      views
+      quality
+    }
+  }
+}
+    `;
+
+/**
+ * __useAlbumQuery__
+ *
+ * To run a query within a React component, call `useAlbumQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAlbumQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAlbumQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useAlbumQuery(baseOptions: Apollo.QueryHookOptions<AlbumQuery, AlbumQueryVariables>) {
+        return Apollo.useQuery<AlbumQuery, AlbumQueryVariables>(AlbumDocument, baseOptions);
+      }
+export function useAlbumLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AlbumQuery, AlbumQueryVariables>) {
+          return Apollo.useLazyQuery<AlbumQuery, AlbumQueryVariables>(AlbumDocument, baseOptions);
+        }
+export type AlbumQueryHookResult = ReturnType<typeof useAlbumQuery>;
+export type AlbumLazyQueryHookResult = ReturnType<typeof useAlbumLazyQuery>;
+export type AlbumQueryResult = Apollo.QueryResult<AlbumQuery, AlbumQueryVariables>;
 export const AlbumsDocument = gql`
     query Albums {
   albums {

@@ -4,6 +4,7 @@ import React from 'react'
 import AlertUI from '../components/Alert'
 import { Layout } from '../components/Layout'
 import { Loading } from '../components/Loading'
+import { StyledLink } from '../components/StyledLink'
 import { useAlbumsQuery } from '../generated/graphql'
 import { withApollo } from '../utils/withApollo'
 
@@ -28,29 +29,33 @@ const Index = () => {
         } else if (data?.albums) {
             body = (
                 <SimpleGrid
+                    px={4}
+                    justifyItems="center"
                     minChildWidth={imageDimensions}
                     spacing={4}
-                    columns={[2, 2, 3, 4, 5]}
+                    columns={[2, 2, 3, 4, 4, 5]}
                 >
-                    {data.albums.map(({ id, cover, author, name }) => {
+                    {data.albums.map(({ id, author, name }) => {
                         return (
                             <Box key={id}>
-                                <Image
-                                    src={'download_amboak'}
-                                    className="km-album-cover"
-                                    alt="album cover"
-                                    objectFit="cover"
-                                    layout="fixed"
-                                    width={imageDimensions}
-                                    height={imageDimensions}
-                                />
-                                <Text
-                                    fontSize="lg"
-                                    fontWeight="500"
-                                    isTruncated
-                                >
-                                    {name}
-                                </Text>
+                                <StyledLink href={`/album/${id}`}>
+                                    <Image
+                                        src={'download_amboak'}
+                                        className="km-album-cover"
+                                        alt="album cover"
+                                        objectFit="cover"
+                                        layout="fixed"
+                                        width={imageDimensions}
+                                        height={imageDimensions}
+                                    />
+                                    <Text
+                                        fontSize="lg"
+                                        fontWeight="500"
+                                        isTruncated
+                                    >
+                                        {name}
+                                    </Text>
+                                </StyledLink>
                                 <Text
                                     fontSize="sm"
                                     fontWeight="400"

@@ -1,0 +1,21 @@
+query Album($id: Int!, $orderBy: String) {
+    album(id: $id) {
+        id
+        name
+        tracksNumber
+        cover
+        realeaseDate
+        author {
+            id
+            name
+        }
+        songs(orderBy: $orderBy) {
+            id
+            order
+            duration
+            name
+            views
+            quality
+        }
+    }
+}

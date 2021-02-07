@@ -43,7 +43,7 @@ export const NavBar: React.FC = () => {
     return (
         <Flex
             p={4}
-            bg="purple.200"
+            bg="gray.800"
             justifyContent="center"
             position="sticky"
             zIndex={10}

@@ -14,10 +14,8 @@ export const Wrapper: React.FC<WrapperProps> = ({
         <Flex
             maxW={variant === 'regular' ? '100%' : '400px'}
             mt={8}
-            px="6vw"
             mx="auto"
             direction="column"
-            justifyContent="center"
             {...props}
         />
     )
