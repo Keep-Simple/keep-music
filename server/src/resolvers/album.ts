@@ -12,6 +12,7 @@ import {
     UseMiddleware,
 } from 'type-graphql'
 import { Album } from '../entities/Album'
+import { Author } from '../entities/Author'
 import { Song } from '../entities/Song'
 import { isAuth } from '../middleware/isAuth'
 import { MyContext } from '../types'
@@ -56,6 +57,16 @@ export class AlbumResolver {
             case 'views':
                 return loaders.songsByAlbumOrderByViews.load(album.id)
         }
+    }
+
+    @FieldResolver(() => Author)
+    author(
+        @Root() album: Album,
+        @Ctx() { loaders }: MyContext
+    ) {
+        if (album.author) return album.author
+
+        return loaders.authors.load(album.authorId)
     }
 
     @Query(() => Album, { nullable: true })

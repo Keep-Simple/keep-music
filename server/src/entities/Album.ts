@@ -41,6 +41,7 @@ export class Album extends BaseEntity {
     @Column()
     authorId: number
 
+    @Field(() => Author)
     @ManyToOne(() => Author, (author) => author.albums)
     author: Author
 
