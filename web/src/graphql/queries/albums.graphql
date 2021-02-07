@@ -1,0 +1,11 @@
+query Albums {
+    albums {
+        id
+        name
+        cover
+        author {
+            id
+            name
+        }
+    }
+}

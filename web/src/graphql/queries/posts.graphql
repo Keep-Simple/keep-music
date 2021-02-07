@@ -1,5 +1,0 @@
-query Posts($limit: Int!, $cursor: String) {
-    posts(cursor: $cursor, limit: $limit) {
-        ...PostSnippet
-    }
-}

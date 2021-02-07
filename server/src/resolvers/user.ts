@@ -14,7 +14,7 @@ import {
 import { v4 } from 'uuid'
 
 import { sendEmail } from '../utils/sendEmail'
-import { COOKIE_NAME, FORGET_PASSWORD_PPREFIX } from '../constants'
+import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants'
 import { validateEmail, validateRegistration } from '../utils/validateRegister'
 import { User } from '../entities/User'
 import { MyContext } from '../types'
@@ -80,7 +80,7 @@ export class UserResolver {
         const token = v4()
 
         await redis.set(
-            FORGET_PASSWORD_PPREFIX + token,
+            FORGET_PASSWORD_PREFIX + token,
             user.id,
             'ex',
             1000 * 3600 * 72 // 3 days
@@ -113,7 +113,7 @@ export class UserResolver {
             }
         }
 
-        const redisKey = FORGET_PASSWORD_PPREFIX + token
+        const redisKey = FORGET_PASSWORD_PREFIX + token
         const userId = await redis.get(redisKey)
 
         const tokenError = [
