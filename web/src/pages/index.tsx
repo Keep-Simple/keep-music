@@ -1,4 +1,5 @@
-import { Box, Image, Stack } from '@chakra-ui/react'
+import { Box, SimpleGrid, useBreakpointValue, Text } from '@chakra-ui/react'
+import Image from 'next/image'
 import React from 'react'
 import AlertUI from '../components/Alert'
 import { Layout } from '../components/Layout'
@@ -12,6 +13,9 @@ const Index = () => {
         notifyOnNetworkStatusChange: true,
     })
 
+    const imageDimensions =
+        useBreakpointValue({ base: 160, md: 190, xl: 226 }) ?? 160
+
     let body = null
 
     if (error) {
@@ -23,21 +27,42 @@ const Index = () => {
             body = <Loading />
         } else if (data?.albums) {
             body = (
-                <Stack spacing={8}>
-                    {data.albums
-                        // .filter((a) => a !== null) // cache invalidation will leave null
-                        .map(({ id, cover, author, name }) => {
-                            return (
-                                <Box key={id} p={4}>
-                                    <Image
-                                        borderRadius="sm"
-                                        src={cover}
-                                        alt="album cover"
-                                    />
-                                </Box>
-                            )
-                        })}
-                </Stack>
+                <SimpleGrid
+                    minChildWidth={imageDimensions}
+                    spacing={4}
+                    columns={[2, 2, 3, 4, 5]}
+                >
+                    {data.albums.map(({ id, cover, author, name }) => {
+                        return (
+                            <Box key={id}>
+                                <Image
+                                    src={'download_amboak'}
+                                    className="km-album-cover"
+                                    alt="album cover"
+                                    objectFit="cover"
+                                    layout="fixed"
+                                    width={imageDimensions}
+                                    height={imageDimensions}
+                                />
+                                <Text
+                                    fontSize="lg"
+                                    fontWeight="500"
+                                    isTruncated
+                                >
+                                    {name}
+                                </Text>
+                                <Text
+                                    fontSize="sm"
+                                    fontWeight="400"
+                                    color="whiteAlpha.700"
+                                    isTruncated
+                                >
+                                    {`Album • ${author.name}`}
+                                </Text>
+                            </Box>
+                        )
+                    })}
+                </SimpleGrid>
             )
         }
     }

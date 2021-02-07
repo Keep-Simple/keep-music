@@ -48,7 +48,7 @@ export const NavBar: React.FC = () => {
             position="sticky"
             zIndex={10}
         >
-            <Flex flex={1} maxW={800} justifyContent="space-between">
+            <Flex flex={1} px={5} justifyContent="space-between">
                 <StyledLink href="/">
                     <Heading>keep-music</Heading>
                 </StyledLink>

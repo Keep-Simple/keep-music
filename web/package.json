@@ -22,7 +22,8 @@
         "next-with-apollo": "^5.1.0",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
-        "react-jinke-music-player": "^4.21.2"
+        "react-jinke-music-player": "^4.21.2",
+        "saas": "^1.0.0"
     },
     "license": "MIT",
     "devDependencies": {

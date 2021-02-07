@@ -12,12 +12,12 @@ export const Wrapper: React.FC<WrapperProps> = ({
 }) => {
     return (
         <Flex
-            maxW={variant === 'regular' ? '800px' : '400px'}
+            maxW={variant === 'regular' ? '100%' : '400px'}
             mt={8}
+            px="6vw"
             mx="auto"
             direction="column"
-            alignItems="center"
-            justifyContent="flex-start"
+            justifyContent="center"
             {...props}
         />
     )
