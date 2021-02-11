@@ -14,7 +14,6 @@ import { COOKIE_NAME, __prod__ } from './constants'
 import { createLoaders } from './utils/loaders'
 
 const main = async () => {
-    console.log(__prod__)
     const dbConnection = await createConnection({
         type: 'postgres',
         url: process.env.DATABASE_URL,

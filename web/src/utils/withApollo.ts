@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { NextPageContext } from 'next'
-import { createWithApollo } from './createWithApollo'
 import { TypedTypePolicies } from '../generated/apollo-helpers'
+import { createWithApollo } from './createWithApollo'
 import { isServer } from './isServer'
 
 const typePolicies: TypedTypePolicies = {
@@ -17,7 +17,7 @@ const typePolicies: TypedTypePolicies = {
     },
 }
 
-const createClient = (ctx: NextPageContext) =>
+export const createClient = (ctx?: NextPageContext) =>
     new ApolloClient({
         uri: process.env.NEXT_PUBLIC_API_URL as string,
         credentials: 'include',

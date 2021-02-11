@@ -5,5 +5,7 @@ declare namespace NodeJS {
     PORT: string;
     SESSION_SECRET: string;
     CORS_ORIGIN: string;
+    CLOUDINARY_URL: string;
+    CLOUDINARY_SECRET: string;
   }
 }
