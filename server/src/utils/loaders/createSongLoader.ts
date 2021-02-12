@@ -1,4 +1,6 @@
 import DataLoader from 'dataloader'
+import { groupBy } from 'rambda'
+import { In } from 'typeorm'
 import { Song } from '../../entities/Song'
 
 export const createSongLoader = () =>
@@ -11,6 +13,16 @@ export const createSongLoader = () =>
         }, {})
 
         return songIds.map((songId) => songIdToSong[songId])
+    })
+
+export const createSongsByAuthorLoader = () =>
+    new DataLoader<number, readonly Song[]>(async (authorIds) => {
+        const songs = await Song.find({
+            where: { authorId: In(authorIds as number[]) },
+            order: { views: 'DESC' },
+        })
+        const songsByAuthorId = groupBy((s) => s.albumId.toString(), songs)
+        return authorIds.map((id) => songsByAuthorId[id] ?? [])
     })
 
 export const createSongOnAlbumLoader = (orderBy: 'track' | 'views' = 'track') =>

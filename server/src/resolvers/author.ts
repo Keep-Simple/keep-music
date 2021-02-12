@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from 'cloudinary'
 import {
     Arg,
+    Ctx,
     Field,
     FieldResolver,
     InputType,
@@ -15,6 +16,7 @@ import { Album } from '../entities/Album'
 import { Song } from '../entities/Song'
 import { isAuth } from '../middleware/isAuth'
 import { Author } from './../entities/Author'
+import { MyContext } from './../types'
 @InputType()
 class AuthorInput {
     @Field()
@@ -58,10 +60,10 @@ export class AuthorResolver {
     }
 
     @FieldResolver(() => [Song], { nullable: true })
-    songs(@Root() author: Author) {
+    songs(@Root() author: Author, @Ctx() { loaders }: MyContext) {
         if (author.songs) return author.songs
 
-        return Song.find({ where: { authorId: author.id } })
+        return loaders.songsByAuthor.load(author.id)
     }
 
     @Query(() => Author, { nullable: true })

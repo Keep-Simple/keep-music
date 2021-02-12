@@ -42,6 +42,7 @@
         "nodemailer": "^6.4.18",
         "nodemon": "^2.0.7",
         "pg": "^8.5.1",
+        "rambda": "^6.5.3",
         "type-graphql": "^1.1.1",
         "typeorm": "^0.2.31",
         "uuid": "^8.3.2"

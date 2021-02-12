@@ -1,6 +1,9 @@
-import { createSongOnAlbumLoader } from './createSongLoader'
 import { createAuthorLoader } from './createAuthorLoader'
-import { createSongLoader } from './createSongLoader'
+import {
+    createSongLoader,
+    createSongOnAlbumLoader,
+    createSongsByAuthorLoader,
+} from './createSongLoader'
 import { createUserLoader } from './createUserLoader'
 
 export const createLoaders = () => ({
@@ -9,4 +12,5 @@ export const createLoaders = () => ({
     songs: createSongLoader(),
     songsByAlbumOrderByTrack: createSongOnAlbumLoader('track'),
     songsByAlbumOrderByViews: createSongOnAlbumLoader('views'),
+    songsByAuthor: createSongsByAuthorLoader(),
 })
