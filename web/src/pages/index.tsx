@@ -1,5 +1,10 @@
-import { Box, SimpleGrid, useBreakpointValue, Text } from '@chakra-ui/react'
-import Image from 'next/image'
+import {
+    Box,
+    Image,
+    SimpleGrid,
+    Text,
+    useBreakpointValue,
+} from '@chakra-ui/react'
 import React from 'react'
 import AlertUI from '../components/Alert'
 import { Layout } from '../components/Layout'
@@ -35,18 +40,15 @@ const Index = () => {
                     spacing={4}
                     columns={[2, 2, 3, 4, 4, 5]}
                 >
-                    {data.albums.map(({ id, author, name }) => {
+                    {data.albums.map(({ id, author, name, cover }) => {
                         return (
                             <Box key={id}>
                                 <StyledLink href={`/album/${id}`}>
                                     <Image
-                                        src={'download_amboak'}
-                                        className="km-album-cover"
+                                        src={cover}
                                         alt="album cover"
+                                        boxSize={imageDimensions}
                                         objectFit="cover"
-                                        layout="fixed"
-                                        width={imageDimensions}
-                                        height={imageDimensions}
                                     />
                                     <Text
                                         fontSize="lg"

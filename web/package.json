@@ -15,6 +15,7 @@
         "@emotion/styled": "^11.1.5",
         "@types/react": "^17.0.1",
         "@uppy/core": "^1.16.1",
+        "@uppy/image-editor": "^0.2.1",
         "@uppy/react": "^1.11.3",
         "@zifahm/uppy-cloudinary": "^0.1.7",
         "date-fns": "^2.17.0",
@@ -28,6 +29,7 @@
         "react-dom": "^17.0.1",
         "react-icons": "^4.2.0",
         "react-jinke-music-player": "^4.21.2",
+        "react-select": "^4.1.0",
         "saas": "^1.0.0",
         "yup": "^0.32.8"
     },
@@ -39,6 +41,7 @@
         "@graphql-codegen/typescript-operations": "1.17.14",
         "@graphql-codegen/typescript-react-apollo": "^2.2.1",
         "@types/node": "^14.14.25",
+        "@types/react-select": "^4.0.13",
         "typescript": "^4.1.5"
     }
 }

@@ -3,6 +3,7 @@ query Albums {
         id
         name
         cover
+        releaseYear
         author {
             id
             name

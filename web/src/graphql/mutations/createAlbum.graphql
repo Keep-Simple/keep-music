@@ -1,0 +1,24 @@
+mutation CreateAlbum($input: AlbumInput!) {
+    createAlbum(input: $input) {
+        id
+        name
+        cover
+        releaseYear
+        songs {
+            id
+            name
+            link
+            byteSize
+            duration
+            views
+            order
+            format
+            albumId
+            authorId
+        }
+        author {
+            id
+            name
+        }
+    }
+}

@@ -13,15 +13,18 @@ export type Scalars = {
   Float: number;
 };
 
-export type Author = {
-  __typename?: 'Author';
+export type Song = {
+  __typename?: 'Song';
   id: Scalars['Float'];
   name: Scalars['String'];
-  info: Scalars['String'];
-  avatar: Scalars['String'];
-  photos: Array<Scalars['String']>;
-  albums?: Maybe<Array<Album>>;
-  songs?: Maybe<Array<Song>>;
+  link: Scalars['String'];
+  byteSize: Scalars['Float'];
+  duration: Scalars['Float'];
+  views: Scalars['Float'];
+  order: Scalars['Float'];
+  format: Scalars['String'];
+  albumId: Scalars['Float'];
+  authorId: Scalars['Float'];
 };
 
 export type Album = {
@@ -30,8 +33,7 @@ export type Album = {
   tracksNumber?: Maybe<Scalars['Float']>;
   cover: Scalars['String'];
   name: Scalars['String'];
-  info: Scalars['String'];
-  realeaseDate?: Maybe<Scalars['String']>;
+  releaseYear: Scalars['Float'];
   authorId: Scalars['Float'];
   author: Author;
   songs?: Maybe<Array<Song>>;
@@ -42,19 +44,15 @@ export type AlbumSongsArgs = {
   orderBy?: Maybe<Scalars['String']>;
 };
 
-export type Song = {
-  __typename?: 'Song';
+export type Author = {
+  __typename?: 'Author';
   id: Scalars['Float'];
   name: Scalars['String'];
-  link: Scalars['String'];
-  byteSize?: Maybe<Scalars['Float']>;
-  cover: Scalars['String'];
-  duration: Scalars['Float'];
-  views: Scalars['Float'];
-  order: Scalars['Float'];
-  quality?: Maybe<Scalars['String']>;
-  albumId: Scalars['Float'];
-  authorId: Scalars['Float'];
+  info: Scalars['String'];
+  avatar: Scalars['String'];
+  photos: Array<Scalars['String']>;
+  albums?: Maybe<Array<Album>>;
+  songs?: Maybe<Array<Song>>;
 };
 
 export type User = {
@@ -83,8 +81,8 @@ export type SongInputBase = {
   link: Scalars['String'];
   duration: Scalars['Float'];
   order: Scalars['Float'];
-  cover?: Maybe<Scalars['String']>;
-  quality?: Maybe<Scalars['String']>;
+  format: Scalars['String'];
+  byteSize: Scalars['Float'];
 };
 
 export type SongInput = {
@@ -92,8 +90,8 @@ export type SongInput = {
   link: Scalars['String'];
   duration: Scalars['Float'];
   order: Scalars['Float'];
-  cover?: Maybe<Scalars['String']>;
-  quality?: Maybe<Scalars['String']>;
+  format: Scalars['String'];
+  byteSize: Scalars['Float'];
   authorId: Scalars['Float'];
   albumId: Scalars['Float'];
 };
@@ -103,8 +101,7 @@ export type AlbumInput = {
   authorId: Scalars['Float'];
   songs?: Maybe<Array<SongInputBase>>;
   cover?: Maybe<Scalars['String']>;
-  realeaseDate?: Maybe<Scalars['String']>;
-  info?: Maybe<Scalars['String']>;
+  releaseYear: Scalars['Float'];
 };
 
 export type AuthorInput = {
@@ -112,6 +109,13 @@ export type AuthorInput = {
   info?: Maybe<Scalars['String']>;
   avatar?: Maybe<Scalars['String']>;
   photos?: Maybe<Array<Scalars['String']>>;
+};
+
+export type SignTokenInput = {
+  source: Scalars['String'];
+  timestamp: Scalars['Float'];
+  folder?: Maybe<Scalars['String']>;
+  upload_preset?: Maybe<Scalars['String']>;
 };
 
 export type AuthInput = {
@@ -126,6 +130,8 @@ export type Query = {
   album?: Maybe<Album>;
   albums?: Maybe<Array<Album>>;
   author?: Maybe<Author>;
+  authors?: Maybe<Array<Author>>;
+  signUpload: Scalars['String'];
   me?: Maybe<User>;
 };
 
@@ -142,6 +148,16 @@ export type QueryAlbumArgs = {
 
 export type QueryAuthorArgs = {
   id: Scalars['Int'];
+};
+
+
+export type QueryAuthorsArgs = {
+  searchQuery?: Maybe<Scalars['String']>;
+};
+
+
+export type QuerySignUploadArgs = {
+  input: SignTokenInput;
 };
 
 export type Mutation = {
@@ -228,6 +244,26 @@ export type ChangePasswordMutation = (
   ) }
 );
 
+export type CreateAlbumMutationVariables = Exact<{
+  input: AlbumInput;
+}>;
+
+
+export type CreateAlbumMutation = (
+  { __typename?: 'Mutation' }
+  & { createAlbum: (
+    { __typename?: 'Album' }
+    & Pick<Album, 'id' | 'name' | 'cover' | 'releaseYear'>
+    & { songs?: Maybe<Array<(
+      { __typename?: 'Song' }
+      & Pick<Song, 'id' | 'name' | 'link' | 'byteSize' | 'duration' | 'views' | 'order' | 'format' | 'albumId' | 'authorId'>
+    )>>, author: (
+      { __typename?: 'Author' }
+      & Pick<Author, 'id' | 'name'>
+    ) }
+  ) }
+);
+
 export type CreateAuthorMutationVariables = Exact<{
   input: AuthorInput;
 }>;
@@ -296,13 +332,13 @@ export type AlbumQuery = (
   { __typename?: 'Query' }
   & { album?: Maybe<(
     { __typename?: 'Album' }
-    & Pick<Album, 'id' | 'name' | 'tracksNumber' | 'cover' | 'realeaseDate'>
+    & Pick<Album, 'id' | 'name' | 'tracksNumber' | 'cover' | 'releaseYear'>
     & { author: (
       { __typename?: 'Author' }
       & Pick<Author, 'id' | 'name'>
     ), songs?: Maybe<Array<(
       { __typename?: 'Song' }
-      & Pick<Song, 'id' | 'order' | 'duration' | 'name' | 'views' | 'quality'>
+      & Pick<Song, 'id' | 'order' | 'duration' | 'name' | 'views' | 'format'>
     )>> }
   )> }
 );
@@ -314,11 +350,24 @@ export type AlbumsQuery = (
   { __typename?: 'Query' }
   & { albums?: Maybe<Array<(
     { __typename?: 'Album' }
-    & Pick<Album, 'id' | 'name' | 'cover'>
+    & Pick<Album, 'id' | 'name' | 'cover' | 'releaseYear'>
     & { author: (
       { __typename?: 'Author' }
       & Pick<Author, 'id' | 'name'>
     ) }
+  )>> }
+);
+
+export type AuthorsQueryVariables = Exact<{
+  searchQuery?: Maybe<Scalars['String']>;
+}>;
+
+
+export type AuthorsQuery = (
+  { __typename?: 'Query' }
+  & { authors?: Maybe<Array<(
+    { __typename?: 'Author' }
+    & Pick<Author, 'id' | 'name' | 'avatar'>
   )>> }
 );
 
@@ -389,6 +438,57 @@ export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
 export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
+export const CreateAlbumDocument = gql`
+    mutation CreateAlbum($input: AlbumInput!) {
+  createAlbum(input: $input) {
+    id
+    name
+    cover
+    releaseYear
+    songs {
+      id
+      name
+      link
+      byteSize
+      duration
+      views
+      order
+      format
+      albumId
+      authorId
+    }
+    author {
+      id
+      name
+    }
+  }
+}
+    `;
+export type CreateAlbumMutationFn = Apollo.MutationFunction<CreateAlbumMutation, CreateAlbumMutationVariables>;
+
+/**
+ * __useCreateAlbumMutation__
+ *
+ * To run a mutation, you first call `useCreateAlbumMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateAlbumMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createAlbumMutation, { data, loading, error }] = useCreateAlbumMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateAlbumMutation(baseOptions?: Apollo.MutationHookOptions<CreateAlbumMutation, CreateAlbumMutationVariables>) {
+        return Apollo.useMutation<CreateAlbumMutation, CreateAlbumMutationVariables>(CreateAlbumDocument, baseOptions);
+      }
+export type CreateAlbumMutationHookResult = ReturnType<typeof useCreateAlbumMutation>;
+export type CreateAlbumMutationResult = Apollo.MutationResult<CreateAlbumMutation>;
+export type CreateAlbumMutationOptions = Apollo.BaseMutationOptions<CreateAlbumMutation, CreateAlbumMutationVariables>;
 export const CreateAuthorDocument = gql`
     mutation CreateAuthor($input: AuthorInput!) {
   createAuthor(input: $input) {
@@ -556,7 +656,7 @@ export const AlbumDocument = gql`
     name
     tracksNumber
     cover
-    realeaseDate
+    releaseYear
     author {
       id
       name
@@ -567,7 +667,7 @@ export const AlbumDocument = gql`
       duration
       name
       views
-      quality
+      format
     }
   }
 }
@@ -605,6 +705,7 @@ export const AlbumsDocument = gql`
     id
     name
     cover
+    releaseYear
     author {
       id
       name
@@ -637,6 +738,41 @@ export function useAlbumsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Alb
 export type AlbumsQueryHookResult = ReturnType<typeof useAlbumsQuery>;
 export type AlbumsLazyQueryHookResult = ReturnType<typeof useAlbumsLazyQuery>;
 export type AlbumsQueryResult = Apollo.QueryResult<AlbumsQuery, AlbumsQueryVariables>;
+export const AuthorsDocument = gql`
+    query Authors($searchQuery: String) {
+  authors(searchQuery: $searchQuery) {
+    id
+    name
+    avatar
+  }
+}
+    `;
+
+/**
+ * __useAuthorsQuery__
+ *
+ * To run a query within a React component, call `useAuthorsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAuthorsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAuthorsQuery({
+ *   variables: {
+ *      searchQuery: // value for 'searchQuery'
+ *   },
+ * });
+ */
+export function useAuthorsQuery(baseOptions?: Apollo.QueryHookOptions<AuthorsQuery, AuthorsQueryVariables>) {
+        return Apollo.useQuery<AuthorsQuery, AuthorsQueryVariables>(AuthorsDocument, baseOptions);
+      }
+export function useAuthorsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AuthorsQuery, AuthorsQueryVariables>) {
+          return Apollo.useLazyQuery<AuthorsQuery, AuthorsQueryVariables>(AuthorsDocument, baseOptions);
+        }
+export type AuthorsQueryHookResult = ReturnType<typeof useAuthorsQuery>;
+export type AuthorsLazyQueryHookResult = ReturnType<typeof useAuthorsLazyQuery>;
+export type AuthorsQueryResult = Apollo.QueryResult<AuthorsQuery, AuthorsQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

@@ -4,7 +4,7 @@ query Album($id: Int!, $orderBy: String) {
         name
         tracksNumber
         cover
-        realeaseDate
+        releaseYear
         author {
             id
             name
@@ -15,7 +15,7 @@ query Album($id: Int!, $orderBy: String) {
             duration
             name
             views
-            quality
+            format
         }
     }
 }

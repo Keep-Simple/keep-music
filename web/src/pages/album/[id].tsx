@@ -4,15 +4,15 @@ import {
     Flex,
     Heading,
     Icon,
+    Image,
     Spacer,
     StackDivider,
     Text,
     useBreakpointValue,
     VStack,
 } from '@chakra-ui/react'
-import Image from 'next/image'
-import { GrPlayFill } from 'react-icons/gr'
 import { useRouter } from 'next/router'
+import { GrPlayFill } from 'react-icons/gr'
 import AlertUI from '../../components/Alert'
 import { Layout } from '../../components/Layout'
 import { Loading } from '../../components/Loading'
@@ -45,7 +45,8 @@ const Index = () => {
                 author,
                 tracksNumber,
                 songs,
-                realeaseDate,
+                releaseYear,
+                cover,
                 name,
             } = data.album
             body = (
@@ -53,13 +54,10 @@ const Index = () => {
                     <Box px="6%">
                         <Flex mb={10}>
                             <Image
-                                src={'download_amboak'}
-                                className="km-album-cover"
+                                src={cover}
                                 alt="album cover"
+                                boxSize={imageDimensions}
                                 objectFit="cover"
-                                layout="fixed"
-                                width={imageDimensions}
-                                height={imageDimensions}
                             />
                             <Flex
                                 ml="48px"
@@ -75,7 +73,7 @@ const Index = () => {
                                     color="whiteAlpha.700"
                                 >
                                     {`Album • ${author.name} • ${
-                                        realeaseDate || 2020
+                                        releaseYear || 2020
                                     }`}
                                 </Text>
                                 <Text

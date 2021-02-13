@@ -32,11 +32,8 @@ class AlbumInput {
     @Field({ nullable: true })
     cover?: string
 
-    @Field(() => String, { nullable: true })
-    realeaseDate?: Date
-
-    @Field({ nullable: true })
-    info?: string
+    @Field()
+    releaseYear: number
 }
 
 export type SongsOrdering = 'track' | 'views'
@@ -46,7 +43,7 @@ export class AlbumResolver {
     @FieldResolver(() => [Song], { nullable: true })
     songs(
         @Root() album: Album,
-        @Arg('orderBy', { nullable: true}) orderBy: SongsOrdering = 'track',
+        @Arg('orderBy', { nullable: true }) orderBy: SongsOrdering = 'track',
         @Ctx() { loaders }: MyContext
     ) {
         if (album.songs) return album.songs
@@ -60,10 +57,7 @@ export class AlbumResolver {
     }
 
     @FieldResolver(() => Author)
-    author(
-        @Root() album: Album,
-        @Ctx() { loaders }: MyContext
-    ) {
+    author(@Root() album: Album, @Ctx() { loaders }: MyContext) {
         if (album.author) return album.author
 
         return loaders.authors.load(album.authorId)
@@ -87,10 +81,10 @@ export class AlbumResolver {
     @Mutation(() => Album)
     @UseMiddleware(isAuth)
     async createAlbum(@Arg('input') input: AlbumInput): Promise<Album> {
-        const {authorId, songs} = input
+        const { authorId, songs } = input
 
         if (songs) {
-            input.songs = songs.map(s => ({...s, authorId}))
+            input.songs = songs.map((s) => ({ ...s, authorId }))
         }
 
         const album = await Album.create({ ...input }).save()

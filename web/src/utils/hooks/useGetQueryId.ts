@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { getNumber } from './parseNumber'
+import { getNumber } from '../parseNumber'
 
 export const useGetQueryId = () => {
     const router = useRouter()

@@ -25,11 +25,11 @@ export class SongInputBase {
     @Field()
     order: number
 
-    @Field({ nullable: true })
-    cover?: string
+    @Field()
+    format: string
 
-    @Field({ nullable: true })
-    quality?: string
+    @Field()
+    byteSize: number
 }
 
 @InputType()

@@ -30,12 +30,8 @@ export class Album extends BaseEntity {
     name: string
 
     @Field()
-    @Column({ default: 'Album does not have description' })
-    info: string
-
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
-    realeaseDate?: Date
+    @Column()
+    releaseYear: number
 
     @Field()
     @Column()

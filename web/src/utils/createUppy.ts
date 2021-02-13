@@ -1,5 +1,11 @@
 import { gql } from '@apollo/client'
 import Uppy from '@uppy/core'
+import '@uppy/core/dist/style.css'
+import '@uppy/dashboard/dist/style.css'
+import '@uppy/drag-drop/dist/style.css'
+import ImageEditor from '@uppy/image-editor'
+import '@uppy/image-editor/dist/style.css'
+// import '@uppy/status-bar/dist/style.css'
 import CloudinaryPlugin from '@zifahm/uppy-cloudinary'
 import { createClient } from './withApollo'
 
@@ -26,6 +32,10 @@ export function createUppy({
         },
         autoProceed,
     })
+
+    if (filesType === 'photo') {
+        uppy.use(ImageEditor, {})
+    }
 
     uppy.use(CloudinaryPlugin, {
         uploadPreset: 'ml_default',

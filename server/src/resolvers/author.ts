@@ -12,6 +12,7 @@ import {
     Root,
     UseMiddleware,
 } from 'type-graphql'
+import { ILike } from 'typeorm'
 import { Album } from '../entities/Album'
 import { Song } from '../entities/Song'
 import { isAuth } from '../middleware/isAuth'
@@ -69,6 +70,11 @@ export class AuthorResolver {
     @Query(() => Author, { nullable: true })
     author(@Arg('id', () => Int) id: number) {
         return Author.findOne(id)
+    }
+
+    @Query(() => [Author], { nullable: true })
+    authors(@Arg('searchQuery', { nullable: true }) query: string = '') {
+        return Author.find({ where: { name: ILike(`%${query}%`) } })
     }
 
     @Mutation(() => Author)

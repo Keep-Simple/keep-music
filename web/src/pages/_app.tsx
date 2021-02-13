@@ -1,11 +1,7 @@
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
-import '@uppy/core/dist/style.css'
-import '@uppy/drag-drop/dist/style.css'
-// import '@uppy/status-bar/dist/style.css'
 import dynamic from 'next/dynamic'
 import { createContext, Dispatch, useReducer } from 'react'
 import { ReactJkMusicPlayerAudioListProps } from 'react-jinke-music-player'
-import 'react-jinke-music-player/assets/index.css'
 import { Fonts } from '../components/Fonts'
 import '../styles/extras.css'
 import theme from '../theme'
@@ -18,8 +14,7 @@ export const addSongsAction = (songs: ReactJkMusicPlayerAudioListProps[]) => {
 }
 const initialState = [
     {
-        musicSrc:
-            'https://ia801506.us.archive.org/22/items/gr82021-02-06/gr8fl2021-02-06D02T01.mp3',
+        musicSrc: '',
         name: 'Monday',
     },
 ]
