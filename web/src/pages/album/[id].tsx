@@ -11,22 +11,26 @@ import {
     useBreakpointValue,
     VStack,
 } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
+import { useContext } from 'react'
 import { GrPlayFill } from 'react-icons/gr'
 import AlertUI from '../../components/Alert'
 import { Layout } from '../../components/Layout'
 import { Loading } from '../../components/Loading'
 import { useAlbumQuery } from '../../generated/graphql'
-import { formatSeconds } from '../../utils/formatSeconds'
+import { addSongsAction, PlayerContext } from '../../state/player'
+import {
+    formatSeconds,
+    secondToMinutesAndHours,
+} from '../../utils/formatSeconds'
+import { useGetQueryId } from '../../utils/hooks/useGetQueryId'
 import { withApollo } from '../../utils/withApollo'
 
 const Index = () => {
-    const router = useRouter()
-    const { id } = router.query
-
+    const id = useGetQueryId()
     const { data, error, loading } = useAlbumQuery({
-        variables: { id: parseInt(id as string) },
+        variables: { id },
     })
+    const { dispatch } = useContext(PlayerContext)
 
     const imageDimensions =
         useBreakpointValue({ base: 160, md: 200, lg: 240, xl: 264 }) ?? 160
@@ -49,6 +53,15 @@ const Index = () => {
                 cover,
                 name,
             } = data.album
+
+            const playAlbum = () => {
+                dispatch(addSongsAction(songs || [], author.name, cover))
+            }
+
+            const albumDuration = secondToMinutesAndHours(
+                songs?.reduce((acc, v) => (acc += v.duration), 0) || 0
+            )
+
             body = (
                 <>
                     <Box px="6%">
@@ -81,7 +94,7 @@ const Index = () => {
                                     fontWeight="400"
                                     color="whiteAlpha.700"
                                 >
-                                    {`${tracksNumber} songs • 50 minutes`}
+                                    {`${tracksNumber} songs • ${albumDuration}`}
                                 </Text>
                                 <Button
                                     mt={7}
@@ -92,6 +105,7 @@ const Index = () => {
                                     fontSize="sm"
                                     borderRadius={2}
                                     variant="none"
+                                    onClick={playAlbum}
                                     leftIcon={
                                         <Flex>
                                             <Icon as={GrPlayFill} mr={1} />

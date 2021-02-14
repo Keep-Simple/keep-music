@@ -338,7 +338,7 @@ export type AlbumQuery = (
       & Pick<Author, 'id' | 'name'>
     ), songs?: Maybe<Array<(
       { __typename?: 'Song' }
-      & Pick<Song, 'id' | 'order' | 'duration' | 'name' | 'views' | 'format'>
+      & Pick<Song, 'id' | 'order' | 'duration' | 'name' | 'views' | 'format' | 'link'>
     )>> }
   )> }
 );
@@ -668,6 +668,7 @@ export const AlbumDocument = gql`
       name
       views
       format
+      link
     }
   }
 }

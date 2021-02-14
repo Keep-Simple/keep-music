@@ -1,4 +1,4 @@
-import { intervalToDuration } from 'date-fns'
+import { formatDuration, intervalToDuration } from 'date-fns'
 
 export function formatSeconds(sec: number) {
     const { hours, minutes, seconds } = intervalToDuration({
@@ -13,4 +13,10 @@ export function formatSeconds(sec: number) {
     }
 
     return `${minutes}:${addZero(seconds)}`
+}
+
+export function secondToMinutesAndHours(sec: number) {
+    const hours = Math.floor(sec / 3600)
+    const minutes = Math.floor(sec / 60)
+    return formatDuration({ hours, minutes }, { format: ['hours', 'minutes'] })
 }
