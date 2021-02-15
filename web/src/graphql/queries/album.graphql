@@ -17,6 +17,7 @@ query Album($id: Int!, $orderBy: String) {
             views
             format
             link
+            albumId
         }
     }
 }
