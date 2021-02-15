@@ -1,4 +1,4 @@
-import { Avatar, Box, Button } from '@chakra-ui/react'
+import { Avatar, Box, Button, useToast } from '@chakra-ui/react'
 import { Dashboard, DragDrop } from '@uppy/react'
 import { Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
@@ -46,6 +46,7 @@ const CreateAlbum = ({}) => {
     const [createAlbum] = useCreateAlbumMutation()
     const [cover, setCover] = useState()
     const router = useRouter()
+    const toast = useToast()
 
     coverUppy.on('file-added', (file) => {
         const reader = new FileReader()
@@ -135,7 +136,7 @@ const CreateAlbum = ({}) => {
                     )
                     await Promise.all([songsUppy.upload(), coverUppy.upload()])
 
-                    const data = await createAlbum({
+                    const { data } = await createAlbum({
                         variables: {
                             input: {
                                 ...values,
@@ -145,7 +146,16 @@ const CreateAlbum = ({}) => {
                         },
                     })
 
-                    if (data?.data?.createAlbum) router.back()
+                    if (data?.createAlbum) {
+                        router.back()
+                        toast({
+                            title: `${data.createAlbum.name} with ${data.createAlbum.tracksNumber} songs was added.`,
+                            description: 'Enjoy! Find it on the Home Page.',
+                            status: 'success',
+                            duration: 9000,
+                            isClosable: true,
+                        })
+                    }
                 }}
             >
                 {({ isSubmitting }) => (

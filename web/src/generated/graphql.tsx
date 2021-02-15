@@ -253,7 +253,7 @@ export type CreateAlbumMutation = (
   { __typename?: 'Mutation' }
   & { createAlbum: (
     { __typename?: 'Album' }
-    & Pick<Album, 'id' | 'name' | 'cover' | 'releaseYear'>
+    & Pick<Album, 'id' | 'name' | 'cover' | 'releaseYear' | 'tracksNumber'>
     & { songs?: Maybe<Array<(
       { __typename?: 'Song' }
       & Pick<Song, 'id' | 'name' | 'link' | 'byteSize' | 'duration' | 'views' | 'order' | 'format' | 'albumId' | 'authorId'>
@@ -445,6 +445,7 @@ export const CreateAlbumDocument = gql`
     name
     cover
     releaseYear
+    tracksNumber
     songs {
       id
       name

@@ -4,6 +4,7 @@ mutation CreateAlbum($input: AlbumInput!) {
         name
         cover
         releaseYear
+        tracksNumber
         songs {
             id
             name

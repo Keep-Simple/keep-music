@@ -1,4 +1,4 @@
-import { Avatar, Box, Button } from '@chakra-ui/react'
+import { Avatar, Box, Button, useToast } from '@chakra-ui/react'
 import { DragDrop } from '@uppy/react'
 import { Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
@@ -30,6 +30,7 @@ const schema = yup.object({
 const CreateAuthor = ({}) => {
     const [createAuthor] = useCreateAuthorMutation()
     const [avatar, setAvatar] = useState()
+    const toast = useToast()
     const router = useRouter()
 
     uppy.on('file-added', (file) => {
@@ -53,7 +54,7 @@ const CreateAuthor = ({}) => {
                         await uppy.upload()
                     }
 
-                    const data = await createAuthor({
+                    const { data } = await createAuthor({
                         variables: {
                             input: {
                                 ...values,
@@ -61,7 +62,17 @@ const CreateAuthor = ({}) => {
                             },
                         },
                     })
-                    if (data?.data?.createAuthor) router.back()
+                    if (data?.createAuthor) {
+                        router.back()
+                        toast({
+                            title: `Artist ${data.createAuthor.name} was added.`,
+                            description:
+                                'Now you can mention him on album creation.',
+                            status: 'success',
+                            duration: 9000,
+                            isClosable: true,
+                        })
+                    }
                 }}
             >
                 {({ isSubmitting, values }) => (

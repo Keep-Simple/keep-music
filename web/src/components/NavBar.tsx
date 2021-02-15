@@ -1,12 +1,25 @@
-import { Box, Button, Flex, Heading, Spinner } from '@chakra-ui/react'
+import { useApolloClient } from '@apollo/client'
+import {
+    Circle,
+    Flex,
+    Heading,
+    Menu,
+    MenuButton,
+    MenuDivider,
+    MenuItem,
+    MenuList,
+    Spinner,
+    Text,
+} from '@chakra-ui/react'
+import NextLink from 'next/link'
+// import { ReactComponent as Logo } from '../../static/logo.svg'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
 import { StyledLink } from './StyledLink'
-import { useApolloClient } from '@apollo/client'
 
 export const NavBar: React.FC = () => {
     const { data, loading } = useMeQuery()
     const apolloClient = useApolloClient()
-    const [logout, { loading: logoutFetching }] = useLogoutMutation()
+    const [logout] = useLogoutMutation()
 
     let body
 
@@ -25,19 +38,42 @@ export const NavBar: React.FC = () => {
         )
     } else {
         body = (
-            <>
-                <Box mr={2}>{data.me.username}</Box>
-                <Button
-                    onClick={async () => {
-                        await logout()
-                        await apolloClient.resetStore()
-                    }}
-                    isLoading={logoutFetching}
-                    variant="link"
-                >
-                    Logout
-                </Button>
-            </>
+            <Menu>
+                <Circle bg="gray.600" size="43px">
+                    <MenuButton
+                        as={Text}
+                        px={4}
+                        py={2}
+                        borderRadius="sm"
+                        transition="all 0.2s"
+                        fontWeight="600"
+                        cursor="pointer"
+                        userSelect="none"
+                    >
+                        {data.me.username.slice(0, 1)}
+                    </MenuButton>
+                </Circle>
+                <MenuList>
+                    <NextLink href="/">
+                        <MenuItem>Home Page</MenuItem>
+                    </NextLink>
+                    <NextLink href="/album/create">
+                        <MenuItem>Add Album</MenuItem>
+                    </NextLink>
+                    <NextLink href="/author/create">
+                        <MenuItem>Create Author</MenuItem>
+                    </NextLink>
+                    <MenuDivider />
+                    <MenuItem
+                        onClick={async () => {
+                            await logout()
+                            await apolloClient.resetStore()
+                        }}
+                    >
+                        Logout
+                    </MenuItem>
+                </MenuList>
+            </Menu>
         )
     }
     return (
@@ -51,6 +87,8 @@ export const NavBar: React.FC = () => {
             <Flex flex={1} px={5} justifyContent="space-between">
                 <StyledLink href="/">
                     <Heading>keep-music</Heading>
+                    {/* <Logo /> */}
+                    {/* <Image src={logoSrc} boxSize="70px" /> */}
                 </StyledLink>
                 <Flex alignItems="center">{body}</Flex>
             </Flex>
