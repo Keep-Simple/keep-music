@@ -8,8 +8,9 @@ const config = {
 const theme = extendTheme({
     config,
     fonts: {
-        heading: 'Open Sans',
-        body: 'Raleway',
+        body: 'Roboto, sans-serif',
+        heading: 'Open Sans, sans-serif',
+        mono: 'Menlo, monospace',
     },
     styles: {
         global: {

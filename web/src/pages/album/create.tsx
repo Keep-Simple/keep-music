@@ -144,7 +144,7 @@ const CreateAlbum = ({}) => {
                             },
                         },
                     })
-                    console.log(data)
+
                     if (data?.data?.createAlbum) router.back()
                 }}
             >

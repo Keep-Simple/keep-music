@@ -5,7 +5,7 @@ import {
     Text,
     useBreakpointValue,
 } from '@chakra-ui/react'
-import React from 'react'
+import NextLink from 'next/link'
 import AlertUI from '../components/Alert'
 import { Layout } from '../components/Layout'
 import { Loading } from '../components/Loading'
@@ -42,17 +42,22 @@ const Index = () => {
                 >
                     {data.albums.map(({ id, author, name, cover }) => {
                         return (
-                            <Box key={id}>
-                                <StyledLink href={`/album/${id}`}>
+                            <Box key={id} w={imageDimensions}>
+                                <NextLink href={`/album/${id}`}>
                                     <Image
+                                        cursor="pointer"
                                         src={cover}
                                         alt="album cover"
+                                        borderRadius={4}
                                         boxSize={imageDimensions}
                                         objectFit="cover"
+                                        mb={2}
                                     />
+                                </NextLink>
+                                <StyledLink href={`/album/${id}`}>
                                     <Text
-                                        fontSize="lg"
-                                        fontWeight="500"
+                                        fontWeight="600"
+                                        fontSize="sm"
                                         isTruncated
                                     >
                                         {name}

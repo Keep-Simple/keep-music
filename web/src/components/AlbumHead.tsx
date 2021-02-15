@@ -43,7 +43,7 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
                 objectFit="cover"
             />
             <Flex ml="48px" justifyContent="center" direction="column">
-                <Heading as="h2" size="xl" mb={3}>
+                <Heading size="lg" mb={3}>
                     {name}
                 </Heading>
                 <Text fontSize="sm" fontWeight="400" color="whiteAlpha.700">
@@ -53,7 +53,7 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
                     {`${tracksNumber} songs • ${albumDuration}`}
                 </Text>
                 <Button
-                    mt={7}
+                    mt={9}
                     bg="white"
                     color="black"
                     w={136}

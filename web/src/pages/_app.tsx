@@ -1,7 +1,6 @@
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
 import dynamic from 'next/dynamic'
 import { useReducer } from 'react'
-import { Fonts } from '../components/Fonts'
 import { PlayerContext } from '../state/player/context'
 import { initialPlayerState, playerReducer } from '../state/player/reducer'
 import '../styles/extras.css'
@@ -17,7 +16,6 @@ function MyApp({ Component, pageProps }: any) {
     return (
         <PlayerContext.Provider value={{ state, dispatch }}>
             <ChakraProvider resetCSS theme={theme}>
-                <Fonts />
                 <ColorModeProvider
                     options={{
                         useSystemColorMode: false,

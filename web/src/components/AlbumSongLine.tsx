@@ -25,7 +25,7 @@ export const AlbumSongLine: FC<
 
         return (
             icons[status!] || (
-                <Text as="span" fontSize="sm">
+                <Text as="span" fontSize="sm" fontWeight="500">
                     {order}
                 </Text>
             )
@@ -51,12 +51,10 @@ export const AlbumSongLine: FC<
                 >
                     <IconOrOrder />
                 </Flex>
-                <Text fontSize="sm" fontWeight="600">
-                    {name}
-                </Text>
+                <Text fontWeight="500">{name}</Text>
             </Flex>
             <Spacer />
-            <Text fontSize="sm" fontWeight="400" color="whiteAlpha.700">
+            <Text fontWeight="400" color="whiteAlpha.700">
                 {formatSeconds(duration)}
             </Text>
         </Flex>

@@ -7,16 +7,7 @@ export const initialPlayerState: PlayerState = {
     showPlayer: false,
 }
 
-const loggerDecorator = (func: Function, _this?: unknown) => (...args: any) => {
-    console.log('input args', args)
-    const result = func.apply(_this, args)
-    console.log('output result', result)
-    return result
-}
-
-export const playerReducer = loggerDecorator(PlayerReducer)
-
-export function PlayerReducer(
+export function playerReducer(
     state = initialPlayerState,
     { type, payload }: any
 ): PlayerState {
