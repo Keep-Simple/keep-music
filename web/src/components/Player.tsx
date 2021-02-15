@@ -14,7 +14,7 @@ import { PlayerContext } from '../state/player/context'
 const Player = () => {
     const { state, dispatch } = useContext(PlayerContext)
 
-    const player = useRef<ReactJkMusicPlayerInstance>()
+    const player = useRef<ReactJkMusicPlayerInstance | null>(null)
 
     useEffect(() => {
         const onSpacebar = (e: KeyboardEvent) => {
@@ -29,7 +29,10 @@ const Player = () => {
     }, [])
 
     useEffect(() => {
-        if (player.current?.paused !== state.selectedSong?.isPaused) {
+        if (
+            player.current?.paused !== state.selectedSong?.isPaused &&
+            state.songs.length
+        ) {
             console.log(player.current)
             player.current?.togglePlay?.()
         }
@@ -51,6 +54,10 @@ const Player = () => {
             mode="full"
             getAudioInstance={(inst) => (player.current = inst)}
             audioLists={state.songs as any}
+            onBeforeDestroy={() => {
+                player.current = null
+                return Promise.resolve()
+            }}
             onAudioProgress={({ readyState, _id }) => {
                 if (readyState === 0) {
                     dispatch(onSongLoading(_id))

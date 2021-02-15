@@ -2,20 +2,6 @@ import { pick } from 'rambda'
 import { Song } from '../../generated/graphql'
 import { PlayerSong } from './context'
 
-export const convertToPlayerSong = (
-    s: Partial<Song>,
-    singer: string,
-    cover: string
-) =>
-    ({
-        singer,
-        cover,
-        musicSrc: s.link,
-        _id: s.id,
-        ...pick(['name', 'duration'], s),
-    } as PlayerSong)
-
-/* ACTIONS */
 export const addSongsAction = (
     songs: Partial<Song>[],
     singer: string,
@@ -45,3 +31,16 @@ export const onAudioListChange = (songs: PlayerSong[]) => ({
     type: 'AUDIO_LIST_CHANGED',
     payload: songs,
 })
+
+export const convertToPlayerSong = (
+    s: Partial<Song>,
+    singer: string,
+    cover: string
+) =>
+    ({
+        singer,
+        cover,
+        musicSrc: s.link,
+        _id: s.id,
+        ...pick(['name', 'duration'], s),
+    } as PlayerSong)
