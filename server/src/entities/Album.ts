@@ -6,6 +6,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
+    Unique,
 } from 'typeorm'
 import { DEFAULT_COVER } from '../constants'
 import { Author } from './Author'
@@ -13,6 +14,7 @@ import { Song } from './Song'
 
 @ObjectType()
 @Entity()
+@Unique(['name', 'authorId'])
 export class Album extends BaseEntity {
     @Field()
     @PrimaryGeneratedColumn()

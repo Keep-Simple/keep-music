@@ -15,30 +15,27 @@ const Index = () => {
         variables: { id },
     })
 
-    let body = null
+    const skeleton = (body: any) => <Layout>{body}</Layout>
 
-    if (error) {
-        body = <AlertUI message={error?.message} />
-    } else {
-        if (!loading && !data) {
-            body = <AlertUI message="No such album found" status="info" />
-        } else if (!data && loading) {
-            body = <Loading />
-        } else if (data?.album) {
-            body = (
-                <Box px="6%" pb="5%">
-                    <AlbumHead {...data.album} />
-                    <AlbumSongs
-                        songs={data.album.songs || []}
-                        cover={data.album.cover}
-                        authorName={data.album.author.name}
-                    />
-                </Box>
-            )
-        }
+    if (error) return skeleton(<AlertUI message={error?.message} />)
+
+    if (!loading && !data)
+        return skeleton(<AlertUI message="No such album found" status="info" />)
+
+    if (!data && loading) return skeleton(<Loading />)
+
+    if (data?.album) {
+        return skeleton(
+            <Box px="6%" pb="5%">
+                <AlbumHead {...data.album} />
+                <AlbumSongs
+                    songs={data.album.songs || []}
+                    cover={data.album.cover}
+                    authorName={data.album.author.name}
+                />
+            </Box>
+        )
     }
-
-    return <Layout>{body}</Layout>
 }
 
 export default withApollo({ ssr: true })(Index)

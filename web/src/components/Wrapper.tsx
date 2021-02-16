@@ -14,6 +14,7 @@ export const Wrapper: React.FC<WrapperProps> = ({
         <Flex
             maxW={variant === 'regular' ? '100%' : '400px'}
             mt={8}
+            mb="200px"
             mx="auto"
             direction="column"
             {...props}

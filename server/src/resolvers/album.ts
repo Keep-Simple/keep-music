@@ -87,7 +87,7 @@ export class AlbumResolver {
             input.songs = songs.map((s) => ({ ...s, authorId }))
         }
 
-        const album = await Album.create({ ...input }).save()
+        const album = await Album.create({ ...input }).save({})
 
         album.tracksNumber = album.songs?.length ?? 0
 

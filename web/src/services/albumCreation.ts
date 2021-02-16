@@ -2,7 +2,7 @@ import { createUppy } from '../utils/createUppy'
 import { SongInputBase } from './../../../server/src/resolvers/song'
 
 class AlbumCreationService {
-    private coverUrl = ''
+    private coverUrl?: string = undefined
     private songs: SongInputBase[] = []
 
     private fileNameRegex = new RegExp(
@@ -55,20 +55,20 @@ class AlbumCreationService {
                 { secure_url, format, duration, bytes, original_filename }
             ) => {
                 const fileName = file.meta.name || original_filename
-
-                let {
-                    groups: { order, name },
-                } = fileName.match(this.fileNameRegex) ?? {
+                const defaultMatch = {
                     groups: {
                         order: this.songs.length + 1,
                         name: fileName,
                     },
                 }
+                let {
+                    groups: { order, name },
+                } = fileName.match(this.fileNameRegex) ?? defaultMatch
 
                 this.songs.push({
                     name,
                     format,
-                    order: parseInt(order),
+                    order: parseInt(order || defaultMatch.groups.order),
                     link: secure_url,
                     byteSize: bytes,
                     duration: Math.ceil(duration),
@@ -79,7 +79,7 @@ class AlbumCreationService {
 
     private resetState() {
         this.songs = []
-        this.coverUrl = ''
+        this.coverUrl = undefined
         this.coverUppy.reset()
         this.songsUppy.reset()
     }

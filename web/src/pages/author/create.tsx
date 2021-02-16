@@ -1,11 +1,18 @@
-import { Avatar, Box, Button, useToast } from '@chakra-ui/react'
-import { DragDrop } from '@uppy/react'
+import {
+    Box,
+    Button,
+    Flex,
+    useBreakpointValue,
+    useToast,
+    VStack,
+} from '@chakra-ui/react'
 import { Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import * as yup from 'yup'
 import { InputField } from '../../components/InputField'
 import { Layout } from '../../components/Layout'
+import { PhotoDragDrop } from '../../components/PhotoDragDrop'
 import { useCreateAuthorMutation } from '../../generated/graphql'
 import { createUppy } from '../../utils/createUppy'
 import { withApollo } from '../../utils/withApollo'
@@ -29,9 +36,14 @@ const schema = yup.object({
 
 const CreateAuthor = ({}) => {
     const [createAuthor] = useCreateAuthorMutation()
-    const [avatar, setAvatar] = useState()
+    const [avatar, setAvatar] = useState('')
     const toast = useToast()
     const router = useRouter()
+
+    const avatarSize = useBreakpointValue({
+        base: 250,
+        xl: 300,
+    }) as number
 
     uppy.on('file-added', (file) => {
         const reader = new FileReader()
@@ -40,7 +52,7 @@ const CreateAuthor = ({}) => {
     })
 
     return (
-        <Layout variant="small">
+        <Layout>
             <Formik
                 initialValues={{ name: '', info: '' }}
                 validationSchema={schema}
@@ -77,45 +89,48 @@ const CreateAuthor = ({}) => {
             >
                 {({ isSubmitting, values }) => (
                     <Form>
-                        <InputField
-                            name="name"
-                            placeholder="King Krule"
-                            label="Artists Name"
-                        />
-                        <Box mt={4} mb={4}>
-                            <InputField
-                                textarea
-                                name="info"
-                                placeholder={`Type in some further info about the ${
-                                    values.name || 'artist'
-                                }...`}
-                                label="Bio"
-                            />
-                        </Box>
+                        <Flex justify="center" mt={20}>
+                            <VStack spacing={10} mr={10} w={avatarSize}>
+                                <InputField
+                                    name="name"
+                                    placeholder="King Krule"
+                                    label="Artists Name"
+                                />
+                                <InputField
+                                    textarea
+                                    name="info"
+                                    placeholder={`Type in some info about the ${
+                                        values.name || 'artist'
+                                    }...`}
+                                    label="Bio"
+                                />
+                            </VStack>
+                            <Box w={avatarSize}>
+                                <PhotoDragDrop
+                                    uppy={uppy}
+                                    src={avatar}
+                                    imageSize={300}
+                                    onDelete={() => {
+                                        setAvatar('')
+                                        uppy.reset()
+                                    }}
+                                />
 
-                        <Button
-                            isLoading={isSubmitting}
-                            type="submit"
-                            colorScheme="red"
-                        >
-                            Create Author
-                        </Button>
+                                <Button
+                                    mt={4}
+                                    float="right"
+                                    size="lg"
+                                    isLoading={isSubmitting}
+                                    type="submit"
+                                    colorScheme="red"
+                                >
+                                    Create Artist
+                                </Button>
+                            </Box>
+                        </Flex>
                     </Form>
                 )}
             </Formik>
-            <Box borderRadius="50%">
-                <DragDrop
-                    width="100%"
-                    height="100%"
-                    uppy={uppy}
-                    locale={{
-                        strings: {
-                            browse: undefined,
-                        },
-                    }}
-                />
-            </Box>
-            {avatar && <Avatar size="2xl" src={avatar} name="artists_avatar" />}
         </Layout>
     )
 }

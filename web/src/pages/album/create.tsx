@@ -1,12 +1,22 @@
 import { gql } from '@apollo/client'
-import { Avatar, Box, Button, useToast } from '@chakra-ui/react'
-import { Dashboard, DragDrop } from '@uppy/react'
+import {
+    Box,
+    Button,
+    Flex,
+    FormControl,
+    FormLabel,
+    Stack,
+    useBreakpointValue,
+    useToast,
+} from '@chakra-ui/react'
+import { Dashboard } from '@uppy/react'
 import { Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import * as yup from 'yup'
 import { InputField } from '../../components/InputField'
 import { Layout } from '../../components/Layout'
+import { PhotoDragDrop } from '../../components/PhotoDragDrop'
 import { SelectField } from '../../components/SelectField'
 import { useCreateAlbumMutation } from '../../generated/graphql'
 import { albumCreationService } from '../../services/albumCreation'
@@ -28,37 +38,70 @@ const schema = yup.object({
 })
 
 const CreateAlbum = ({}) => {
-    const [createAlbum] = useCreateAlbumMutation()
     const [cover, setCover] = useState('')
     const router = useRouter()
     const toast = useToast()
 
+    const coverSize = useBreakpointValue({
+        base: 250,
+        xl: 300,
+    }) as number
+
     albumCreationService.onCoverAdd((base64Url) => setCover(base64Url))
 
+    const [createAlbum] = useCreateAlbumMutation({
+        update(cache, { data }) {
+            if (!data?.createAlbum) return
+
+            cache.modify({
+                fields: {
+                    albums(existingAlbums = []) {
+                        const newAlbumRef = cache.writeFragment({
+                            data: data.createAlbum,
+                            fragment: gql`
+                                fragment NewAlbum on Album {
+                                    id
+                                    name
+                                    cover
+                                    releaseYear
+                                    tracksNumber
+                                    songs {
+                                        id
+                                        name
+                                        link
+                                        byteSize
+                                        duration
+                                        views
+                                        order
+                                        format
+                                        albumId
+                                        authorId
+                                    }
+                                    author {
+                                        id
+                                        name
+                                    }
+                                }
+                            `,
+                        })
+                        return [...existingAlbums, newAlbumRef]
+                    },
+                },
+            })
+
+            router.back()
+            toast({
+                title: `${data.createAlbum.name} with ${data.createAlbum.tracksNumber} songs was added.`,
+                description: 'Enjoy! Find it on the Home Page.',
+                status: 'success',
+                duration: 9000,
+                isClosable: true,
+            })
+        },
+    })
+
     return (
-        <Layout variant="small">
-            <Dashboard
-                theme="dark"
-                uppy={albumCreationService.songsUppy}
-                hideUploadButton
-                proudlyDisplayPoweredByUppy={false}
-                showProgressDetails
-                metaFields={[{ id: 'name', name: 'File name' }]}
-            />
-            <Box color="black">
-                <DragDrop
-                    width="100%"
-                    height="100%"
-                    uppy={albumCreationService.coverUppy}
-                    locale={{
-                        strings: {
-                            dropHereOr: 'Drop here or %{browse}',
-                            browse: 'browse',
-                        },
-                    }}
-                />
-            </Box>
-            {cover && <Avatar size="2xl" src={cover} name="album_cover" />}
+        <Layout>
             <Formik
                 initialValues={{
                     name: '',
@@ -77,89 +120,71 @@ const CreateAlbum = ({}) => {
                                 cover,
                             },
                         },
-                        update(cache, { data }) {
-                            if (!data?.createAlbum) return
-
-                            cache.modify({
-                                fields: {
-                                    albums(existingAlbums = []) {
-                                        const newAlbumRef = cache.writeFragment(
-                                            {
-                                                data: data.createAlbum,
-                                                fragment: gql`
-                                                    fragment NewAlbum on Album {
-                                                        id
-                                                        name
-                                                        cover
-                                                        releaseYear
-                                                        tracksNumber
-                                                        songs {
-                                                            id
-                                                            name
-                                                            link
-                                                            byteSize
-                                                            duration
-                                                            views
-                                                            order
-                                                            format
-                                                            albumId
-                                                            authorId
-                                                        }
-                                                        author {
-                                                            id
-                                                            name
-                                                        }
-                                                    }
-                                                `,
-                                            }
-                                        )
-                                        return [newAlbumRef, ...existingAlbums]
-                                    },
-                                },
-                            })
-
-                            router.back()
-                            toast({
-                                title: `${data.createAlbum.name} with ${data.createAlbum.tracksNumber} songs was added.`,
-                                description: 'Enjoy! Find it on the Home Page.',
-                                status: 'success',
-                                duration: 9000,
-                                isClosable: true,
-                            })
-                        },
                     })
                 }}
             >
                 {({ isSubmitting }) => (
                     <Form>
-                        <InputField
-                            name="name"
-                            placeholder="Malibe Ken"
-                            label="Album Title"
-                        />
-                        <Box mt={4}>
-                            <SelectField
-                                name="authorId"
-                                label="Author"
-                                loadOptions={fetchAuthorsByQuery}
-                            />
-                        </Box>
-                        <Box mt={4} mb={4}>
-                            <InputField
-                                type="number"
-                                name="releaseYear"
-                                placeholder="1999"
-                                label="Release year"
-                            />
-                        </Box>
-
-                        <Button
-                            isLoading={isSubmitting}
-                            type="submit"
-                            colorScheme="red"
-                        >
-                            Create Album
-                        </Button>
+                        <Flex justify="center" wrap="wrap">
+                            <Stack w={coverSize} mr={10} spacing={4}>
+                                <FormControl id="albumCover">
+                                    <FormLabel>Album Cover</FormLabel>
+                                    <PhotoDragDrop
+                                        src={cover}
+                                        imageSize={coverSize}
+                                        uppy={albumCreationService.coverUppy}
+                                        onDelete={() => {
+                                            setCover('')
+                                            albumCreationService.coverUppy.reset()
+                                        }}
+                                    />
+                                </FormControl>
+                                <InputField
+                                    name="name"
+                                    placeholder="Malibe Ken"
+                                    label="Album Title"
+                                />
+                                <SelectField
+                                    name="authorId"
+                                    label="Author"
+                                    loadOptions={fetchAuthorsByQuery}
+                                />
+                                <InputField
+                                    type="number"
+                                    name="releaseYear"
+                                    placeholder="1999"
+                                    label="Release year"
+                                />
+                            </Stack>
+                            <Box>
+                                <FormControl
+                                    mb={4}
+                                    id="songs"
+                                    w={(coverSize * 7) / 3}
+                                >
+                                    <FormLabel>Songs</FormLabel>
+                                    <Dashboard
+                                        theme="dark"
+                                        uppy={albumCreationService.songsUppy}
+                                        hideUploadButton
+                                        proudlyDisplayPoweredByUppy={false}
+                                        showProgressDetails
+                                        metaFields={[
+                                            { id: 'name', name: 'File name' },
+                                        ]}
+                                    />
+                                </FormControl>
+                                <Button
+                                    float="right"
+                                    size="lg"
+                                    isLoading={isSubmitting}
+                                    type="submit"
+                                    colorScheme="red"
+                                >
+                                    Create Album
+                                </Button>
+                            </Box>
+                        </Flex>
                     </Form>
                 )}
             </Formik>
