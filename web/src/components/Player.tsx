@@ -39,7 +39,6 @@ const Player = () => {
             player.current?.paused !== state.selectedSong?.isPaused &&
             state.songs.length
         ) {
-            console.log(player.current)
             player.current?.togglePlay?.()
         }
     }, [state.selectedSong?.isPaused])
