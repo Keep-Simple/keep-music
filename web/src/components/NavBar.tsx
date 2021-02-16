@@ -50,7 +50,7 @@ export const NavBar: React.FC = () => {
                         cursor="pointer"
                         userSelect="none"
                     >
-                        {data.me.username.slice(0, 1)}
+                        {data.me.username.charAt(0)}
                     </MenuButton>
                 </Circle>
                 <MenuList>

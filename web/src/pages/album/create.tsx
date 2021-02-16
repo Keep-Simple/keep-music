@@ -1,3 +1,4 @@
+import { gql } from '@apollo/client'
 import { Avatar, Box, Button, useToast } from '@chakra-ui/react'
 import { Dashboard, DragDrop } from '@uppy/react'
 import { Form, Formik } from 'formik'
@@ -136,7 +137,7 @@ const CreateAlbum = ({}) => {
                     )
                     await Promise.all([songsUppy.upload(), coverUppy.upload()])
 
-                    const { data } = await createAlbum({
+                    await createAlbum({
                         variables: {
                             input: {
                                 ...values,
@@ -144,18 +145,57 @@ const CreateAlbum = ({}) => {
                                 cover: coverUrl,
                             },
                         },
-                    })
+                        update(cache, { data }) {
+                            if (!data?.createAlbum) return
 
-                    if (data?.createAlbum) {
-                        router.back()
-                        toast({
-                            title: `${data.createAlbum.name} with ${data.createAlbum.tracksNumber} songs was added.`,
-                            description: 'Enjoy! Find it on the Home Page.',
-                            status: 'success',
-                            duration: 9000,
-                            isClosable: true,
-                        })
-                    }
+                            cache.modify({
+                                fields: {
+                                    albums(existingAlbums = []) {
+                                        const newAlbumRef = cache.writeFragment(
+                                            {
+                                                data: data.createAlbum,
+                                                fragment: gql`
+                                                    fragment NewAlbum on Album {
+                                                        id
+                                                        name
+                                                        cover
+                                                        releaseYear
+                                                        tracksNumber
+                                                        songs {
+                                                            id
+                                                            name
+                                                            link
+                                                            byteSize
+                                                            duration
+                                                            views
+                                                            order
+                                                            format
+                                                            albumId
+                                                            authorId
+                                                        }
+                                                        author {
+                                                            id
+                                                            name
+                                                        }
+                                                    }
+                                                `,
+                                            }
+                                        )
+                                        return [newAlbumRef, ...existingAlbums]
+                                    },
+                                },
+                            })
+
+                            router.back()
+                            toast({
+                                title: `${data.createAlbum.name} with ${data.createAlbum.tracksNumber} songs was added.`,
+                                description: 'Enjoy! Find it on the Home Page.',
+                                status: 'success',
+                                duration: 9000,
+                                isClosable: true,
+                            })
+                        },
+                    })
                 }}
             >
                 {({ isSubmitting }) => (

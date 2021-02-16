@@ -18,7 +18,11 @@ const Player = () => {
 
     useEffect(() => {
         const onSpacebar = (e: KeyboardEvent) => {
-            if (e.code === 'Space') {
+            if (
+                e.code === 'Space' &&
+                (e.target as any)?.tagName !== 'INPUT' &&
+                state.showPlayer
+            ) {
                 e.preventDefault()
                 player.current?.togglePlay?.()
             }
@@ -28,7 +32,7 @@ const Player = () => {
         return () => {
             window.removeEventListener('keydown', onSpacebar)
         }
-    }, [])
+    }, [state.showPlayer])
 
     useEffect(() => {
         if (
