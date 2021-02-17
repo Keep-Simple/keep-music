@@ -1,4 +1,3 @@
-import { v2 as cloudinary } from 'cloudinary'
 import {
     Arg,
     Ctx,
@@ -33,21 +32,6 @@ class AuthorInput {
     photos?: string[]
 }
 
-@InputType()
-class SignTokenInput {
-    @Field()
-    source: string
-
-    @Field()
-    timestamp: number
-
-    @Field({ nullable: true })
-    folder?: string
-
-    @Field({ nullable: true })
-    upload_preset: string
-}
-
 @Resolver(Author)
 export class AuthorResolver {
     @FieldResolver(() => [Album], { nullable: true })
@@ -61,10 +45,14 @@ export class AuthorResolver {
     }
 
     @FieldResolver(() => [Song], { nullable: true })
-    songs(@Root() author: Author, @Ctx() { loaders }: MyContext) {
+    songs(
+        @Root() author: Author,
+        @Ctx() { loaders }: MyContext,
+        @Arg('limit', () => Int, { nullable: true }) limit?: number
+    ) {
         if (author.songs) return author.songs
 
-        return loaders.songsByAuthor.load(author.id)
+        return loaders.songsByAuthor.load({ id: author.id, limit })
     }
 
     @Query(() => Author, { nullable: true })
@@ -81,24 +69,5 @@ export class AuthorResolver {
     @UseMiddleware(isAuth)
     async createAuthor(@Arg('input') input: AuthorInput) {
         return Author.create({ ...input, songs: [], albums: [] }).save()
-    }
-
-    @Query(() => String)
-    @UseMiddleware(isAuth)
-    signUpload(
-        @Arg('input')
-        { folder, source, upload_preset, timestamp }: SignTokenInput
-    ) {
-        const signature = cloudinary.utils.api_sign_request(
-            {
-                timestamp,
-                folder,
-                source,
-                upload_preset,
-            },
-            process.env.CLOUDINARY_SECRET
-        )
-
-        return signature
     }
 }

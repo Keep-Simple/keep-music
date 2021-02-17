@@ -1,18 +1,16 @@
 import { Box } from '@chakra-ui/react'
 import React from 'react'
-import { AlbumHead } from '../../components/AlbumHead'
-import { AlbumSongs } from '../../components/AlbumSongs'
 import AlertUI from '../../components/Alert'
 import { Layout } from '../../components/Layout'
 import { Loading } from '../../components/Loading'
-import { useAlbumQuery } from '../../generated/graphql'
+import { useAuthorQuery } from '../../generated/graphql'
 import { useGetQueryId } from '../../utils/hooks/useGetQueryId'
 import { withApollo } from '../../utils/withApollo'
 
-const Album = () => {
+const Author = () => {
     const id = useGetQueryId()
-    const { data, error, loading } = useAlbumQuery({
-        variables: { id },
+    const { data, error, loading } = useAuthorQuery({
+        variables: { id, limit: 6 },
     })
 
     const skeleton = (body: any) => <Layout>{body}</Layout>
@@ -20,22 +18,19 @@ const Album = () => {
     if (error) return skeleton(<AlertUI message={error?.message} />)
 
     if (!loading && !data)
-        return skeleton(<AlertUI message="No such album found" status="info" />)
+        return skeleton(
+            <AlertUI message="No such artist found" status="info" />
+        )
 
     if (!data && loading) return skeleton(<Loading />)
 
-    if (data?.album) {
+    if (data?.author) {
         return skeleton(
             <Box px="6%" pb="5%">
-                <AlbumHead {...data.album} />
-                <AlbumSongs
-                    songs={data.album.songs || []}
-                    cover={data.album.cover}
-                    authorName={data.album.author.name}
-                />
+                {data.author.name}
             </Box>
         )
     }
 }
 
-export default withApollo({ ssr: true })(Album)
+export default withApollo({ ssr: true })(Author)

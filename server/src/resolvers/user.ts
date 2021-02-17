@@ -1,4 +1,5 @@
 import argoHash from 'argon2'
+import { v2 as cloudinary } from 'cloudinary'
 import {
     Arg,
     Ctx,
@@ -10,14 +11,30 @@ import {
     Query,
     Resolver,
     Root,
+    UseMiddleware,
 } from 'type-graphql'
 import { v4 } from 'uuid'
-
-import { sendEmail } from '../utils/sendEmail'
 import { COOKIE_NAME, FORGET_PASSWORD_PREFIX } from '../constants'
-import { validateEmail, validateRegistration } from '../utils/validateRegister'
 import { User } from '../entities/User'
+import { isAuth } from '../middleware/isAuth'
 import { MyContext } from '../types'
+import { sendEmail } from '../utils/sendEmail'
+import { validateEmail, validateRegistration } from '../utils/validateRegister'
+
+@InputType()
+class SignTokenInput {
+    @Field()
+    source: string
+
+    @Field()
+    timestamp: number
+
+    @Field({ nullable: true })
+    folder?: string
+
+    @Field({ nullable: true })
+    upload_preset: string
+}
 
 @InputType()
 export class AuthInput {
@@ -94,6 +111,25 @@ export class UserResolver {
         )
 
         return true
+    }
+
+    @Query(() => String)
+    @UseMiddleware(isAuth)
+    signUpload(
+        @Arg('input')
+        { folder, source, upload_preset, timestamp }: SignTokenInput
+    ) {
+        const signature = cloudinary.utils.api_sign_request(
+            {
+                timestamp,
+                folder,
+                source,
+                upload_preset,
+            },
+            process.env.CLOUDINARY_SECRET
+        )
+
+        return signature
     }
 
     @Mutation(() => UserResponse)

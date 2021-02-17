@@ -1,0 +1,27 @@
+query Author($id: Int!, $limit: Int) {
+    author(id: $id) {
+        id
+        name
+        info
+        avatar
+        photos
+        albums {
+            tracksNumber
+            name
+            songs {
+                name
+                order
+                views
+                id
+            }
+        }
+        songs(limit: $limit) {
+            id
+            name
+            views
+            albumId
+            duration
+            link
+        }
+    }
+}

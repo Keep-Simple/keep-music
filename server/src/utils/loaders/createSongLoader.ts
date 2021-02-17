@@ -16,20 +16,31 @@ export const createSongLoader = () =>
     })
 
 export const createSongsByAuthorLoader = () =>
-    new DataLoader<number, readonly Song[]>(async (authorIds) => {
-        const songs = await Song.find({
-            where: { authorId: In(authorIds as number[]) },
-            order: { views: 'DESC' },
-        })
-        const songsByAuthorId = groupBy((s) => s.albumId.toString(), songs)
-        return authorIds.map((id) => songsByAuthorId[id] ?? [])
-    })
+    new DataLoader<{ id: number; limit?: number }, readonly Song[], number>(
+        async (authorIds) => {
+            const limit = authorIds[0].limit || 10
+            const ids = authorIds.map((a) => a.id)
 
-export const createSongOnAlbumLoader = (orderBy: 'track' | 'views' = 'track') =>
-    new DataLoader<number, Song[]>(async (albumIds) => {
-        const albumIdsStr = albumIds.join(',')
+            const songs = await Song.find({
+                where: { authorId: In(ids) },
+                order: { views: 'DESC' },
+                take: limit,
+            })
 
-        const orderedSongs = (await Song.query(`
+            const songsByAuthorId = groupBy((s) => s.authorId.toString(), songs)
+            return ids.map((id) => songsByAuthorId[id] ?? [])
+        },
+        { cacheKeyFn: (key) => key.id }
+    )
+
+export const createSongOnAlbumLoader = () =>
+    new DataLoader<{ id: number; orderBy?: 'track' | 'views' }, Song[], number>(
+        async (albumIds) => {
+            const orderBy = albumIds[0].orderBy || 'track'
+
+            const albumIdsStr = albumIds.map((a) => a.id).join(',')
+
+            const orderedSongs = (await Song.query(`
         select s.*
         from song s
         join unnest('{${albumIdsStr}}'::int[]) WITH ORDINALITY t("albumId", ord) USING ("albumId")
@@ -37,16 +48,20 @@ export const createSongOnAlbumLoader = (orderBy: 'track' | 'views' = 'track') =>
         order by t.ord, ${orderBy === 'views' ? 's.views DESC' : 's.order ASC'}
         `)) as Song[]
 
-        return orderedSongs.reduce(
-            (acc: Song[][], s) => {
-                const lastEntry = acc[acc.length - 1]
-                if (lastEntry[0] && lastEntry[0].albumId !== s.albumId) {
-                    acc.push([s])
-                } else {
-                    lastEntry.push(s)
-                }
-                return acc
-            },
-            [[]]
-        )
-    })
+            return orderedSongs.reduce(
+                (acc: Song[][], s) => {
+                    const lastEntry = acc[acc.length - 1]
+                    if (lastEntry[0] && lastEntry[0].albumId !== s.albumId) {
+                        acc.push([s])
+                    } else {
+                        lastEntry.push(s)
+                    }
+                    return acc
+                },
+                [[]]
+            )
+        },
+        {
+            cacheKeyFn: (key) => key.id,
+        }
+    )

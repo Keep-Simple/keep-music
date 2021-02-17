@@ -13,10 +13,11 @@ import { AlbumQuery } from '../generated/graphql'
 import { addSongsAction } from '../state/player/actions'
 import { PlayerContext } from '../state/player/context'
 import { secondToMinutesAndHours } from '../utils/formatSeconds'
+import { StyledLink } from './StyledLink'
 
 export const AlbumHead: FC<AlbumQuery['album']> = ({
     cover,
-    author: { name: authorName },
+    author,
     releaseYear,
     tracksNumber,
     name,
@@ -28,7 +29,7 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
         useBreakpointValue({ base: 160, md: 200, lg: 240, xl: 264 }) ?? 160
 
     const playAlbum = () => {
-        dispatch(addSongsAction(songs || [], authorName, cover))
+        dispatch(addSongsAction(songs || [], author.name, cover))
     }
 
     const albumDuration = secondToMinutesAndHours(
@@ -47,7 +48,15 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
                     {name}
                 </Heading>
                 <Text fontSize="sm" fontWeight="400" color="whiteAlpha.700">
-                    {`Album • ${authorName} • ${releaseYear}`}
+                    {`Album • `}
+                    <Text
+                        as={StyledLink}
+                        href={`/author/${author.id}`}
+                        fontSize="sm"
+                    >
+                        {author.name}
+                    </Text>
+                    {` • ${releaseYear}`}
                 </Text>
                 <Text fontSize="sm" fontWeight="400" color="whiteAlpha.700">
                     {`${tracksNumber} songs • ${albumDuration}`}

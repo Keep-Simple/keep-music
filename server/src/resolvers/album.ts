@@ -43,17 +43,12 @@ export class AlbumResolver {
     @FieldResolver(() => [Song], { nullable: true })
     songs(
         @Root() album: Album,
-        @Arg('orderBy', { nullable: true }) orderBy: SongsOrdering = 'track',
-        @Ctx() { loaders }: MyContext
+        @Ctx() { loaders }: MyContext,
+        @Arg('orderBy', { nullable: true }) orderBy?: SongsOrdering
     ) {
         if (album.songs) return album.songs
 
-        switch (orderBy) {
-            case 'track':
-                return loaders.songsByAlbumOrderByTrack.load(album.id)
-            case 'views':
-                return loaders.songsByAlbumOrderByViews.load(album.id)
-        }
+        return loaders.songsByAlbum.load({ id: album.id, orderBy })
     }
 
     @FieldResolver(() => Author)

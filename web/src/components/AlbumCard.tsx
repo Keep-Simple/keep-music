@@ -80,7 +80,14 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                 color="whiteAlpha.700"
                 isTruncated
             >
-                {`Album • ${author.name}`}
+                {`Album • `}
+                <Text
+                    as={StyledLink}
+                    href={`/author/${author.id}`}
+                    fontSize="sm"
+                >
+                    {author.name}
+                </Text>
             </Text>
         </Box>
     )

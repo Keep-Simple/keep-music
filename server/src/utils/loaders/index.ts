@@ -10,7 +10,6 @@ export const createLoaders = () => ({
     users: createUserLoader(),
     authors: createAuthorLoader(),
     songs: createSongLoader(),
-    songsByAlbumOrderByTrack: createSongOnAlbumLoader('track'),
-    songsByAlbumOrderByViews: createSongOnAlbumLoader('views'),
+    songsByAlbum: createSongOnAlbumLoader(),
     songsByAuthor: createSongsByAuthorLoader(),
 })

@@ -51,15 +51,15 @@ export type UserResponseFieldPolicy = {
 	errors?: FieldPolicy<any> | FieldReadFunction<any>,
 	user?: FieldPolicy<any> | FieldReadFunction<any>
 };
-export type QueryKeySpecifier = ('song' | 'album' | 'albums' | 'author' | 'authors' | 'signUpload' | 'me' | QueryKeySpecifier)[];
+export type QueryKeySpecifier = ('song' | 'album' | 'albums' | 'author' | 'authors' | 'me' | 'signUpload' | QueryKeySpecifier)[];
 export type QueryFieldPolicy = {
 	song?: FieldPolicy<any> | FieldReadFunction<any>,
 	album?: FieldPolicy<any> | FieldReadFunction<any>,
 	albums?: FieldPolicy<any> | FieldReadFunction<any>,
 	author?: FieldPolicy<any> | FieldReadFunction<any>,
 	authors?: FieldPolicy<any> | FieldReadFunction<any>,
-	signUpload?: FieldPolicy<any> | FieldReadFunction<any>,
-	me?: FieldPolicy<any> | FieldReadFunction<any>
+	me?: FieldPolicy<any> | FieldReadFunction<any>,
+	signUpload?: FieldPolicy<any> | FieldReadFunction<any>
 };
 export type MutationKeySpecifier = ('viewSong' | 'createAlbum' | 'createAuthor' | 'forgotPassword' | 'changePassword' | 'register' | 'login' | 'logout' | MutationKeySpecifier)[];
 export type MutationFieldPolicy = {

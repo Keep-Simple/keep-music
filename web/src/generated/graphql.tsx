@@ -55,6 +55,11 @@ export type Author = {
   songs?: Maybe<Array<Song>>;
 };
 
+
+export type AuthorSongsArgs = {
+  limit?: Maybe<Scalars['Int']>;
+};
+
 export type User = {
   __typename?: 'User';
   id: Scalars['Float'];
@@ -131,8 +136,8 @@ export type Query = {
   albums?: Maybe<Array<Album>>;
   author?: Maybe<Author>;
   authors?: Maybe<Array<Author>>;
-  signUpload: Scalars['String'];
   me?: Maybe<User>;
+  signUpload: Scalars['String'];
 };
 
 
@@ -366,6 +371,31 @@ export type AlbumsQuery = (
       & Pick<Author, 'id' | 'name'>
     ) }
   )>> }
+);
+
+export type AuthorQueryVariables = Exact<{
+  id: Scalars['Int'];
+  limit?: Maybe<Scalars['Int']>;
+}>;
+
+
+export type AuthorQuery = (
+  { __typename?: 'Query' }
+  & { author?: Maybe<(
+    { __typename?: 'Author' }
+    & Pick<Author, 'id' | 'name' | 'info' | 'avatar' | 'photos'>
+    & { albums?: Maybe<Array<(
+      { __typename?: 'Album' }
+      & Pick<Album, 'tracksNumber' | 'name'>
+      & { songs?: Maybe<Array<(
+        { __typename?: 'Song' }
+        & Pick<Song, 'name' | 'order' | 'views' | 'id'>
+      )>> }
+    )>>, songs?: Maybe<Array<(
+      { __typename?: 'Song' }
+      & Pick<Song, 'id' | 'name' | 'views' | 'albumId' | 'duration' | 'link'>
+    )>> }
+  )> }
 );
 
 export type AuthorsQueryVariables = Exact<{
@@ -781,6 +811,62 @@ export function useAlbumsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Alb
 export type AlbumsQueryHookResult = ReturnType<typeof useAlbumsQuery>;
 export type AlbumsLazyQueryHookResult = ReturnType<typeof useAlbumsLazyQuery>;
 export type AlbumsQueryResult = Apollo.QueryResult<AlbumsQuery, AlbumsQueryVariables>;
+export const AuthorDocument = gql`
+    query Author($id: Int!, $limit: Int) {
+  author(id: $id) {
+    id
+    name
+    info
+    avatar
+    photos
+    albums {
+      tracksNumber
+      name
+      songs {
+        name
+        order
+        views
+        id
+      }
+    }
+    songs(limit: $limit) {
+      id
+      name
+      views
+      albumId
+      duration
+      link
+    }
+  }
+}
+    `;
+
+/**
+ * __useAuthorQuery__
+ *
+ * To run a query within a React component, call `useAuthorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAuthorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAuthorQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useAuthorQuery(baseOptions: Apollo.QueryHookOptions<AuthorQuery, AuthorQueryVariables>) {
+        return Apollo.useQuery<AuthorQuery, AuthorQueryVariables>(AuthorDocument, baseOptions);
+      }
+export function useAuthorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AuthorQuery, AuthorQueryVariables>) {
+          return Apollo.useLazyQuery<AuthorQuery, AuthorQueryVariables>(AuthorDocument, baseOptions);
+        }
+export type AuthorQueryHookResult = ReturnType<typeof useAuthorQuery>;
+export type AuthorLazyQueryHookResult = ReturnType<typeof useAuthorLazyQuery>;
+export type AuthorQueryResult = Apollo.QueryResult<AuthorQuery, AuthorQueryVariables>;
 export const AuthorsDocument = gql`
     query Authors($searchQuery: String) {
   authors(searchQuery: $searchQuery) {
