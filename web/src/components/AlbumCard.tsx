@@ -33,7 +33,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                         transition="all .1s ease"
                         cursor="pointer"
                         boxShadow={
-                            isHover && !playStatus
+                            isHover
                                 ? 'inset 0px 101px 82px 3px rgba(0,0,0,0.4)'
                                 : 'initial'
                         }
@@ -49,19 +49,19 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                             objectFit="cover"
                         />
                     </Box>
-                    <Fade in={isHover || playStatus}>
+                    <Fade in={isHover || !!playStatus}>
                         <Circle
                             bottom={5}
                             right={5}
+                            opacity={playStatus ? 1 : 0.75}
+                            size={10}
+                            transition="all .1s ease"
+                            bg="black"
                             cursor="pointer"
-                            opacity={playStatus ? 1 : 0.7}
                             pos="absolute"
                             transform={
                                 playStatus || isHover ? 'scale(1.1)' : ''
                             }
-                            size={10}
-                            transition="all .1s ease"
-                            bg="black"
                             _hover={{
                                 opacity: 1,
                             }}
