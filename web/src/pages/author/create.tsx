@@ -90,7 +90,18 @@ const CreateAuthor = ({}) => {
                 {({ isSubmitting, values }) => (
                     <Form>
                         <Flex justify="center" mt={20}>
-                            <VStack spacing={10} mr={10} w={avatarSize}>
+                            <Box w={avatarSize}>
+                                <PhotoDragDrop
+                                    uppy={uppy}
+                                    src={avatar}
+                                    imageSize={300}
+                                    onDelete={() => {
+                                        setAvatar('')
+                                        uppy.reset()
+                                    }}
+                                />
+                            </Box>
+                            <VStack spacing={10} ml={10} w={avatarSize}>
                                 <InputField
                                     name="name"
                                     placeholder="King Krule"
@@ -104,18 +115,6 @@ const CreateAuthor = ({}) => {
                                     }...`}
                                     label="Bio"
                                 />
-                            </VStack>
-                            <Box w={avatarSize}>
-                                <PhotoDragDrop
-                                    uppy={uppy}
-                                    src={avatar}
-                                    imageSize={300}
-                                    onDelete={() => {
-                                        setAvatar('')
-                                        uppy.reset()
-                                    }}
-                                />
-
                                 <Button
                                     mt={4}
                                     float="right"
@@ -126,7 +125,7 @@ const CreateAuthor = ({}) => {
                                 >
                                     Create Artist
                                 </Button>
-                            </Box>
+                            </VStack>
                         </Flex>
                     </Form>
                 )}

@@ -1,4 +1,4 @@
-import { Box, Circle, Image, Text } from '@chakra-ui/react'
+import { Box, Circle, Fade, Icon, Image, Text } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import React, { FC } from 'react'
 import { BsPlayFill } from 'react-icons/bs'
@@ -10,12 +10,14 @@ import { StyledLink } from './StyledLink'
 type AlbumCardProps = Pick<Album, 'name' | 'cover' | 'id'> & {
     coverSize: number
     author: Pick<Author, 'id' | 'name'>
+    playAlbum: () => void
 }
 
 export const AlbumCard: FC<AlbumCardProps> = ({
     id,
     coverSize,
     cover,
+    playAlbum,
     name,
     author,
 }) => {
@@ -24,29 +26,47 @@ export const AlbumCard: FC<AlbumCardProps> = ({
         <Box w={coverSize}>
             <NextLink href={`/album/${id}`}>
                 <Box ref={ref} pos="relative">
-                    <Image
+                    <Box
+                        transition="all .1s ease"
                         cursor="pointer"
-                        src={cover}
-                        alt="album cover"
-                        borderRadius={4}
-                        boxSize={coverSize}
-                        objectFit="cover"
-                        mb={2}
-                    />
-                    {isHover && (
+                        boxShadow={
+                            isHover
+                                ? 'inset 0px 101px 82px 3px rgba(0,0,0,0.4)'
+                                : 'initial'
+                        }
+                    >
+                        <Image
+                            borderRadius={4}
+                            mb={2}
+                            zIndex={-2}
+                            src={cover}
+                            boxSize={coverSize}
+                            pos="relative"
+                            alt="album cover"
+                            objectFit="cover"
+                        />
+                    </Box>
+                    <Fade in={isHover}>
                         <Circle
-                            cursor="pointer"
-                            onClick={(e) => e.stopPropagation()}
-                            pos="absolute"
                             bottom={5}
                             right={5}
                             opacity={0.9}
+                            pos="absolute"
                             size="35px"
+                            transition="all .1s ease"
                             bg="black"
+                            _hover={{
+                                transform: 'scale(1.1)',
+                                cursor: 'pointer',
+                            }}
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                playAlbum()
+                            }}
                         >
-                            <BsPlayFill color="white" size={24} />
+                            <Icon as={BsPlayFill} color="white" boxSize={6} />
                         </Circle>
-                    )}
+                    </Fade>
                 </Box>
             </NextLink>
             <StyledLink href={`/album/${id}`}>
