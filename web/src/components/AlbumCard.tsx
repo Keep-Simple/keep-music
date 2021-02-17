@@ -10,18 +10,21 @@ import { StyledLink } from './StyledLink'
 type AlbumCardProps = Pick<Album, 'name' | 'cover' | 'id'> & {
     coverSize: number
     author: Pick<Author, 'id' | 'name'>
-    playAlbum: () => void
+    playStatus: 'loading' | 'playing' | 'paused' | null
+    onIconClick: () => void
 }
 
 export const AlbumCard: FC<AlbumCardProps> = ({
     id,
     coverSize,
     cover,
-    playAlbum,
+    onIconClick,
+    playStatus,
     name,
     author,
 }) => {
     const [ref, isHover] = useHover()
+
     return (
         <Box w={coverSize}>
             <NextLink href={`/album/${id}`}>
@@ -30,7 +33,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                         transition="all .1s ease"
                         cursor="pointer"
                         boxShadow={
-                            isHover
+                            isHover && !playStatus
                                 ? 'inset 0px 101px 82px 3px rgba(0,0,0,0.4)'
                                 : 'initial'
                         }
@@ -46,22 +49,25 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                             objectFit="cover"
                         />
                     </Box>
-                    <Fade in={isHover}>
+                    <Fade in={isHover || playStatus}>
                         <Circle
                             bottom={5}
                             right={5}
-                            opacity={0.9}
+                            cursor="pointer"
+                            opacity={playStatus ? 1 : 0.7}
                             pos="absolute"
-                            size="35px"
+                            transform={
+                                playStatus || isHover ? 'scale(1.1)' : ''
+                            }
+                            size={10}
                             transition="all .1s ease"
                             bg="black"
                             _hover={{
-                                transform: 'scale(1.1)',
-                                cursor: 'pointer',
+                                opacity: 1,
                             }}
                             onClick={(e) => {
                                 e.stopPropagation()
-                                playAlbum()
+                                onIconClick()
                             }}
                         >
                             <Icon as={BsPlayFill} color="white" boxSize={6} />
