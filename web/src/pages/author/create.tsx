@@ -74,6 +74,7 @@ const CreateAuthor = ({}) => {
                             },
                         },
                     })
+                    uppy.reset()
                     if (data?.createAuthor) {
                         router.back()
                         toast({

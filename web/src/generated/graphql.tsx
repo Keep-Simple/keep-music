@@ -322,6 +322,16 @@ export type RegisterMutation = (
   ) }
 );
 
+export type ViewSongMutationVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type ViewSongMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'viewSong'>
+);
+
 export type AlbumQueryVariables = Exact<{
   id: Scalars['Int'];
   orderBy?: Maybe<Scalars['String']>;
@@ -650,6 +660,36 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const ViewSongDocument = gql`
+    mutation ViewSong($id: Int!) {
+  viewSong(id: $id)
+}
+    `;
+export type ViewSongMutationFn = Apollo.MutationFunction<ViewSongMutation, ViewSongMutationVariables>;
+
+/**
+ * __useViewSongMutation__
+ *
+ * To run a mutation, you first call `useViewSongMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useViewSongMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [viewSongMutation, { data, loading, error }] = useViewSongMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useViewSongMutation(baseOptions?: Apollo.MutationHookOptions<ViewSongMutation, ViewSongMutationVariables>) {
+        return Apollo.useMutation<ViewSongMutation, ViewSongMutationVariables>(ViewSongDocument, baseOptions);
+      }
+export type ViewSongMutationHookResult = ReturnType<typeof useViewSongMutation>;
+export type ViewSongMutationResult = Apollo.MutationResult<ViewSongMutation>;
+export type ViewSongMutationOptions = Apollo.BaseMutationOptions<ViewSongMutation, ViewSongMutationVariables>;
 export const AlbumDocument = gql`
     query Album($id: Int!, $orderBy: String) {
   album(id: $id) {

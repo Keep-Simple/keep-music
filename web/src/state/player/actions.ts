@@ -1,4 +1,3 @@
-import { pick } from 'rambda'
 import { Song } from '../../generated/graphql'
 import { PlayerSong } from './context'
 
@@ -42,5 +41,7 @@ export const convertToPlayerSong = (
         cover,
         musicSrc: s.link,
         _id: s.id,
-        ...pick(['name', 'duration'], s),
+        name: s.name,
+        duration: s.duration,
+        albumId: s.albumId,
     } as PlayerSong)

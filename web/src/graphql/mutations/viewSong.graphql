@@ -1,0 +1,3 @@
+mutation ViewSong($id: Int!) {
+    viewSong(id: $id)
+}

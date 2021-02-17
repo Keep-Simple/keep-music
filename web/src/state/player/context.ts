@@ -21,4 +21,7 @@ export type PlayerState = {
     }
 }
 
-export type PlayerSong = ReactJkMusicPlayerAudioListProps & { _id?: number }
+export type PlayerSong = ReactJkMusicPlayerAudioListProps & {
+    _id?: number
+    albumId?: number
+}

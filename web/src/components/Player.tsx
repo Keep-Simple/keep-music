@@ -1,8 +1,14 @@
-import { useContext, useEffect, useRef } from 'react'
+import { useRouter } from 'next/router'
+import { useContext, useEffect, useRef, useState } from 'react'
 import ReactJkMusicPlayer, {
     ReactJkMusicPlayerInstance,
 } from 'react-jinke-music-player'
 import 'react-jinke-music-player/assets/index.css'
+import {
+    ViewSongDocument,
+    ViewSongMutation,
+    ViewSongMutationVariables,
+} from '../generated/graphql'
 import {
     onAudioListChange,
     onSongLoading,
@@ -10,17 +16,45 @@ import {
     onSongPlay,
 } from '../state/player/actions'
 import { PlayerContext } from '../state/player/context'
+import { createClient } from '../utils/withApollo'
 
+const defaultPlayProgress = {
+    progress: 0,
+    currentTime: 0,
+    duration: 0,
+    viewSent: false,
+}
 const Player = () => {
+    const router = useRouter()
     const { state, dispatch } = useContext(PlayerContext)
-
+    const [sendView, setView] = useState(false)
     const player = useRef<ReactJkMusicPlayerInstance | null>(null)
+    const apolloClient = useRef(createClient())
+    const playProgress = useRef(defaultPlayProgress)
+
+    useEffect(() => {
+        if (sendView && state.selectedSong?._id) {
+            apolloClient.current
+                .mutate<ViewSongMutation, ViewSongMutationVariables>({
+                    mutation: ViewSongDocument,
+                    variables: { id: state.selectedSong?._id },
+                })
+                .then(() => {
+                    setView(false)
+                    playProgress.current = {
+                        ...defaultPlayProgress,
+                        viewSent: true,
+                    }
+                })
+        }
+    }, [sendView])
 
     useEffect(() => {
         const onSpacebar = (e: KeyboardEvent) => {
             if (
                 e.code === 'Space' &&
                 (e.target as any)?.tagName !== 'INPUT' &&
+                (e.target as any)?.tagName !== 'TEXTAREA' &&
                 state.showPlayer
             ) {
                 e.preventDefault()
@@ -56,16 +90,50 @@ const Player = () => {
             showThemeSwitch={false}
             showReload={false}
             showDownload={false}
+            loadAudioErrorPlayNext={false}
+            defaultVolume={0.6}
             mode="full"
             getAudioInstance={(inst) => (player.current = inst)}
             audioLists={state.songs as any}
+            onAudioReload={() => {
+                playProgress.current = defaultPlayProgress
+            }}
+            onAudioPlayTrackChange={() => {
+                playProgress.current = defaultPlayProgress
+            }}
+            onCoverClick={() =>
+                router.push(`/album/${state.selectedSong?.albumId}`)
+            }
             onBeforeDestroy={() => {
                 player.current = null
                 return Promise.resolve()
             }}
-            onAudioProgress={({ readyState, _id }) => {
+            onAudioProgress={({ readyState, _id, duration, currentTime }) => {
                 if (readyState === 0) {
                     dispatch(onSongLoading(_id))
+                } else {
+                    const {
+                        currentTime: prevTime,
+                        progress: prevProgress,
+                        viewSent,
+                    } = playProgress.current
+
+                    const timeDiff = currentTime - prevTime
+
+                    // user changed slider position
+                    if (Math.abs(timeDiff) > 0.3) return
+
+                    const progress = prevProgress + timeDiff / duration
+
+                    // send view mutation
+                    if (progress > 0.1 && !viewSent) setView(true)
+
+                    playProgress.current = {
+                        currentTime,
+                        duration,
+                        progress,
+                        viewSent,
+                    }
                 }
             }}
             onAudioPlay={(audioInfo) => dispatch(onSongPlay(audioInfo._id))}
