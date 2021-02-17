@@ -24,6 +24,9 @@ const defaultPlayProgress = {
     duration: 0,
     viewSent: false,
 }
+
+const PROGRESS_WHEN_SEND_VIEW = 0.25
+
 const Player = () => {
     const router = useRouter()
     const { state, dispatch } = useContext(PlayerContext)
@@ -121,26 +124,38 @@ const Player = () => {
                     const timeDiff = currentTime - prevTime
 
                     // user changed slider position
-                    if (Math.abs(timeDiff) > 0.3) return
+                    if (Math.abs(timeDiff) > 0.3) {
+                        playProgress.current = {
+                            currentTime,
+                            duration,
+                            viewSent,
+                            progress: prevProgress,
+                        }
+                    } else {
+                        const progress = prevProgress + timeDiff / duration
 
-                    const progress = prevProgress + timeDiff / duration
+                        // send view mutation
+                        if (progress > PROGRESS_WHEN_SEND_VIEW && !viewSent) {
+                            setView(true)
+                        }
 
-                    // send view mutation
-                    if (progress > 0.1 && !viewSent) setView(true)
-
-                    playProgress.current = {
-                        currentTime,
-                        duration,
-                        progress,
-                        viewSent,
+                        playProgress.current = {
+                            currentTime,
+                            duration,
+                            progress,
+                            viewSent,
+                        }
                     }
                 }
             }}
             onAudioPlay={(audioInfo) => dispatch(onSongPlay(audioInfo._id))}
             onAudioPause={() => dispatch(onSongPause())}
-            onAudioListsChange={(_, audioLists, __) =>
+            onAudioListsChange={(_, audioLists, audioInfo) => {
+                if (state.selectedSong?._id !== audioInfo._id) {
+                    playProgress.current = defaultPlayProgress
+                }
                 dispatch(onAudioListChange(audioLists))
-            }
+            }}
         />
     )
 }
