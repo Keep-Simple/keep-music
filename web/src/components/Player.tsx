@@ -1,14 +1,11 @@
 import { useRouter } from 'next/router'
 import { useContext, useEffect, useRef, useState } from 'react'
-import ReactJkMusicPlayer, {
-    ReactJkMusicPlayerInstance,
-} from 'react-jinke-music-player'
-import 'react-jinke-music-player/assets/index.css'
 import {
     ViewSongDocument,
     ViewSongMutation,
     ViewSongMutationVariables,
 } from '../generated/graphql'
+import ReactJkMusicPlayer, { ReactJkMusicPlayerInstance } from '../player'
 import {
     onAudioListChange,
     onSongLoading,

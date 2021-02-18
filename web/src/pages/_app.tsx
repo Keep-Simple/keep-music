@@ -3,7 +3,6 @@ import dynamic from 'next/dynamic'
 import { useReducer } from 'react'
 import { PlayerContext } from '../state/player/context'
 import { initialPlayerState, playerReducer } from '../state/player/reducer'
-import '../styles/extras.css'
 import theme from '../theme'
 
 const PlayerWithNoSSR = dynamic(() => import('../components/Player'), {
