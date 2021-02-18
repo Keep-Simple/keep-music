@@ -1,5 +1,5 @@
+import { SongInputBase } from '../generated/graphql'
 import { createUppy } from '../utils/createUppy'
-import { SongInputBase } from './../../../server/src/resolvers/song'
 
 class AlbumCreationService {
     private coverUrl?: string = undefined

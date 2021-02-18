@@ -1,5 +1,4 @@
-const withLess = require('@zeit/next-less')
-module.exports = withLess({
+module.exports = {
     images: {
         loader: 'cloudinary',
         path: 'https://res.cloudinary.com/keep-music',
@@ -15,4 +14,4 @@ module.exports = withLess({
 
         return config
     },
-})
+}

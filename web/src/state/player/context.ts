@@ -1,5 +1,5 @@
 import { createContext, Dispatch } from 'react'
-import { ReactJkMusicPlayerAudioListProps } from 'react-jinke-music-player'
+import { ReactJkMusicPlayerAudioListProps } from '../../player'
 import { initialPlayerState } from './reducer'
 
 export type PlayerContextType = {

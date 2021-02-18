@@ -55,7 +55,6 @@ import { THEME } from './config/theme'
 import { VOLUME_FADE } from './config/volumeFade'
 import LOCALE_CONFIG from './locale'
 import Lyric from './lyric'
-import './styles/index.less'
 import {
     adjustVolume,
     arrayEqual,

@@ -1,6 +1,7 @@
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
 import dynamic from 'next/dynamic'
 import { useReducer } from 'react'
+import '../player/styles/index.css'
 import { PlayerContext } from '../state/player/context'
 import { initialPlayerState, playerReducer } from '../state/player/reducer'
 import theme from '../theme'
