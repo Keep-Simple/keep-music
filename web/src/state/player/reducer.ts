@@ -68,6 +68,7 @@ export function playerReducer(
             return {
                 ...state,
                 albumLoading: payload,
+                selectedSong: payload ? undefined : state.selectedSong,
             }
         default:
             return state

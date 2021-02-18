@@ -94,6 +94,7 @@ const Player = () => {
             showReload={false}
             showDownload={false}
             loadAudioErrorPlayNext={false}
+            toggleMode={false}
             defaultVolume={0.6}
             mode="full"
             getAudioInstance={(inst) => (player.current = inst)}
