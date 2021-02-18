@@ -62,7 +62,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
     }
 
     return (
-        <Box w={coverSize}>
+        <Box w={coverSize} userSelect="none">
             <NextLink href={`/album/${id}`}>
                 <Box ref={ref} pos="relative">
                     <Box
@@ -102,10 +102,6 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                             onBlur={() => {
                                 setFocused(false)
                             }}
-                            onFocus={() => {
-                                setFocused(true)
-                                onIconClick()
-                            }}
                             transform={
                                 playStatus || isIconHover
                                     ? 'scale(1.1)'
@@ -116,6 +112,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                             }}
                             onClick={(e) => {
                                 e.stopPropagation()
+                                setFocused(true)
                                 onIconClick()
                             }}
                         >
