@@ -6,17 +6,17 @@ import { formatSeconds } from '../utils/formatSeconds'
 import { useHover } from '../utils/hooks/useHover'
 import { SongLineType } from './AlbumSongs'
 
-export type SongLineStatus = 'paused' | 'playing' | 'loading' | null
+export type PlayStatus = 'paused' | 'playing' | 'loading' | null
 
 const icons = {
     playing: <GiPauseButton color="white" size={20} />,
-    loading: <Spinner color="red.500" size="sm" />,
+    loading: <Spinner color="red.500" size="sm" speed=".8s" />,
     paused: <BsPlayFill color="white" size={24} />,
     hover: <BsPlayFill color="white" size={24} />,
 }
 
 export const AlbumSongLine: FC<
-    SongLineType & { status: SongLineStatus; onClick: () => void }
+    SongLineType & { status: PlayStatus; onClick: () => void }
 > = ({ name, duration, order, status, onClick }) => {
     const [lineRef, isLineHovered] = useHover()
 

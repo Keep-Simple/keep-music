@@ -19,6 +19,7 @@ export type PlayerState = {
         isPaused?: boolean
         isLoading?: boolean
     }
+    albumLoading: boolean
 }
 
 export type PlayerSong = ReactJkMusicPlayerAudioListProps & {

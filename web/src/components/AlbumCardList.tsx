@@ -9,6 +9,7 @@ import {
 } from '../generated/graphql'
 import {
     addSongsAction,
+    onAlbumLoading,
     onSongPause,
     onSongPlay,
 } from '../state/player/actions'
@@ -21,7 +22,7 @@ export const AlbumCardList = () => {
     const client = useApolloClient()
     const {
         dispatch,
-        state: { selectedSong },
+        state: { selectedSong, albumLoading },
     } = useContext(PlayerContext)
     const toast = useToast()
 
@@ -44,6 +45,8 @@ export const AlbumCardList = () => {
     if (!data?.albums && loading) return <Loading />
 
     const playAlbum = useCallback(async (id: number) => {
+        dispatch(onAlbumLoading(true))
+
         const { data } = await client.query<AlbumQuery, AlbumQueryVariables>({
             query: AlbumDocument,
             variables: { id },
@@ -55,16 +58,17 @@ export const AlbumCardList = () => {
                 title: "Can't play album",
                 description: 'Try opening album page directly',
             })
-            return
+        } else {
+            const {
+                songs = [],
+                cover,
+                author: { name: singer },
+            } = data.album
+
+            dispatch(addSongsAction(songs!, singer, cover))
         }
 
-        const {
-            songs = [],
-            cover,
-            author: { name: singer },
-        } = data.album
-
-        dispatch(addSongsAction(songs!, singer, cover))
+        dispatch(onAlbumLoading(false))
     }, [])
 
     return (
@@ -78,23 +82,25 @@ export const AlbumCardList = () => {
             {data?.albums?.map(({ id, author, name, cover }) => {
                 const isCurrent = selectedSong?.albumId === id
 
-                const onIconClick = () => {
-                    dispatch(
-                        status
-                            ? status === 'paused'
-                                ? onSongPlay(selectedSong!._id!)
-                                : onSongPause()
-                            : playAlbum(id)
-                    )
-                }
-
                 const status = isCurrent
-                    ? selectedSong?.isLoading
+                    ? selectedSong?.isLoading || albumLoading
                         ? 'loading'
                         : selectedSong?.isPaused
                         ? 'paused'
                         : 'playing'
                     : null
+
+                const onIconClick = () => {
+                    const toDispatch = status
+                        ? status === 'paused'
+                            ? onSongPlay(selectedSong!._id!)
+                            : onSongPause()
+                        : !albumLoading && playAlbum(id)
+
+                    if (toDispatch) {
+                        dispatch(toDispatch)
+                    }
+                }
 
                 return (
                     <AlbumCard

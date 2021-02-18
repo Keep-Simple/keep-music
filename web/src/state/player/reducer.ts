@@ -5,6 +5,7 @@ export const initialPlayerState: PlayerState = {
     selectedSong: undefined,
     songs: [] as PlayerSong[],
     showPlayer: false,
+    albumLoading: false,
 }
 
 export function playerReducer(
@@ -62,6 +63,11 @@ export function playerReducer(
             return {
                 ...state,
                 selectedSong: { ...state.selectedSong!, isPaused: true },
+            }
+        case 'SET_ALBUM_LOADING':
+            return {
+                ...state,
+                albumLoading: payload,
             }
         default:
             return state

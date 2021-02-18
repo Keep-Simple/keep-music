@@ -12,6 +12,11 @@ export const addSongsAction = (
     }
 }
 
+export const onAlbumLoading = (isLoading: boolean) => ({
+    type: 'SET_ALBUM_LOADING',
+    payload: isLoading,
+})
+
 export const onSongLoading = (id: number) => ({
     type: 'SET_SONG_LOADING',
     payload: id,
