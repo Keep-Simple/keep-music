@@ -28,6 +28,7 @@ import {
 } from './components/Icon'
 import AudioPlayerMobile from './components/PlayerMobile'
 import PlayModel from './components/PlayModel'
+import { ProgressBar } from './components/ProgressBar'
 import { AUDIO_LIST_REMOVE_ANIMATE_TIME } from './config/animate'
 import { AUDIO_NETWORK_STATE, AUDIO_READY_STATE } from './config/audioState'
 import { SPACE_BAR_KEYCODE } from './config/keycode'
@@ -41,10 +42,7 @@ import {
 } from './config/player'
 import PLAY_MODE from './config/playMode'
 import PROP_TYPES from './config/propTypes'
-import {
-    PROGRESS_BAR_SLIDER_OPTIONS,
-    VOLUME_BAR_SLIDER_OPTIONS,
-} from './config/slider'
+import { VOLUME_BAR_SLIDER_OPTIONS } from './config/slider'
 import SORTABLE_CONFIG from './config/sortable'
 import { THEME } from './config/theme'
 import { VOLUME_FADE } from './config/volumeFade'
@@ -309,23 +307,23 @@ export default class ReactJkMusicPlayer extends PureComponent {
               }
             : {}
 
-        const ProgressBar = (
-            <>
-                {showProgressLoadBar && (
-                    <div
-                        className="progress-load-bar"
-                        style={{ width: `${Math.min(loadedProgress, 100)}%` }}
-                    />
-                )}
-                <Slider
-                    max={Math.ceil(this.audioDuration)}
-                    defaultValue={0}
-                    value={Math.ceil(currentTime)}
-                    {...progressHandler}
-                    {...PROGRESS_BAR_SLIDER_OPTIONS}
-                />
-            </>
-        )
+        // const ProgressBar = (
+        //     <>
+        //         {showProgressLoadBar && (
+        //             <div
+        //                 className="progress-load-bar"
+        //                 style={{ width: `${Math.min(loadedProgress, 100)}%` }}
+        //             />
+        //         )}
+        //         <Slider
+        //             max={Math.ceil(this.audioDuration)}
+        //             defaultValue={0}
+        //             value={Math.ceil(currentTime)}
+        //             {...progressHandler}
+        //             {...PROGRESS_BAR_SLIDER_OPTIONS}
+        //         />
+        //     </>
+        // )
 
         const PlayModeComponent = showPlayMode && (
             <span
@@ -371,7 +369,7 @@ export default class ReactJkMusicPlayer extends PureComponent {
                         themeSwitch={ThemeSwitchComponent}
                         duration={formattedAudioDuration}
                         currentTime={formattedCurrentTime}
-                        progressBar={ProgressBar}
+                        progressBar={<ProgressBar />}
                         onPlay={this.onTogglePlay}
                         currentPlayModeName={currentPlayModeName}
                         playMode={PlayModeComponent}
@@ -436,7 +434,13 @@ export default class ReactJkMusicPlayer extends PureComponent {
                                             : formattedCurrentTime}
                                     </span>
                                     <div className="progress-bar">
-                                        {ProgressBar}
+                                        <ProgressBar
+                                            value={currentTime}
+                                            max={this.audioDuration}
+                                            loadedProgress={loadedProgress}
+                                            onSeeking={this.onProgressChange}
+                                            onSeeked={this.onAudioSeeked}
+                                        />
                                     </div>
                                     <span
                                         className="duration"
@@ -1350,9 +1354,6 @@ export default class ReactJkMusicPlayer extends PureComponent {
     }
 
     onProgressChange = (currentTime) => {
-        if (this.audio) {
-            this.audio.currentTime = currentTime
-        }
         this.setState({ currentTime, isAudioSeeking: true })
     }
 
@@ -1361,17 +1362,11 @@ export default class ReactJkMusicPlayer extends PureComponent {
         if (!this.state.audioLists.length) {
             return
         }
-        this.lyric && this.lyric.seek(currentTime * 1000)
-
-        if (!this.state.playing) {
-            this.lyric && this.lyric.stop()
-        }
         if (this.audio) {
             this.audio.currentTime = currentTime
         }
 
-        this.props.onAudioSeeked &&
-            this.props.onAudioSeeked(this.getBaseAudioInfo())
+        this.props.onAudioSeeked?.(this.getBaseAudioInfo())
 
         setTimeout(() => {
             this.setState({ isAudioSeeking: false })
@@ -1981,8 +1976,7 @@ export default class ReactJkMusicPlayer extends PureComponent {
                         this.audio.currentTime - skipTime,
                         0
                     )
-                    this.props.onAudioSeeked &&
-                        this.props.onAudioSeeked(this.getBaseAudioInfo())
+                    this.props.onAudioSeeked?.(this.getBaseAudioInfo())
                 }
             )
             navigator.mediaSession.setActionHandler(
@@ -1993,8 +1987,7 @@ export default class ReactJkMusicPlayer extends PureComponent {
                         this.audio.currentTime + skipTime,
                         this.audioDuration
                     )
-                    this.props.onAudioSeeked &&
-                        this.props.onAudioSeeked(this.getBaseAudioInfo())
+                    this.props.onAudioSeeked?.(this.getBaseAudioInfo())
                 }
             )
             navigator.mediaSession.setActionHandler(

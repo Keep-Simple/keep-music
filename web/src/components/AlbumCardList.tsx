@@ -1,29 +1,24 @@
 import { useApolloClient } from '@apollo/client'
 import { SimpleGrid, useBreakpointValue, useToast } from '@chakra-ui/react'
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback } from 'react'
+import { useAudioPlayer } from 'react-use-audio-player'
 import {
     AlbumDocument,
     AlbumQuery,
     AlbumQueryVariables,
     useAlbumsQuery,
 } from '../generated/graphql'
-import {
-    addSongsAction,
-    onAlbumLoading,
-    onSongPause,
-    onSongPlay,
-} from '../state/player/actions'
-import { PlayerContext } from '../state/player/context'
+import { Msg, Player } from '../state/player/actionTypes'
+import { usePlayer, useSelectedSong } from '../state/player/context'
 import { AlbumCard } from './AlbumCard'
 import AlertUI from './Alert'
 import { Loading } from './Loading'
 
 export const AlbumCardList = () => {
     const client = useApolloClient()
-    const {
-        dispatch,
-        state: { selectedSong, albumLoading },
-    } = useContext(PlayerContext)
+    const [dispatch, { albumLoading }] = usePlayer()
+    const selectedSong = useSelectedSong()
+    const player = useAudioPlayer()
     const toast = useToast()
 
     const { data, error, loading } = useAlbumsQuery({
@@ -45,7 +40,7 @@ export const AlbumCardList = () => {
     if (!data?.albums && loading) return <Loading />
 
     const playAlbum = useCallback(async (id: number) => {
-        dispatch(onAlbumLoading(true))
+        dispatch(Msg(Player.LoadAlbum, { isLoading: false }))
 
         const { data } = await client.query<AlbumQuery, AlbumQueryVariables>({
             query: AlbumDocument,
@@ -65,10 +60,12 @@ export const AlbumCardList = () => {
                 author: { name: singer },
             } = data.album
 
-            dispatch(addSongsAction(songs!, singer, cover))
+            if (songs) {
+                dispatch(Msg(Player.AddSongs, { songs, cover, singer }))
+            }
         }
 
-        dispatch(onAlbumLoading(false))
+        dispatch(Msg(Player.LoadAlbum, { isLoading: false }))
     }, [])
 
     return (
@@ -83,22 +80,19 @@ export const AlbumCardList = () => {
                 const isCurrent = selectedSong?.albumId === id
 
                 const status = isCurrent
-                    ? selectedSong?.isLoading || albumLoading
+                    ? player.loading || albumLoading
                         ? 'loading'
-                        : selectedSong?.isPaused
-                        ? 'paused'
-                        : 'playing'
+                        : player.playing
+                        ? 'playing'
+                        : 'paused'
                     : null
 
                 const onIconClick = () => {
-                    const toDispatch = status
-                        ? status === 'paused'
-                            ? onSongPlay(selectedSong!._id!)
-                            : onSongPause()
-                        : !albumLoading && playAlbum(id)
-
-                    if (toDispatch) {
-                        dispatch(toDispatch)
+                    if (!status) {
+                        return playAlbum(id)
+                    }
+                    if (['paused', 'playing'].includes(status)) {
+                        return player.togglePlayPause()
                     }
                 }
 

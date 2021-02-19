@@ -1,17 +1,21 @@
 import { Divider, Flex } from '@chakra-ui/react'
-import React, { FC, Fragment, useContext } from 'react'
+import React, { FC, Fragment } from 'react'
+import { useAudioPlayer } from 'react-use-audio-player'
 import { Song } from '../generated/graphql'
-import {
-    addSongsAction,
-    onSongPause,
-    onSongPlay,
-} from '../state/player/actions'
-import { PlayerContext } from '../state/player/context'
+import { Msg, Player } from '../state/player/actionTypes'
+import { usePlayerDispatch, useSelectedSong } from '../state/player/context'
 import { AlbumSongLine } from './AlbumSongLine'
 
 export type SongLineType = Pick<
     Song,
-    'id' | 'name' | 'order' | 'duration' | 'views' | 'format' | 'link'
+    | 'id'
+    | 'name'
+    | 'order'
+    | 'duration'
+    | 'views'
+    | 'format'
+    | 'link'
+    | 'albumId'
 >
 
 type AlbumSongsProps = {
@@ -25,31 +29,36 @@ export const AlbumSongs: FC<AlbumSongsProps> = ({
     authorName,
     cover,
 }) => {
-    const {
-        state: { selectedSong },
-        dispatch,
-    } = useContext(PlayerContext)
+    const dispatch = usePlayerDispatch()
+    const selectedSong = useSelectedSong()
+    const { playing, loading, togglePlayPause } = useAudioPlayer()
+
     return (
         <Flex direction="column">
             {songs?.map((s, i) => {
-                const isCurrent = s.id === selectedSong?._id
-
-                const onClick = () =>
-                    dispatch(
-                        isCurrent
-                            ? selectedSong?.isPaused
-                                ? onSongPlay(s.id)
-                                : onSongPause()
-                            : addSongsAction([s], authorName, cover) // push to top of the playlist
-                    )
+                const isCurrent = s.id === selectedSong?.id
 
                 const status = isCurrent
-                    ? selectedSong?.isLoading
+                    ? loading
                         ? 'loading'
-                        : selectedSong?.isPaused
-                        ? 'paused'
-                        : 'playing'
+                        : playing
+                        ? 'playing'
+                        : 'paused'
                     : null
+
+                const onClick = () => {
+                    if (!isCurrent) {
+                        dispatch(
+                            Msg(Player.AddSongs, {
+                                cover,
+                                singer: authorName,
+                                songs: [s],
+                            })
+                        )
+                    } else {
+                        togglePlayPause()
+                    }
+                }
 
                 return (
                     <Fragment key={s.id}>

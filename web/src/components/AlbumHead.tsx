@@ -7,11 +7,11 @@ import {
     Text,
     useBreakpointValue,
 } from '@chakra-ui/react'
-import React, { FC, useContext } from 'react'
+import React, { FC } from 'react'
 import { BsPlayFill } from 'react-icons/bs'
 import { AlbumQuery } from '../generated/graphql'
-import { addSongsAction } from '../state/player/actions'
-import { PlayerContext } from '../state/player/context'
+import { Msg, Player } from '../state/player/actionTypes'
+import { usePlayerDispatch } from '../state/player/context'
 import { secondToMinutesAndHours } from '../utils/formatSeconds'
 import { StyledLink } from './StyledLink'
 
@@ -23,13 +23,17 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
     name,
     songs,
 }) => {
-    const { dispatch } = useContext(PlayerContext)
+    const dispatch = usePlayerDispatch()
 
     const imageDimensions =
         useBreakpointValue({ base: 160, md: 200, lg: 240, xl: 264 }) ?? 160
 
     const playAlbum = () => {
-        dispatch(addSongsAction(songs || [], author.name, cover))
+        if (songs) {
+            dispatch(
+                Msg(Player.AddSongs, { cover, singer: author.name, songs })
+            )
+        }
     }
 
     const albumDuration = secondToMinutesAndHours(

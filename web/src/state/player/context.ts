@@ -1,28 +1,18 @@
-import { createContext, Dispatch } from 'react'
-import { ReactJkMusicPlayerAudioListProps } from '../../player'
-import { initialPlayerState } from './reducer'
+import { createContext, Dispatch, useContext } from 'react'
+import { Actions } from './actionTypes'
+import { PlayerState } from './entityTypes'
 
-export type PlayerContextType = {
-    state: PlayerState
-    dispatch: Dispatch<any>
-}
+export const PlayerContext = createContext<PlayerState>({} as PlayerState)
 
-export const PlayerContext = createContext({
-    state: initialPlayerState,
-    dispatch: () => null,
-} as PlayerContextType)
+export const PlayerDispatchContext = createContext<Dispatch<Actions>>(
+    () => null
+)
 
-export type PlayerState = {
-    songs: readonly PlayerSong[]
-    showPlayer: boolean
-    selectedSong?: PlayerSong & {
-        isPaused?: boolean
-        isLoading?: boolean
-    }
-    albumLoading: boolean
-}
+export const usePlayerState = () => useContext(PlayerContext)
+export const usePlayerDispatch = () => useContext(PlayerDispatchContext)
+export const usePlayer = () => [usePlayerDispatch(), usePlayerState()] as const
 
-export type PlayerSong = ReactJkMusicPlayerAudioListProps & {
-    _id?: number
-    albumId?: number
+export const useSelectedSong = () => {
+    const { selectedSongIdx, songs } = usePlayerState()
+    return songs?.[selectedSongIdx] ?? {}
 }

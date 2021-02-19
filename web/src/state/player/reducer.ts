@@ -1,75 +1,41 @@
 import { uniqWith } from 'rambda'
-import { PlayerSong, PlayerState } from './context'
+import { Actions, Player } from './actionTypes'
+import { PlayerState } from './entityTypes'
 
 export const initialPlayerState: PlayerState = {
-    selectedSong: undefined,
-    songs: [] as PlayerSong[],
+    selectedSongIdx: 0,
+    songs: [],
     showPlayer: false,
     albumLoading: false,
 }
 
 export function playerReducer(
     state = initialPlayerState,
-    { type, payload }: any
+    action: Actions
 ): PlayerState {
-    switch (type) {
-        case 'AUDIO_LIST_CHANGED': {
-            const currentSongExists = (payload as PlayerSong[]).find(
-                (s) => s._id === state.selectedSong?._id
-            )
-            return {
-                ...state,
-                songs: payload,
-                showPlayer: !!payload.length,
-                selectedSong: currentSongExists && state.selectedSong,
-            }
-        }
-        case 'SET_CURRENT_PLAYING_SONG': {
-            const currentSong = state.songs.find((s) => s._id === payload)
+    switch (action.type) {
+        case Player.AddSongs: {
+            const { songs, cover, singer } = action.payload
+            const newSongs = songs.map((s) => ({ ...s, singer, cover })) ?? []
+
+            const combinedSongs = uniqWith((s1, s2) => s1.id === s2.id, [
+                ...newSongs,
+                ...state.songs,
+            ]) as PlayerState['songs']
 
             return {
                 ...state,
-                selectedSong: {
-                    ...currentSong!,
-                    isPaused: false,
-                    isLoading: false,
-                },
-            }
-        }
-        case 'SET_SONG_LOADING': {
-            const currentSong = state.songs.find((s) => s._id === payload)
-
-            return {
-                ...state,
-                selectedSong: {
-                    ...currentSong!,
-                    isPaused: false,
-                    isLoading: true,
-                },
-            }
-        }
-        case 'ADD_SONGS': {
-            const songs = uniqWith<PlayerSong, unknown>(
-                (s1, s2) => s1._id === s2._id,
-                [...payload, ...state.songs]
-            )
-            return {
-                ...state,
-                songs,
+                songs: combinedSongs,
+                selectedSongIdx: 0,
                 showPlayer: true,
             }
         }
-        case 'SET_CURRENT_PAUSED_SONG':
+        case Player.LoadAlbum: {
             return {
                 ...state,
-                selectedSong: { ...state.selectedSong!, isPaused: true },
+                albumLoading: action.payload.isLoading,
             }
-        case 'SET_ALBUM_LOADING':
-            return {
-                ...state,
-                albumLoading: payload,
-                selectedSong: payload ? undefined : state.selectedSong,
-            }
+        }
         default:
             return state
     }
