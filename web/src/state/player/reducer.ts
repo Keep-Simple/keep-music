@@ -36,6 +36,22 @@ export function playerReducer(
                 albumLoading: action.payload.isLoading,
             }
         }
+        case Player.PlayNext: {
+            return {
+                ...state,
+                selectedSongIdx:
+                    (state.selectedSongIdx + 1) % state.songs.length,
+            }
+        }
+        case Player.PlayPrev: {
+            let newIdx = state.selectedSongIdx - 1
+            newIdx = newIdx < 0 ? state.songs.length - 1 : newIdx
+
+            return {
+                ...state,
+                selectedSongIdx: newIdx,
+            }
+        }
         default:
             return state
     }

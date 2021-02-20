@@ -20,14 +20,13 @@ export const VolumeControl = () => {
     }, [muted, mute])
 
     const iconProps = {
-        color: 'gray.500',
         ml: 5,
         cursor: 'pointer',
         onClick: () => setMuted(!muted),
     }
 
     return (
-        <Flex ref={ref} p={3}>
+        <Flex ref={ref}>
             <Slider
                 aria-label="volume-slider"
                 max={1}

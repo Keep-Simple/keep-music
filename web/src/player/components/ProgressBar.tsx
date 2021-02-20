@@ -54,7 +54,7 @@ export const ProgressBar = () => {
                     pos="relative"
                 />
             </SliderTrack>
-            <SliderThumb boxSize={6}>
+            <SliderThumb boxSize={5}>
                 <Box color="tomato" as={MdGraphicEq} />
             </SliderThumb>
         </Slider>

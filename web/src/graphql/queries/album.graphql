@@ -18,6 +18,7 @@ query Album($id: Int!, $orderBy: String) {
             format
             link
             albumId
+            authorId
         }
     }
 }
