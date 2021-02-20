@@ -32,13 +32,6 @@ export const AlbumCardList = () => {
         xl: 226,
     }) as number
 
-    if (error) return <AlertUI message={error?.message} />
-
-    if (!loading && !data?.albums)
-        return <AlertUI message="No Albums out here" status="info" />
-
-    if (!data?.albums && loading) return <Loading />
-
     const playAlbum = useCallback(async (id: number) => {
         dispatch(Msg(Player.LoadAlbum, { isLoading: false }))
 
@@ -67,6 +60,13 @@ export const AlbumCardList = () => {
 
         dispatch(Msg(Player.LoadAlbum, { isLoading: false }))
     }, [])
+
+    if (error) return <AlertUI message={error?.message} />
+
+    if (!loading && !data?.albums)
+        return <AlertUI message="No Albums out here" status="info" />
+
+    if (!data?.albums && loading) return <Loading />
 
     return (
         <SimpleGrid

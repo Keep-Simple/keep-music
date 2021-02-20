@@ -7,6 +7,8 @@
         "dev": "next dev",
         "prettier": "prettier -c --write '**/*'",
         "start": "next start",
+        "gen:theme-typings": "chakra-cli tokens ./src/theme.ts",
+        "postinstall": "yarn gen:theme-typings",
         "gen": "graphql-codegen --config codegen.yml"
     },
     "dependencies": {
@@ -40,12 +42,14 @@
     },
     "license": "MIT",
     "devDependencies": {
+        "@chakra-ui/cli": "^1.2.1",
         "@graphql-codegen/cli": "1.20.1",
         "@graphql-codegen/typescript": "1.21.0",
         "@graphql-codegen/typescript-apollo-client-helpers": "^1.1.2",
         "@graphql-codegen/typescript-operations": "1.17.14",
         "@graphql-codegen/typescript-react-apollo": "^2.2.1",
         "@svgr/webpack": "^5.5.0",
+        "@types/howler": "^2.2.1",
         "@types/node": "^14.14.28",
         "@types/react-select": "^4.0.13",
         "typescript": "^4.1.5",
