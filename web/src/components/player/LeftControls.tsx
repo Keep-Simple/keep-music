@@ -3,7 +3,7 @@ import React, { FC } from 'react'
 import { useAudioPlayer } from 'react-use-audio-player'
 import { Msg, Player } from '../../state/player/actionTypes'
 import { usePlayerDispatch } from '../../state/player/context'
-import { Icons } from './Icon'
+import { Icons } from '../Icons'
 
 export const LeftControls: FC<WrapProps> = (props) => {
     const dispatch = usePlayerDispatch()

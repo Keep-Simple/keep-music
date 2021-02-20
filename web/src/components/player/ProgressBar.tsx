@@ -28,6 +28,7 @@ export const ProgressBar = () => {
 
     return (
         <Slider
+            focusThumbOnChange={false}
             aria-label="progress-slider"
             value={_position}
             max={duration}

@@ -16,19 +16,14 @@ export type SongLineType = Pick<
     | 'format'
     | 'link'
     | 'albumId'
+    | 'authorId'
 >
 
 type AlbumSongsProps = {
     songs: SongLineType[]
-    authorName: string
-    cover: string
 }
 
-export const AlbumSongs: FC<AlbumSongsProps> = ({
-    songs,
-    authorName,
-    cover,
-}) => {
+export const AlbumSongs: FC<AlbumSongsProps> = ({ songs }) => {
     const dispatch = usePlayerDispatch()
     const selectedSong = useSelectedSong()
     const { playing, loading, togglePlayPause } = useAudioPlayer()
@@ -50,8 +45,6 @@ export const AlbumSongs: FC<AlbumSongsProps> = ({
                     if (!isCurrent) {
                         dispatch(
                             Msg(Player.AddSongs, {
-                                cover,
-                                singer: authorName,
                                 songs: [s],
                             })
                         )

@@ -1,18 +1,16 @@
-import { Flex, Spacer, Spinner, Text } from '@chakra-ui/react'
+import { Flex, Spacer, Text } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { BsPlayFill } from 'react-icons/bs'
-import { GiPauseButton } from 'react-icons/gi'
 import { formatSeconds } from '../utils/formatSeconds'
 import { useHover } from '../utils/hooks/useHover'
 import { SongLineType } from './AlbumSongs'
+import { Icons } from './Icons'
 
 export type PlayStatus = 'paused' | 'playing' | 'loading' | null
 
 const icons = {
-    playing: <GiPauseButton color="white" size={20} />,
-    loading: <Spinner color="red.500" size="sm" speed=".8s" />,
-    paused: <BsPlayFill color="white" size={24} />,
-    hover: <BsPlayFill color="white" size={24} />,
+    playing: <Icons.Pause />,
+    loading: <Icons.Loading />,
+    paused: <Icons.Play />,
 }
 
 export const AlbumSongLine: FC<
@@ -21,7 +19,7 @@ export const AlbumSongLine: FC<
     const [lineRef, isLineHovered] = useHover()
 
     const IconOrOrder = () => {
-        if (isLineHovered) return icons[status || 'hover']
+        if (isLineHovered) return icons[status || 'paused']
 
         return (
             icons[status!] || (
@@ -38,7 +36,7 @@ export const AlbumSongLine: FC<
             h={57}
             align="center"
             px={2}
-            bg={status ? 'gray.700' : undefined}
+            bg={status ? 'gray.600' : undefined}
         >
             <Flex align="center">
                 <Flex

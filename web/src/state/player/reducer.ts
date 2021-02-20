@@ -15,11 +15,8 @@ export function playerReducer(
 ): PlayerState {
     switch (action.type) {
         case Player.AddSongs: {
-            const { songs, cover, singer } = action.payload
-            const newSongs = songs.map((s) => ({ ...s, singer, cover })) ?? []
-
             const combinedSongs = uniqWith((s1, s2) => s1.id === s2.id, [
-                ...newSongs,
+                ...action.payload.songs,
                 ...state.songs,
             ]) as PlayerState['songs']
 

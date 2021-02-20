@@ -47,15 +47,7 @@ export const AlbumCardList = () => {
                 description: 'Try opening album page directly',
             })
         } else {
-            const {
-                songs = [],
-                cover,
-                author: { name: singer },
-            } = data.album
-
-            if (songs) {
-                dispatch(Msg(Player.AddSongs, { songs, cover, singer }))
-            }
+            dispatch(Msg(Player.AddSongs, { songs: data.album.songs || [] }))
         }
 
         dispatch(Msg(Player.LoadAlbum, { isLoading: false }))

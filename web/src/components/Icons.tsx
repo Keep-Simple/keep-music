@@ -1,7 +1,7 @@
-import { createIcon, IconProps, Spinner } from '@chakra-ui/react'
+import { createIcon, Spinner, SpinnerProps } from '@chakra-ui/react'
 import React, { FC } from 'react'
 
-const Loading: FC<IconProps> = (props) => (
+const Loading: FC<SpinnerProps> = (props) => (
     <Spinner color="red.500" size="sm" speed=".8s" {...(props as any)} />
 )
 

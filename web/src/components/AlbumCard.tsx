@@ -1,33 +1,11 @@
-import { Box, Circle, Fade, Image, Spinner, Text } from '@chakra-ui/react'
+import { Box, Circle, Fade, Image, Text } from '@chakra-ui/react'
 import NextLink from 'next/link'
 import React, { FC, useState } from 'react'
-import { BsPlayFill } from 'react-icons/bs'
-import { GiPauseButton, GiSpeaker } from 'react-icons/gi'
 import { Album, Author } from '../generated/graphql'
 import { useHover } from '../utils/hooks/useHover'
 import { PlayStatus } from './AlbumSongLine'
+import { Icons } from './Icons'
 import { StyledLink } from './StyledLink'
-
-const icons = {
-    focus: <GiPauseButton color="white" size={20} />,
-    loading: (
-        <>
-            <BsPlayFill color="white" size={24} />
-            <Spinner
-                pos="absolute"
-                color="red.500"
-                h="40px"
-                w="40px"
-                thickness="3px"
-                speed=".8s"
-                top={0}
-                left={0}
-            />
-        </>
-    ),
-    playing: <GiSpeaker color="white" size={24} />,
-    paused: <BsPlayFill color="white" size={24} />,
-}
 
 type AlbumCardProps = Pick<Album, 'name' | 'cover' | 'id'> & {
     coverSize: number
@@ -52,11 +30,26 @@ export const AlbumCard: FC<AlbumCardProps> = ({
     const Icon = () => {
         switch (playStatus) {
             case 'loading':
-                return icons.loading
+                return (
+                    <>
+                        <Icons.Play />
+                        <Icons.Loading
+                            pos="absolute"
+                            boxSize="40px"
+                            thickness="3px"
+                            top={0}
+                            left={0}
+                        />
+                    </>
+                )
             case 'playing':
-                return focused || isIconHover ? icons.focus : icons.playing
+                return focused || isIconHover ? (
+                    <Icons.Pause />
+                ) : (
+                    <Icons.Sound />
+                )
             default:
-                return icons.paused
+                return <Icons.Play />
         }
     }
 

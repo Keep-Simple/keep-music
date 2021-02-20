@@ -1,17 +1,18 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { StyledLink } from '../../components/StyledLink'
+import { useAlbumQuery } from '../../generated/graphql'
 import { useSelectedSong } from '../../state/player/context'
+import { StyledLink } from '../StyledLink'
 
 export const AudioInfo: FC = () => {
-    const { cover, name, singer, views, authorId, albumId } = useSelectedSong()
+    const { name, views, authorId, albumId } = useSelectedSong()
+    const { data } = useAlbumQuery({ variables: { id: albumId } })
+
     return (
         <Flex align="center" justify="center">
             <Image
                 mr={4}
-                src={cover}
-                // h="40px"
-                // w="71px"
+                src={data?.album?.cover}
                 boxSize="40px"
                 alt="song cover"
                 borderRadius="sm"
@@ -23,11 +24,12 @@ export const AudioInfo: FC = () => {
                 </Text>
                 <Text color="#FFFFFFB3" mt={-1}>
                     <StyledLink href={`/author/${authorId}`}>
-                        {singer}
+                        {data?.album?.author?.name}
                     </StyledLink>
-                    {/* <StyledLink href={`/album/${albumId}`}>
-                        {}
-                    </StyledLink> */}
+                    {` • `}
+                    <StyledLink href={`/album/${albumId}`}>
+                        {data?.album?.name}
+                    </StyledLink>
                     {` • ${views} views`}
                 </Text>
             </Box>

@@ -28,11 +28,7 @@ const Album = () => {
         return skeleton(
             <Box px="6%" pb="5%">
                 <AlbumHead {...data.album} />
-                <AlbumSongs
-                    songs={data.album.songs || []}
-                    cover={data.album.cover}
-                    authorName={data.album.author.name}
-                />
+                <AlbumSongs songs={data.album.songs || []} />
             </Box>
         )
     }

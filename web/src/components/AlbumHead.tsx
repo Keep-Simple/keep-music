@@ -2,17 +2,16 @@ import {
     Button,
     Flex,
     Heading,
-    Icon,
     Image,
     Text,
     useBreakpointValue,
 } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { BsPlayFill } from 'react-icons/bs'
 import { AlbumQuery } from '../generated/graphql'
 import { Msg, Player } from '../state/player/actionTypes'
 import { usePlayerDispatch } from '../state/player/context'
 import { secondToMinutesAndHours } from '../utils/formatSeconds'
+import { Icons } from './Icons'
 import { StyledLink } from './StyledLink'
 
 export const AlbumHead: FC<AlbumQuery['album']> = ({
@@ -30,9 +29,7 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
 
     const playAlbum = () => {
         if (songs) {
-            dispatch(
-                Msg(Player.AddSongs, { cover, singer: author.name, songs })
-            )
+            dispatch(Msg(Player.AddSongs, { songs }))
         }
     }
 
@@ -48,21 +45,17 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
                 objectFit="cover"
             />
             <Flex ml="48px" justifyContent="center" direction="column">
-                <Heading size="lg" mb={3}>
+                <Heading fontSize="34px" mb={4}>
                     {name}
                 </Heading>
-                <Text fontSize="sm" fontWeight="400" color="whiteAlpha.700">
+                <Text fontWeight="400" color="whiteAlpha.700">
                     {`Album • `}
-                    <Text
-                        as={StyledLink}
-                        href={`/author/${author.id}`}
-                        fontSize="sm"
-                    >
+                    <Text as={StyledLink} href={`/author/${author.id}`}>
                         {author.name}
                     </Text>
                     {` • ${releaseYear}`}
                 </Text>
-                <Text fontSize="sm" fontWeight="400" color="whiteAlpha.700">
+                <Text fontWeight="400" color="whiteAlpha.700">
                     {`${tracksNumber} songs • ${albumDuration}`}
                 </Text>
                 <Button
@@ -70,18 +63,15 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
                     bg="white"
                     color="black"
                     w={136}
-                    h="36px"
                     fontSize="sm"
+                    fontWeight="semibold"
+                    h="36px"
                     borderRadius={2}
                     variant="none"
                     onClick={playAlbum}
-                    leftIcon={
-                        <Flex>
-                            <Icon as={BsPlayFill} boxSize={6} />
-                        </Flex>
-                    }
+                    leftIcon={<Icons.Play />}
                 >
-                    Play
+                    PLAY
                 </Button>
             </Flex>
         </Flex>

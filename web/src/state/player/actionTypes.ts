@@ -1,4 +1,4 @@
-import { SongType } from './entityTypes'
+import { PlayerSong } from './entityTypes'
 import { ActionMap, createMsg } from './typeHelpers'
 
 export enum Player {
@@ -9,7 +9,7 @@ export enum Player {
 }
 
 type Messages = {
-    [Player.AddSongs]: { songs: SongType[]; singer: string; cover: string }
+    [Player.AddSongs]: { songs: PlayerSong[] }
     [Player.LoadAlbum]: { isLoading: boolean }
     [Player.PlayNext]: undefined
     [Player.PlayPrev]: undefined

@@ -1,10 +1,9 @@
 import dynamic from 'next/dynamic'
 import React from 'react'
-import '../player/styles/index.css'
 import { PlayerProviders } from '../state/player/context'
 import { ThemeProviders } from '../themeProviders'
 
-const PlayerWithNoSSR = dynamic(() => import('../player/components/Player'), {
+const PlayerWithNoSSR = dynamic(() => import('../components/player/Player'), {
     ssr: false,
 })
 
