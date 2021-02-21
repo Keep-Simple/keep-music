@@ -13,7 +13,7 @@ import { useTrackSongView } from './PlayerAnalytics'
 
 export const ProgressBar = ({ loadProgress = 0 }) => {
     useTrackSongView()
-    const { duration, seek, position } = useAudioPosition({
+    const { duration, seek, position, percentComplete } = useAudioPosition({
         highRefreshRate: true,
     })
     const [_position, _setPosition] = useDraggingTime()
