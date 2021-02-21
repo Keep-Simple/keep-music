@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
-import React, { useEffect, useState } from 'react'
-import { usePlayer } from '../../state/player/context'
+import React, { useEffect } from 'react'
+import { useAudioPlayer, usePlayerState } from '../../state/player/context'
 import { withApollo } from '../../utils/withApollo'
 import { AudioInfo } from './AudioInfo'
 import { LeftControls } from './LeftControls'
@@ -10,9 +10,8 @@ import { RightControls } from './RightControls'
 import { TimeLabel } from './TimeLabel'
 
 const Player = () => {
-    const [dispatch, { showPlayer }] = usePlayer()
-    const [loadProgress, setLoadProgress] = useState(0)
-    // const { togglePlay } = useAudioPlayer()
+    const { showPlayer } = usePlayerState()
+    const { togglePlay } = useAudioPlayer()
 
     useEffect(() => {
         const onSpacebar = (e: KeyboardEvent) => {
@@ -23,7 +22,7 @@ const Player = () => {
                 showPlayer
             ) {
                 e.preventDefault()
-                // togglePlay()
+                togglePlay()
             }
         }
 
@@ -31,7 +30,7 @@ const Player = () => {
         return () => {
             window.removeEventListener('keydown', onSpacebar)
         }
-    }, [showPlayer])
+    }, [showPlayer, togglePlay])
 
     return (
         <Box pos="fixed" bottom={0} right={0} left={0}>
@@ -55,7 +54,7 @@ const Player = () => {
                 </Flex>
 
                 <Box pos="absolute" top={-2} left={0} right={0}>
-                    <ProgressBar loadProgress={loadProgress} />
+                    <ProgressBar />
                 </Box>
             </motion.div>
         </Box>

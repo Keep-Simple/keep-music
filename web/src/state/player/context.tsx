@@ -3,31 +3,18 @@ import React, {
     Dispatch,
     FC,
     useContext,
+    useEffect,
     useReducer,
     useState,
 } from 'react'
 import { useAudio } from 'react-use'
 import { Actions, Msg, Player } from './actionTypes'
-import { PlayerState } from './entityTypes'
+import {
+    AudioContextValue,
+    AudioPositionContetValue,
+    PlayerState,
+} from './entityTypes'
 import { initialPlayerState, playerReducer } from './reducer'
-
-export type AudioContextValue = {
-    loading: boolean
-    volume: number
-    muted: boolean
-    paused: boolean
-    setVolume: (num: number) => void
-    togglePlay: (is?: boolean) => void
-    toggleMute: (is?: boolean) => void
-}
-
-export type AudioPositionContetValue = {
-    loadProgress: number
-    progress: number
-    seek: (n: number) => void
-    duration: number
-    position: number
-}
 
 // -- Contexts -- //
 const PlayerContext = createContext<PlayerState>({} as PlayerState)
@@ -43,7 +30,9 @@ const DraggingTimeContext = createContext([0, () => null] as [
     React.Dispatch<React.SetStateAction<number>>
 ])
 
-// -- Providers all in one -- //
+const DEFAULT_VOLUME = 0.5
+
+// -- Audio Providers all in one -- //
 export const PlayerProviders: FC = ({ children }) => {
     const draggingState = useState(0)
     const [loading, setLoading] = useState(false)
@@ -81,6 +70,8 @@ export const PlayerProviders: FC = ({ children }) => {
         seek: controls.seek,
         duration: audioState.duration,
     }
+
+    useEffect(() => controls.volume(DEFAULT_VOLUME), [])
 
     return (
         <PlayerContext.Provider value={playerState}>

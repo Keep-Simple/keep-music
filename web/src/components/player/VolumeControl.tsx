@@ -17,7 +17,7 @@ export const VolumeControl = () => {
     const iconProps = {
         ml: 5,
         cursor: 'pointer',
-        onClick: () => toggleMute,
+        onClick: () => toggleMute(),
     }
 
     return (
