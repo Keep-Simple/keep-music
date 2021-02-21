@@ -31,6 +31,7 @@ export const VolumeControl = () => {
                 aria-label="volume-slider"
                 max={1}
                 min={0}
+                defaultValue={0.5}
                 opacity={isHover ? 1 : 0}
                 transition=".1s ease"
                 w="68px"

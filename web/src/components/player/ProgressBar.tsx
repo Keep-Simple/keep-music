@@ -9,9 +9,11 @@ import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { MdGraphicEq } from 'react-icons/md'
 import { useAudioPosition } from 'react-use-audio-player'
 import { useDraggingTime } from '../../state/player/context'
+import { useTrackSongView } from './PlayerAnalytics'
 
-export const ProgressBar = () => {
-    const { percentComplete, duration, seek, position } = useAudioPosition({
+export const ProgressBar = ({ loadProgress = 0 }) => {
+    useTrackSongView()
+    const { duration, seek, position } = useAudioPosition({
         highRefreshRate: true,
     })
     const [_position, _setPosition] = useDraggingTime()
@@ -50,7 +52,7 @@ export const ProgressBar = () => {
                 <SliderFilledTrack bg="#FF0000" zIndex={1} />
                 <Box
                     bg="gray.500"
-                    w={`${percentComplete}%`}
+                    w={`${Math.ceil(loadProgress)}%`}
                     h="2px"
                     pos="relative"
                 />

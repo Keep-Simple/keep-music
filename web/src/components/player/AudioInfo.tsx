@@ -6,7 +6,10 @@ import { StyledLink } from '../StyledLink'
 
 export const AudioInfo: FC = () => {
     const { name, views, authorId, albumId } = useSelectedSong()
-    const { data } = useAlbumQuery({ variables: { id: albumId } })
+    const { data } = useAlbumQuery({
+        variables: { id: albumId },
+        skip: !albumId,
+    })
 
     return (
         <Flex align="center" justify="center">
