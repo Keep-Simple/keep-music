@@ -1,7 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import { SimpleGrid, useBreakpointValue, useToast } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
-import { useAudioPlayer } from 'react-use-audio-player'
 import {
     AlbumDocument,
     AlbumQuery,
@@ -9,7 +8,11 @@ import {
     useAlbumsQuery,
 } from '../generated/graphql'
 import { Msg, Player } from '../state/player/actionTypes'
-import { usePlayer, useSelectedSong } from '../state/player/context'
+import {
+    useAudioPlayer,
+    usePlayer,
+    useSelectedSong,
+} from '../state/player/context'
 import { AlbumCard } from './AlbumCard'
 import AlertUI from './Alert'
 import { Loading } from './Loading'
@@ -74,9 +77,9 @@ export const AlbumCardList = () => {
                 const status = isCurrent
                     ? player.loading || albumLoading
                         ? 'loading'
-                        : player.playing
-                        ? 'playing'
-                        : 'paused'
+                        : player.paused
+                        ? 'paused'
+                        : 'playing'
                     : null
 
                 const onIconClick = () => {
@@ -84,7 +87,7 @@ export const AlbumCardList = () => {
                         return playAlbum(id)
                     }
                     if (['paused', 'playing'].includes(status)) {
-                        return player.togglePlayPause()
+                        return player.togglePlay()
                     }
                 }
 

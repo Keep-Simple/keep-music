@@ -1,7 +1,6 @@
 import { Text } from '@chakra-ui/react'
 import React from 'react'
-import { useAudioPosition } from 'react-use-audio-player'
-import { useDraggingTime } from '../../state/player/context'
+import { useAudioPosition, useDraggingTime } from '../../state/player/context'
 import { formatSeconds } from '../../utils/formatSeconds'
 
 export const TimeLabel = () => {

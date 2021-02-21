@@ -1,12 +1,11 @@
 import { useApolloClient } from '@apollo/client'
 import { useEffect, useRef, useState } from 'react'
-import { useAudioPosition } from 'react-use-audio-player'
 import {
     ViewSongDocument,
     ViewSongMutation,
     ViewSongMutationVariables,
 } from '../../generated/graphql'
-import { useSelectedSong } from '../../state/player/context'
+import { useAudioPosition, useSelectedSong } from '../../state/player/context'
 
 const defaultPlayProgress = {
     progress: 0,
@@ -20,9 +19,7 @@ export const useTrackSongView = () => {
     const apolloClient = useApolloClient()
     const { id } = useSelectedSong()
     const playProgress = useRef(defaultPlayProgress)
-    const { percentComplete, duration } = useAudioPosition({
-        highRefreshRate: true,
-    })
+    const { progress, duration } = useAudioPosition()
 
     useEffect(() => {
         playProgress.current = defaultPlayProgress
@@ -31,7 +28,7 @@ export const useTrackSongView = () => {
     useEffect(() => {
         const { progress: prevProgress, viewSent } = playProgress.current
 
-        const progressDiff = Math.abs(percentComplete - prevProgress)
+        const progressDiff = Math.abs(progress - prevProgress)
 
         // user changed slider position
         if (progressDiff > duration / 100) {
@@ -52,7 +49,7 @@ export const useTrackSongView = () => {
                 viewSent,
             }
         }
-    }, [percentComplete])
+    }, [progress])
 
     useEffect(() => {
         if (sendView && id) {

@@ -1,16 +1,15 @@
 import { Wrap, WrapItem, WrapProps } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { useAudioPlayer } from 'react-use-audio-player'
 import { Msg, Player } from '../../state/player/actionTypes'
-import { usePlayerDispatch } from '../../state/player/context'
+import { useAudioPlayer, usePlayerDispatch } from '../../state/player/context'
 import { Icons } from '../Icons'
 
 export const LeftControls: FC<WrapProps> = (props) => {
     const dispatch = usePlayerDispatch()
-    const { togglePlayPause, playing, ready } = useAudioPlayer()
+    const { togglePlay, paused } = useAudioPlayer()
 
     const playPauseProps = {
-        onClick: () => ready && togglePlayPause(),
+        onClick: () => togglePlay(),
         boxSize: '40px',
     }
 
@@ -22,7 +21,7 @@ export const LeftControls: FC<WrapProps> = (props) => {
                 />
             </WrapItem>
             <WrapItem p={2} cursor="pointer">
-                {playing ? (
+                {!paused ? (
                     <Icons.Pause {...playPauseProps} />
                 ) : (
                     <Icons.Play {...playPauseProps} />

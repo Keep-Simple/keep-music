@@ -1,9 +1,12 @@
 import { Divider, Flex } from '@chakra-ui/react'
 import React, { FC, Fragment } from 'react'
-import { useAudioPlayer } from 'react-use-audio-player'
 import { Song } from '../generated/graphql'
 import { Msg, Player } from '../state/player/actionTypes'
-import { usePlayerDispatch, useSelectedSong } from '../state/player/context'
+import {
+    useAudioPlayer,
+    usePlayerDispatch,
+    useSelectedSong,
+} from '../state/player/context'
 import { AlbumSongLine } from './AlbumSongLine'
 
 export type SongLineType = Pick<
@@ -26,7 +29,7 @@ type AlbumSongsProps = {
 export const AlbumSongs: FC<AlbumSongsProps> = ({ songs }) => {
     const dispatch = usePlayerDispatch()
     const selectedSong = useSelectedSong()
-    const { playing, loading, togglePlayPause } = useAudioPlayer()
+    const { paused, loading, togglePlay } = useAudioPlayer()
 
     return (
         <Flex direction="column">
@@ -36,9 +39,9 @@ export const AlbumSongs: FC<AlbumSongsProps> = ({ songs }) => {
                 const status = isCurrent
                     ? loading
                         ? 'loading'
-                        : playing
-                        ? 'playing'
-                        : 'paused'
+                        : paused
+                        ? 'paused'
+                        : 'playing'
                     : null
 
                 const onClick = () => {
@@ -49,7 +52,7 @@ export const AlbumSongs: FC<AlbumSongsProps> = ({ songs }) => {
                             })
                         )
                     } else {
-                        togglePlayPause()
+                        togglePlay()
                     }
                 }
 

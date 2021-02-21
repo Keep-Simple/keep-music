@@ -5,24 +5,19 @@ import {
     SliderThumb,
     SliderTrack,
 } from '@chakra-ui/react'
-import React, { useEffect, useState } from 'react'
-import { useAudioPlayer } from 'react-use-audio-player'
+import React from 'react'
+import { useAudioPlayer } from '../../state/player/context'
 import { useHover } from '../../utils/hooks/useHover'
 import { Icons } from '../Icons'
 
 export const VolumeControl = () => {
-    const { volume, mute } = useAudioPlayer()
+    const { toggleMute, setVolume, muted, volume } = useAudioPlayer()
     const [ref, isHover] = useHover()
-    const [muted, setMuted] = useState(false)
-
-    useEffect(() => {
-        mute(muted)
-    }, [muted, mute])
 
     const iconProps = {
         ml: 5,
         cursor: 'pointer',
-        onClick: () => setMuted(!muted),
+        onClick: () => toggleMute,
     }
 
     return (
@@ -31,12 +26,12 @@ export const VolumeControl = () => {
                 aria-label="volume-slider"
                 max={1}
                 min={0}
-                defaultValue={0.5}
+                defaultValue={volume}
                 opacity={isHover ? 1 : 0}
                 transition=".1s ease"
                 w="68px"
                 step={0.01}
-                onChange={volume}
+                onChange={setVolume}
             >
                 <SliderTrack bg="gray.500" h="2px">
                     <SliderFilledTrack bg="white" />

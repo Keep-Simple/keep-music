@@ -16,12 +16,14 @@ export type AudioContextValue = {
     volume: number
     muted: boolean
     paused: boolean
+    setVolume: (num: number) => void
     togglePlay: (is?: boolean) => void
     toggleMute: (is?: boolean) => void
 }
 
 export type AudioPositionContetValue = {
-    percentComplete: number
+    loadProgress: number
+    progress: number
     seek: (n: number) => void
     duration: number
     position: number
@@ -35,7 +37,6 @@ const PlayerAudioPosition = createContext<AudioPositionContetValue>(
 )
 
 const PlayerDispatchContext = createContext<Dispatch<Actions>>(() => null)
-const [playerState, dispatch] = useReducer(playerReducer, initialPlayerState)
 
 const DraggingTimeContext = createContext([0, () => null] as [
     number,
@@ -45,11 +46,14 @@ const DraggingTimeContext = createContext([0, () => null] as [
 // -- Providers all in one -- //
 export const PlayerProviders: FC = ({ children }) => {
     const draggingState = useState(0)
-    const selectedSong = useSelectedSong()
     const [loading, setLoading] = useState(false)
+    const [playerState, dispatch] = useReducer(
+        playerReducer,
+        initialPlayerState
+    )
 
-    const [audio, audioState, controls, ref] = useAudio({
-        src: selectedSong.link,
+    const [audio, audioState, controls] = useAudio({
+        src: playerState.songs?.[playerState.selectedSongIdx]?.link ?? '',
         autoPlay: true,
         onLoadStart: () => setLoading(true),
         onEnded: () => dispatch(Msg(Player.PlayNext)),
@@ -58,6 +62,7 @@ export const PlayerProviders: FC = ({ children }) => {
 
     const audioContextValue: AudioContextValue = {
         loading,
+        setVolume: controls.volume,
         volume: audioState.volume,
         muted: audioState.muted,
         paused: audioState.paused,
@@ -68,29 +73,28 @@ export const PlayerProviders: FC = ({ children }) => {
     }
 
     const audioPositionContextValue: AudioPositionContetValue = {
-        percentComplete: Math.ceil(
-            (audioState.buffered[0].end / audioState.duration) * 100
+        loadProgress: Math.ceil(
+            (audioState.buffered[0]?.end / audioState.duration) * 100
         ),
-        position: audioState.time,
+        progress: Math.ceil((audioState.time / audioState.duration) * 100),
+        position: Math.ceil(audioState.time),
         seek: controls.seek,
         duration: audioState.duration,
     }
 
     return (
-        <DraggingTimeContext.Provider value={draggingState}>
-            <PlayerContext.Provider value={playerState}>
-                <PlayerAudio.Provider value={audioContextValue}>
-                    <PlayerAudioPosition.Provider
-                        value={audioPositionContextValue}
-                    >
+        <PlayerContext.Provider value={playerState}>
+            <PlayerAudio.Provider value={audioContextValue}>
+                <PlayerAudioPosition.Provider value={audioPositionContextValue}>
+                    <DraggingTimeContext.Provider value={draggingState}>
                         <PlayerDispatchContext.Provider value={dispatch}>
                             {audio}
                             {children}
                         </PlayerDispatchContext.Provider>
-                    </PlayerAudioPosition.Provider>
-                </PlayerAudio.Provider>
-            </PlayerContext.Provider>
-        </DraggingTimeContext.Provider>
+                    </DraggingTimeContext.Provider>
+                </PlayerAudioPosition.Provider>
+            </PlayerAudio.Provider>
+        </PlayerContext.Provider>
     )
 }
 

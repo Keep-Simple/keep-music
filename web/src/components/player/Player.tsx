@@ -1,7 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import React, { useEffect, useState } from 'react'
-import { useAudioPlayer, usePlayer } from '../../state/player/context'
+import { usePlayer } from '../../state/player/context'
 import { withApollo } from '../../utils/withApollo'
 import { AudioInfo } from './AudioInfo'
 import { LeftControls } from './LeftControls'
@@ -12,7 +12,7 @@ import { TimeLabel } from './TimeLabel'
 const Player = () => {
     const [dispatch, { showPlayer }] = usePlayer()
     const [loadProgress, setLoadProgress] = useState(0)
-    const { togglePlay } = useAudioPlayer()
+    // const { togglePlay } = useAudioPlayer()
 
     useEffect(() => {
         const onSpacebar = (e: KeyboardEvent) => {
@@ -23,7 +23,7 @@ const Player = () => {
                 showPlayer
             ) {
                 e.preventDefault()
-                togglePlay()
+                // togglePlay()
             }
         }
 

@@ -7,26 +7,34 @@ import {
 } from '@chakra-ui/react'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { MdGraphicEq } from 'react-icons/md'
-import { useAudioPosition } from 'react-use-audio-player'
-import { useDraggingTime } from '../../state/player/context'
+import { useAudioPosition, useDraggingTime } from '../../state/player/context'
 import { useTrackSongView } from './PlayerAnalytics'
 
-export const ProgressBar = ({ loadProgress = 0 }) => {
+export const ProgressBar = () => {
     useTrackSongView()
-    const { duration, seek, position, percentComplete } = useAudioPosition({
-        highRefreshRate: true,
-    })
+    const { duration, seek, position, loadProgress } = useAudioPosition()
     const [_position, _setPosition] = useDraggingTime()
 
     const [dragging, setDragging] = useState(false)
-
-    useEffect(() => {
-        if (!dragging) seek(_position)
-    }, [dragging])
+    const [sync, setSync] = useState(true)
 
     useLayoutEffect(() => {
-        if (!dragging) _setPosition(position)
-    }, [position, dragging])
+        if (dragging) return
+
+        if (!sync) {
+            if (position === _position) {
+                setSync(true)
+            }
+        } else {
+            _setPosition(position)
+        }
+    }, [position, dragging, sync])
+
+    useEffect(() => {
+        if (!dragging) {
+            seek(_position)
+        }
+    }, [dragging])
 
     return (
         <Slider
@@ -40,6 +48,7 @@ export const ProgressBar = ({ loadProgress = 0 }) => {
             }}
             onChangeEnd={(value) => {
                 if (dragging) {
+                    setSync(false)
                     setDragging(false)
                     _setPosition(value)
                 }
