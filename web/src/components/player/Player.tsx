@@ -53,7 +53,7 @@ const Player = () => {
                     </Box>
                 </Flex>
 
-                <Box pos="absolute" top={-2} left={0} right={0}>
+                <Box pos="absolute" top="-10px" left={-3} right={3}>
                     <ProgressBar />
                 </Box>
             </motion.div>

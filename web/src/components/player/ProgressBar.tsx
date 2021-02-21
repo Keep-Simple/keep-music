@@ -8,6 +8,7 @@ import {
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { MdGraphicEq } from 'react-icons/md'
 import { useAudioPosition, useDraggingTime } from '../../state/player/context'
+import { useHover } from '../../utils/hooks/useHover'
 import { useTrackSongView } from './PlayerAnalytics'
 
 export const ProgressBar = () => {
@@ -17,6 +18,7 @@ export const ProgressBar = () => {
 
     const [dragging, setDragging] = useState(false)
     const [sync, setSync] = useState(true)
+    const [ref, hovered] = useHover()
 
     useLayoutEffect(() => {
         if (dragging) return
@@ -36,39 +38,43 @@ export const ProgressBar = () => {
         }
     }, [dragging])
 
+    const height = hovered ? '4px' : '2px'
+
     return (
-        <Slider
-            focusThumbOnChange={false}
-            aria-label="progress-slider"
-            value={_position}
-            max={duration}
-            onChangeStart={(value) => {
-                setDragging(true)
-                _setPosition(value)
-            }}
-            onChangeEnd={(value) => {
-                if (dragging) {
-                    setSync(false)
-                    setDragging(false)
+        <Box ref={ref}>
+            <Slider
+                focusThumbOnChange={false}
+                aria-label="progress-slider"
+                value={_position}
+                max={duration}
+                onChangeStart={(value) => {
+                    setDragging(true)
                     _setPosition(value)
-                }
-            }}
-            onChange={(value) => {
-                _setPosition(value)
-            }}
-        >
-            <SliderTrack bg="#FFFFFF1A" h="2px">
-                <SliderFilledTrack bg="#FF0000" zIndex={1} />
-                <Box
-                    bg="gray.500"
-                    w={`${Math.ceil(loadProgress)}%`}
-                    h="2px"
-                    pos="relative"
-                />
-            </SliderTrack>
-            <SliderThumb boxSize={5}>
-                <Box color="tomato" as={MdGraphicEq} />
-            </SliderThumb>
-        </Slider>
+                }}
+                onChangeEnd={(value) => {
+                    if (dragging) {
+                        setSync(false)
+                        setDragging(false)
+                        _setPosition(value)
+                    }
+                }}
+                onChange={(value) => {
+                    _setPosition(value)
+                }}
+            >
+                <SliderTrack bg="#FFFFFF1A" h={height}>
+                    <SliderFilledTrack bg="red.500" zIndex={1} />
+                    <Box
+                        bg="gray.500"
+                        w={`${Math.ceil(loadProgress)}%`}
+                        h={height}
+                        pos="relative"
+                    />
+                </SliderTrack>
+                <SliderThumb boxSize={5}>
+                    <Box color="red.500" as={MdGraphicEq} />
+                </SliderThumb>
+            </Slider>
+        </Box>
     )
 }

@@ -36,7 +36,7 @@ export const AlbumCardList = () => {
     }) as number
 
     const playAlbum = useCallback(async (id: number) => {
-        dispatch(Msg(Player.LoadAlbum, { isLoading: false }))
+        dispatch(Msg(Player.LoadAlbum, { isLoading: true }))
 
         const { data } = await client.query<AlbumQuery, AlbumQueryVariables>({
             query: AlbumDocument,

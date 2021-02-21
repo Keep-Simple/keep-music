@@ -24,9 +24,10 @@ export const VolumeControl = () => {
         <Flex ref={ref}>
             <Slider
                 aria-label="volume-slider"
+                focusThumbOnChange={false}
                 max={1}
                 min={0}
-                defaultValue={volume}
+                value={!muted ? volume : 0}
                 opacity={isHover ? 1 : 0}
                 transition=".1s ease"
                 w="68px"
