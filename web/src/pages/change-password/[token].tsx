@@ -1,11 +1,9 @@
-import { useRouter } from 'next/router'
 import { Button } from '@chakra-ui/react'
-import { Formik, Form } from 'formik'
-
-import AlertUI from '../../components/Alert'
-import { InputField } from '../../components/InputField'
-import { Wrapper } from '../../components/Wrapper'
-
+import { Form, Formik } from 'formik'
+import { useRouter } from 'next/router'
+import AlertUI from '../../components/ui/Alert'
+import { InputField } from '../../components/ui/InputField'
+import { Wrapper } from '../../components/ui/Wrapper'
 import {
     MeDocument,
     MeQuery,

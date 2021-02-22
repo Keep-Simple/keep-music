@@ -1,6 +1,6 @@
 import { Wrap, WrapItem, WrapProps } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { Icons } from '../Icons'
+import { Icons } from '../ui/Icons'
 import { VolumeControl } from './VolumeControl'
 
 export const RightControls: FC<WrapProps> = (props) => {

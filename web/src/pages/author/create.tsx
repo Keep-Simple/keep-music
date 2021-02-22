@@ -10,11 +10,12 @@ import { Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import * as yup from 'yup'
-import { InputField } from '../../components/InputField'
-import { Layout } from '../../components/Layout'
-import { PhotoDragDrop } from '../../components/PhotoDragDrop'
+import { InputField } from '../../components/ui/InputField'
+import { Layout } from '../../components/ui/Layout'
+import { PhotoDragDrop } from '../../components/ui/PhotoDragDrop'
 import { useCreateAuthorMutation } from '../../generated/graphql'
 import { createUppy } from '../../utils/createUppy'
+import { useIsAuth } from '../../utils/hooks/useIsAuth'
 import { withApollo } from '../../utils/withApollo'
 
 const uppy = createUppy({
@@ -35,6 +36,7 @@ const schema = yup.object({
 })
 
 const CreateAuthor = ({}) => {
+    useIsAuth()
     const [createAuthor] = useCreateAuthorMutation()
     const [avatar, setAvatar] = useState('')
     const toast = useToast()

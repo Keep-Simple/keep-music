@@ -3,7 +3,7 @@ import React, { FC } from 'react'
 import { formatSeconds } from '../utils/formatSeconds'
 import { useHover } from '../utils/hooks/useHover'
 import { SongLineType } from './AlbumSongs'
-import { Icons } from './Icons'
+import { Icons } from './ui/Icons'
 
 export type PlayStatus = 'paused' | 'playing' | 'loading' | null
 

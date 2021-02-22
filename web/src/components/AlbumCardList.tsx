@@ -14,8 +14,8 @@ import {
     useSelectedSong,
 } from '../state/player/context'
 import { AlbumCard } from './AlbumCard'
-import AlertUI from './Alert'
-import { Loading } from './Loading'
+import AlertUI from './ui/Alert'
+import { Loading } from './ui/Loading'
 
 export const AlbumCardList = () => {
     const client = useApolloClient()

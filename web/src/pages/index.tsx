@@ -1,5 +1,6 @@
+import React from 'react'
 import { AlbumCardList } from '../components/AlbumCardList'
-import { Layout } from '../components/Layout'
+import { Layout } from '../components/ui/Layout'
 import { withApollo } from '../utils/withApollo'
 
 const Index = () => {

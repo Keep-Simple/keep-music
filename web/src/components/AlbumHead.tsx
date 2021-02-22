@@ -11,8 +11,8 @@ import { AlbumQuery } from '../generated/graphql'
 import { Msg, Player } from '../state/player/actionTypes'
 import { usePlayerDispatch } from '../state/player/context'
 import { secondToMinutesAndHours } from '../utils/formatSeconds'
-import { Icons } from './Icons'
-import { StyledLink } from './StyledLink'
+import { Icons } from './ui/Icons'
+import { StyledLink } from './ui/StyledLink'
 
 export const AlbumHead: FC<AlbumQuery['album']> = ({
     cover,

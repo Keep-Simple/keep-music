@@ -1,11 +1,11 @@
 import { Box, Circle, Fade, Image, Text } from '@chakra-ui/react'
 import NextLink from 'next/link'
-import React, { FC, useState } from 'react'
+import React, { FC, useMemo, useState } from 'react'
 import { Album, Author } from '../generated/graphql'
 import { useHover } from '../utils/hooks/useHover'
 import { PlayStatus } from './AlbumSongLine'
-import { Icons } from './Icons'
-import { StyledLink } from './StyledLink'
+import { Icons } from './ui/Icons'
+import { StyledLink } from './ui/StyledLink'
 
 type AlbumCardProps = Pick<Album, 'name' | 'cover' | 'id'> & {
     coverSize: number
@@ -27,7 +27,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
     const { hovered: isIconHover, bind: iconBind } = useHover()
     const [focused, setFocused] = useState(false)
 
-    const Icon = () => {
+    const Icon = useMemo(() => {
         switch (playStatus) {
             case 'loading':
                 return (
@@ -51,7 +51,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
             default:
                 return <Icons.Play />
         }
-    }
+    }, [playStatus, focused, isIconHover])
 
     return (
         <Box w={coverSize} userSelect="none">
@@ -109,7 +109,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                                 onIconClick()
                             }}
                         >
-                            <Icon />
+                            {Icon}
                         </Circle>
                     </Fade>
                 </Box>

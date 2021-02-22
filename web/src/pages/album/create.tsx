@@ -14,13 +14,14 @@ import { Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
 import React, { useState } from 'react'
 import * as yup from 'yup'
-import { InputField } from '../../components/InputField'
-import { Layout } from '../../components/Layout'
-import { PhotoDragDrop } from '../../components/PhotoDragDrop'
-import { SelectField } from '../../components/SelectField'
+import { InputField } from '../../components/ui/InputField'
+import { Layout } from '../../components/ui/Layout'
+import { PhotoDragDrop } from '../../components/ui/PhotoDragDrop'
+import { SelectField } from '../../components/ui/SelectField'
 import { useCreateAlbumMutation } from '../../generated/graphql'
 import { albumCreationService } from '../../services/albumCreation'
 import { fetchAuthorsByQuery } from '../../utils/fetchAuthorsByQuery'
+import { useIsAuth } from '../../utils/hooks/useIsAuth'
 import { withApollo } from '../../utils/withApollo'
 
 const schema = yup.object({
@@ -38,6 +39,7 @@ const schema = yup.object({
 })
 
 const CreateAlbum = ({}) => {
+    useIsAuth()
     const [cover, setCover] = useState('')
     const router = useRouter()
     const toast = useToast()

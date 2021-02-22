@@ -14,7 +14,7 @@ import {
 import NextLink from 'next/link'
 // import { ReactComponent as Logo } from '../../static/logo.svg'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
-import { StyledLink } from './StyledLink'
+import { StyledLink } from './ui/StyledLink'
 
 export const NavBar: React.FC = () => {
     const { data, loading } = useMeQuery()

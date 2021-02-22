@@ -8,7 +8,7 @@ import {
 import React from 'react'
 import { useAudioPlayer } from '../../state/player/context'
 import { useHover } from '../../utils/hooks/useHover'
-import { Icons } from '../Icons'
+import { Icons } from '../ui/Icons'
 
 export const VolumeControl = () => {
     const { toggleMute, setVolume, muted, volume } = useAudioPlayer()

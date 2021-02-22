@@ -2,7 +2,7 @@ import { Box, CloseButton, Image } from '@chakra-ui/react'
 import Uppy from '@uppy/core'
 import { DragDrop } from '@uppy/react'
 import React, { FC } from 'react'
-import { useHover } from '../utils/hooks/useHover'
+import { useHover } from '../../utils/hooks/useHover'
 
 type Props = {
     src?: string
@@ -17,13 +17,13 @@ export const PhotoDragDrop: FC<Props> = ({
     onDelete,
     imageSize,
 }) => {
-    const [ref, isHover] = useHover()
+    const { bind, hovered } = useHover()
 
     return (
         <Box
-            color={isHover && src ? 'white' : 'black'}
-            ref={ref}
+            color={hovered && src ? 'white' : 'black'}
             position="relative"
+            {...bind}
         >
             {src ? (
                 <>
@@ -36,7 +36,7 @@ export const PhotoDragDrop: FC<Props> = ({
                     />
 
                     <CloseButton
-                        display={isHover ? 'initial' : 'none'}
+                        display={hovered ? 'initial' : 'none'}
                         onClick={onDelete}
                         position="absolute"
                         size="lg"
