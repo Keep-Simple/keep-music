@@ -26,7 +26,11 @@ export const AudioInfo: FC = () => {
                 <Text fontSize="md" fontWeight="semibold">
                     {name}
                 </Text>
-                <Text color="#FFFFFFB3" mt={-1}>
+                <Text
+                    color="#FFFFFFB3"
+                    mt={-1}
+                    onClick={(e) => e.stopPropagation()}
+                >
                     <StyledLink href={`/author/${authorId}`}>
                         {data?.album?.author?.name}
                     </StyledLink>

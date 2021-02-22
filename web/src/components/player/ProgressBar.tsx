@@ -7,9 +7,9 @@ import {
 } from '@chakra-ui/react'
 import React, { useLayoutEffect, useState } from 'react'
 import { MdGraphicEq } from 'react-icons/md'
+import { useTrackSongView } from '../../services/playerAnalytics'
 import { useAudioPosition, useDraggingTime } from '../../state/player/context'
 import { useHover } from '../../utils/hooks/useHover'
-import { useTrackSongView } from './playerAnalytics'
 
 export const ProgressBar = () => {
     useTrackSongView()

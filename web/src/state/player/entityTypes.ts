@@ -8,6 +8,7 @@ export type PlayerSong = Pick<
 export type PlayerState = {
     songs: PlayerSong[]
     showPlayer: boolean
+    showPanel: boolean
     selectedSongIdx: number
     albumLoading: {
         state: boolean

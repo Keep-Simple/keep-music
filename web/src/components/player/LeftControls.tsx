@@ -13,12 +13,18 @@ export const LeftControls: FC<WrapProps> = (props) => {
         boxSize: '40px',
     }
 
+    const wrapperProps = {
+        onClick: (e: React.MouseEvent) => e.stopPropagation(),
+        p: 2,
+        cursor: 'pointer',
+    }
+
     const MainIcon = () => {
         if (loading)
             return (
                 <Icons.Loading
                     boxSize="40px"
-                    thickness="4px"
+                    thickness="3px"
                     color="gray.500"
                 />
             )
@@ -31,15 +37,15 @@ export const LeftControls: FC<WrapProps> = (props) => {
 
     return (
         <Wrap spacing={2} align="center" {...props}>
-            <WrapItem p={2} cursor="pointer">
+            <WrapItem {...wrapperProps}>
                 <Icons.PrevSong
                     onClick={() => dispatch(Msg(Player.PlayPrev))}
                 />
             </WrapItem>
-            <WrapItem p={2} cursor="pointer">
+            <WrapItem {...wrapperProps}>
                 <MainIcon />
             </WrapItem>
-            <WrapItem p={2} cursor="pointer">
+            <WrapItem {...wrapperProps}>
                 <Icons.NextSong
                     onClick={() => dispatch(Msg(Player.PlayNext))}
                 />

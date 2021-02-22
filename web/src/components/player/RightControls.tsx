@@ -1,10 +1,15 @@
 import { Wrap, WrapItem, WrapProps } from '@chakra-ui/react'
 import React, { FC } from 'react'
 import { Icons } from '../ui/Icons'
+import { PanelToggle } from './PanelToggle'
 import { VolumeControl } from './VolumeControl'
 
 export const RightControls: FC<WrapProps> = (props) => {
-    // const { togglePlayPause, playing, ready } = useAudioPlayer()
+    const iconProps = {
+        onClick: (e: React.MouseEvent) => e.stopPropagation(),
+        p: 2,
+        cursor: 'pointer',
+    }
 
     return (
         <Wrap
@@ -15,17 +20,17 @@ export const RightControls: FC<WrapProps> = (props) => {
             mr={3}
             {...props}
         >
-            <WrapItem p={2} cursor="pointer">
+            <WrapItem {...iconProps}>
                 <VolumeControl />
             </WrapItem>
-            <WrapItem p={2} cursor="pointer">
+            <WrapItem {...iconProps}>
                 <Icons.Loop />
             </WrapItem>
-            <WrapItem p={2} cursor="pointer">
+            <WrapItem {...iconProps}>
                 <Icons.Shuffle />
             </WrapItem>
-            <WrapItem p={2} cursor="pointer">
-                <Icons.TogglePager color="white" />
+            <WrapItem {...iconProps}>
+                <PanelToggle />
             </WrapItem>
         </Wrap>
     )

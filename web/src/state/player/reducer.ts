@@ -6,6 +6,7 @@ export const initialPlayerState: PlayerState = {
     selectedSongIdx: 0,
     songs: [],
     showPlayer: false,
+    showPanel: false,
     albumLoading: {
         state: false,
         id: undefined,
@@ -54,6 +55,12 @@ export function playerReducer(
             return {
                 ...state,
                 selectedSongIdx: newIdx,
+            }
+        }
+        case Player.TogglePanel: {
+            return {
+                ...state,
+                showPanel: !state.showPanel,
             }
         }
         default:
