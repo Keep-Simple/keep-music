@@ -46,11 +46,7 @@ export const AlbumSongs: FC<AlbumSongsProps> = ({ songs }) => {
 
                 const onClick = () => {
                     if (!isCurrent) {
-                        dispatch(
-                            Msg(Player.AddSongs, {
-                                songs: [s],
-                            })
-                        )
+                        dispatch(Msg(Player.ChangePlayIdx, { id: s.id }))
                     } else {
                         togglePlay()
                     }

@@ -63,6 +63,14 @@ export function playerReducer(
                 showPanel: !state.showPanel,
             }
         }
+        case Player.ChangePlayIdx: {
+            return {
+                ...state,
+                selectedSongIdx: state.songs.findIndex(
+                    (s) => s.id === action.payload.id
+                ),
+            }
+        }
         default:
             return state
     }
