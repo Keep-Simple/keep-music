@@ -42,10 +42,11 @@ export const PlayerProviders: FC = ({ children }) => {
         initialPlayerState
     )
 
+    const currentSong = playerState.songs[playerState.selectedSongIdx] ?? {}
+
     const [audio, audioState, controls] = useAudio({
-        src: playerState.songs?.[playerState.selectedSongIdx]?.link ?? '',
+        src: currentSong.link,
         autoPlay: true,
-        onLoadStart: () => setLoading(true),
         onEnded: () => dispatch(Msg(Player.PlayNext)),
         onCanPlay: () => setLoading(false),
     })
@@ -67,15 +68,19 @@ export const PlayerProviders: FC = ({ children }) => {
 
     const audioPositionContextValue: AudioPositionContetValue = {
         loadProgress: !loading
-            ? Math.ceil(
+            ? Math.floor(
                   (audioState.buffered[0]?.end / audioState.duration) * 100
               ) || 0
             : 0,
-        progress: Math.ceil((audioState.time / audioState.duration) * 100),
-        position: Math.ceil(audioState.time),
+        progress: Math.floor((audioState.time / audioState.duration) * 100),
+        position: Math.floor(audioState.time),
         seek: controls.seek,
         duration: audioState.duration,
     }
+
+    useEffect(() => {
+        setLoading(true)
+    }, [currentSong.id])
 
     useEffect(() => controls.volume(DEFAULT_VOLUME), [])
 

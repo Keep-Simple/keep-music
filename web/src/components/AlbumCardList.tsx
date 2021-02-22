@@ -52,7 +52,6 @@ export const AlbumCardList = () => {
         } else {
             dispatch(Msg(Player.AddSongs, { songs: data.album.songs || [] }))
         }
-
         dispatch(Msg(Player.LoadAlbum, { isLoading: false }))
     }, [])
 
@@ -75,7 +74,6 @@ export const AlbumCardList = () => {
                 const isCurrentPlaying = selectedSong?.albumId === id
                 const isCurrentLoading = albumLoading.id === id
 
-                console.log('rendering album cards')
                 const status = isCurrentLoading
                     ? 'loading'
                     : isCurrentPlaying

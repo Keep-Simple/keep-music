@@ -5,7 +5,7 @@ import {
     SliderThumb,
     SliderTrack,
 } from '@chakra-ui/react'
-import React, { useEffect, useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { MdGraphicEq } from 'react-icons/md'
 import { useAudioPosition, useDraggingTime } from '../../state/player/context'
 import { useHover } from '../../utils/hooks/useHover'
@@ -21,6 +21,12 @@ export const ProgressBar = () => {
     const { bind, hovered } = useHover()
 
     useLayoutEffect(() => {
+        if (!dragging) {
+            seek(_position)
+        }
+    }, [dragging])
+
+    useLayoutEffect(() => {
         if (dragging) return
 
         if (!sync) {
@@ -31,12 +37,6 @@ export const ProgressBar = () => {
             _setPosition(position)
         }
     }, [position, dragging, sync])
-
-    useEffect(() => {
-        if (!dragging) {
-            seek(_position)
-        }
-    }, [dragging])
 
     const height = hovered ? '4px' : '2px'
 
@@ -68,7 +68,7 @@ export const ProgressBar = () => {
                 <SliderTrack bg="#FFFFFF1A" h={height}>
                     <SliderFilledTrack bg="red.500" zIndex={1} />
                     <Box
-                        bg="gray.500"
+                        bg="#FFFFFF1A"
                         w={`${Math.ceil(loadProgress)}%`}
                         h={height}
                         pos="relative"
