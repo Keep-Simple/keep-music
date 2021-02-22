@@ -18,13 +18,13 @@ export const ProgressBar = () => {
 
     const [dragging, setDragging] = useState(false)
     const [sync, setSync] = useState(true)
-    const [ref, hovered] = useHover()
+    const { bind, hovered } = useHover()
 
     useLayoutEffect(() => {
         if (dragging) return
 
         if (!sync) {
-            if (position === _position) {
+            if (Math.abs(position - _position) <= 1) {
                 setSync(true)
             }
         } else {
@@ -41,24 +41,27 @@ export const ProgressBar = () => {
     const height = hovered ? '4px' : '2px'
 
     return (
-        <Box ref={ref}>
+        <Box {...bind}>
             <Slider
                 focusThumbOnChange={false}
                 aria-label="progress-slider"
                 value={_position}
-                max={duration}
+                max={duration || 100}
                 onChangeStart={(value) => {
                     setDragging(true)
                     _setPosition(value)
                 }}
                 onChangeEnd={(value) => {
                     if (dragging) {
-                        setSync(false)
                         setDragging(false)
+                        setSync(false)
                         _setPosition(value)
                     }
                 }}
                 onChange={(value) => {
+                    if (value === position) {
+                        setDragging(false)
+                    }
                     _setPosition(value)
                 }}
             >

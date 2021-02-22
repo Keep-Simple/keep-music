@@ -12,7 +12,7 @@ import { Icons } from '../Icons'
 
 export const VolumeControl = () => {
     const { toggleMute, setVolume, muted, volume } = useAudioPlayer()
-    const [ref, isHover] = useHover()
+    const { hovered, bind } = useHover()
 
     const iconProps = {
         ml: 5,
@@ -21,14 +21,14 @@ export const VolumeControl = () => {
     }
 
     return (
-        <Flex ref={ref}>
+        <Flex {...bind}>
             <Slider
                 aria-label="volume-slider"
                 focusThumbOnChange={false}
                 max={1}
                 min={0}
                 value={!muted ? volume : 0}
-                opacity={isHover ? 1 : 0}
+                opacity={hovered ? 1 : 0}
                 transition=".1s ease"
                 w="68px"
                 step={0.01}

@@ -6,11 +6,27 @@ import { Icons } from '../Icons'
 
 export const LeftControls: FC<WrapProps> = (props) => {
     const dispatch = usePlayerDispatch()
-    const { togglePlay, paused } = useAudioPlayer()
+    const { togglePlay, paused, loading } = useAudioPlayer()
 
-    const playPauseProps = {
+    const iconProps = {
         onClick: () => togglePlay(),
         boxSize: '40px',
+    }
+
+    const MainIcon = () => {
+        if (loading)
+            return (
+                <Icons.Loading
+                    boxSize="40px"
+                    thickness="4px"
+                    color="gray.500"
+                />
+            )
+        return paused ? (
+            <Icons.Play {...iconProps} />
+        ) : (
+            <Icons.Pause {...iconProps} />
+        )
     }
 
     return (
@@ -21,11 +37,7 @@ export const LeftControls: FC<WrapProps> = (props) => {
                 />
             </WrapItem>
             <WrapItem p={2} cursor="pointer">
-                {!paused ? (
-                    <Icons.Pause {...playPauseProps} />
-                ) : (
-                    <Icons.Play {...playPauseProps} />
-                )}
+                <MainIcon />
             </WrapItem>
             <WrapItem p={2} cursor="pointer">
                 <Icons.NextSong

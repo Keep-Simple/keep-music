@@ -9,7 +9,10 @@ export type PlayerState = {
     songs: PlayerSong[]
     showPlayer: boolean
     selectedSongIdx: number
-    albumLoading: boolean
+    albumLoading: {
+        state: boolean
+        id?: number
+    }
 }
 
 export type AudioContextValue = {

@@ -4,6 +4,7 @@ import React, {
     FC,
     useContext,
     useEffect,
+    useMemo,
     useReducer,
     useState,
 } from 'react'
@@ -49,22 +50,27 @@ export const PlayerProviders: FC = ({ children }) => {
         onCanPlay: () => setLoading(false),
     })
 
-    const audioContextValue: AudioContextValue = {
-        loading,
-        setVolume: controls.volume,
-        volume: audioState.volume,
-        muted: audioState.muted,
-        paused: audioState.paused,
-        togglePlay: (is) =>
-            audioState.paused || is ? controls.play() : controls.pause(),
-        toggleMute: (is) =>
-            audioState.muted || is ? controls.unmute() : controls.mute(),
-    }
+    const audioContextValue: AudioContextValue = useMemo(
+        () => ({
+            loading,
+            setVolume: controls.volume,
+            volume: audioState.volume,
+            muted: audioState.muted,
+            paused: audioState.paused,
+            togglePlay: (is) =>
+                audioState.paused || is ? controls.play() : controls.pause(),
+            toggleMute: (is) =>
+                audioState.muted || is ? controls.unmute() : controls.mute(),
+        }),
+        [audioState.volume, audioState.muted, audioState.paused, loading]
+    )
 
     const audioPositionContextValue: AudioPositionContetValue = {
-        loadProgress: Math.ceil(
-            (audioState.buffered[0]?.end / audioState.duration) * 100
-        ),
+        loadProgress: !loading
+            ? Math.ceil(
+                  (audioState.buffered[0]?.end / audioState.duration) * 100
+              ) || 0
+            : 0,
         progress: Math.ceil((audioState.time / audioState.duration) * 100),
         position: Math.ceil(audioState.time),
         seek: controls.seek,

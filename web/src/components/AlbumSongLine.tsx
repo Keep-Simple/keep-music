@@ -16,10 +16,10 @@ const icons = {
 export const AlbumSongLine: FC<
     SongLineType & { status: PlayStatus; onClick: () => void }
 > = ({ name, duration, order, status, onClick }) => {
-    const [lineRef, isLineHovered] = useHover()
+    const { hovered, bind } = useHover()
 
     const IconOrOrder = () => {
-        if (isLineHovered) return icons[status || 'paused']
+        if (hovered) return icons[status || 'paused']
 
         return (
             icons[status!] || (
@@ -32,7 +32,7 @@ export const AlbumSongLine: FC<
 
     return (
         <Flex
-            ref={lineRef}
+            {...bind}
             h={57}
             align="center"
             px={2}

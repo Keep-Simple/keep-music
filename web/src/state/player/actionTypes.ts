@@ -10,7 +10,7 @@ export enum Player {
 
 type Messages = {
     [Player.AddSongs]: { songs: PlayerSong[] }
-    [Player.LoadAlbum]: { isLoading: boolean }
+    [Player.LoadAlbum]: { isLoading: boolean; id?: number }
     [Player.PlayNext]: undefined
     [Player.PlayPrev]: undefined
 }

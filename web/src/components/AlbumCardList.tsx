@@ -36,7 +36,7 @@ export const AlbumCardList = () => {
     }) as number
 
     const playAlbum = useCallback(async (id: number) => {
-        dispatch(Msg(Player.LoadAlbum, { isLoading: true }))
+        dispatch(Msg(Player.LoadAlbum, { isLoading: true, id }))
 
         const { data } = await client.query<AlbumQuery, AlbumQueryVariables>({
             query: AlbumDocument,
@@ -72,10 +72,14 @@ export const AlbumCardList = () => {
             columns={[2, 2, 3, 4, 4, 5]}
         >
             {data?.albums?.map(({ id, author, name, cover }) => {
-                const isCurrent = selectedSong?.albumId === id
+                const isCurrentPlaying = selectedSong?.albumId === id
+                const isCurrentLoading = albumLoading.id === id
 
-                const status = isCurrent
-                    ? player.loading || albumLoading
+                console.log('rendering album cards')
+                const status = isCurrentLoading
+                    ? 'loading'
+                    : isCurrentPlaying
+                    ? player.loading
                         ? 'loading'
                         : player.paused
                         ? 'paused'

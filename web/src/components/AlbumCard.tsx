@@ -23,8 +23,8 @@ export const AlbumCard: FC<AlbumCardProps> = ({
     name,
     author,
 }) => {
-    const [ref, isHover] = useHover()
-    const [iconRef, isIconHover] = useHover()
+    const { hovered: isHover, bind } = useHover()
+    const { hovered: isIconHover, bind: iconBind } = useHover()
     const [focused, setFocused] = useState(false)
 
     const Icon = () => {
@@ -32,11 +32,11 @@ export const AlbumCard: FC<AlbumCardProps> = ({
             case 'loading':
                 return (
                     <>
-                        <Icons.Play />
+                        <Icons.Pause />
                         <Icons.Loading
                             pos="absolute"
                             boxSize="40px"
-                            thickness="3px"
+                            thickness="2px"
                             top={0}
                             left={0}
                         />
@@ -56,7 +56,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
     return (
         <Box w={coverSize} userSelect="none">
             <NextLink href={`/album/${id}`}>
-                <Box ref={ref} pos="relative">
+                <Box {...bind} pos="relative">
                     <Box
                         transition="all .1s ease"
                         cursor="pointer"
@@ -80,11 +80,12 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                     </Box>
                     <Fade in={isHover || !!playStatus}>
                         <Circle
-                            ref={iconRef}
+                            {...iconBind}
                             bottom={5}
                             right={5}
                             opacity={playStatus ? 1 : 0.75}
                             size={10}
+                            zIndex={10}
                             transition="all .1s ease"
                             bg="black"
                             outline="none"

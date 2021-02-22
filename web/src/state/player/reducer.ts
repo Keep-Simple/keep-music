@@ -6,7 +6,10 @@ export const initialPlayerState: PlayerState = {
     selectedSongIdx: 0,
     songs: [],
     showPlayer: false,
-    albumLoading: false,
+    albumLoading: {
+        state: false,
+        id: undefined,
+    },
 }
 
 export function playerReducer(
@@ -28,9 +31,13 @@ export function playerReducer(
             }
         }
         case Player.LoadAlbum: {
+            const { id, isLoading } = action.payload
             return {
                 ...state,
-                albumLoading: action.payload.isLoading,
+                albumLoading: {
+                    id,
+                    state: isLoading,
+                },
             }
         }
         case Player.PlayNext: {
