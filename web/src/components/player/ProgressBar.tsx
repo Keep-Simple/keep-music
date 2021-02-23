@@ -41,7 +41,7 @@ export const ProgressBar = () => {
     const height = hovered ? '4px' : '2px'
 
     return (
-        <Box {...bind}>
+        <Box {...bind} onClick={(e) => e.stopPropagation()}>
             <Slider
                 focusThumbOnChange={false}
                 aria-label="progress-slider"

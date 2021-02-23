@@ -7,7 +7,7 @@
         "dev": "next dev",
         "prettier": "prettier -c --write '**/*'",
         "start": "next start",
-        "gen:theme-typings": "chakra-cli tokens ./src/theme.ts",
+        "gen:theme-typings": "chakra-cli tokens ./src/theme/theme.ts",
         "postinstall": "yarn gen:theme-typings",
         "gen": "graphql-codegen --config codegen.yml"
     },
@@ -25,7 +25,7 @@
         "date-fns": "^2.17.0",
         "downloadjs": "^1.4.7",
         "formik": "^2.2.6",
-        "framer-motion": "^3.5.2",
+        "framer-motion": "^3.6.7",
         "graphql": "^15.5.0",
         "is-mobile": "^2.2.2",
         "isomorphic-unfetch": "^3.1.0",
@@ -49,7 +49,7 @@
         "@graphql-codegen/typescript-react-apollo": "^2.2.1",
         "@svgr/webpack": "^5.5.0",
         "@types/howler": "^2.2.1",
-        "@types/node": "^14.14.28",
+        "@types/node": "^14.14.31",
         "@types/react-select": "^4.0.13",
         "typescript": "^4.1.5",
         "url-loader": "^4.1.1"

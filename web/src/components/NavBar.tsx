@@ -14,12 +14,15 @@ import {
 import NextLink from 'next/link'
 // import { ReactComponent as Logo } from '../../static/logo.svg'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
+import { Msg, Player } from '../state/player/actionTypes'
+import { usePlayer } from '../state/player/context'
 import { StyledLink } from './ui/StyledLink'
 
 export const NavBar: React.FC = () => {
     const { data, loading } = useMeQuery()
     const apolloClient = useApolloClient()
     const [logout] = useLogoutMutation()
+    const [dispatch, { showPanel }] = usePlayer()
 
     let body
 
@@ -84,6 +87,7 @@ export const NavBar: React.FC = () => {
             justifyContent="center"
             position="sticky"
             zIndex={10}
+            onClick={() => showPanel && dispatch(Msg(Player.TogglePanel))}
         >
             <Flex flex={1} justifyContent="space-between">
                 <StyledLink href="/">

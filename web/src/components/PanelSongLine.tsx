@@ -1,4 +1,4 @@
-import { Flex, Spacer, Text } from '@chakra-ui/react'
+import { Box, Flex, Image, Spacer, Text } from '@chakra-ui/react'
 import React, { FC } from 'react'
 import { Song } from '../generated/graphql'
 import { formatSeconds } from '../utils/formatSeconds'
@@ -10,7 +10,7 @@ export type PlayStatus = 'paused' | 'playing' | 'loading' | null
 export type PanelSongLineType = Pick<
     Song,
     'id' | 'name' | 'duration' | 'link' | 'albumId' | 'authorId'
-> & { status: PlayStatus; onClick: () => void }
+> & { status: PlayStatus; onClick: () => void; singer: string; cover: string }
 
 const icons = {
     playing: <Icons.Pause />,
@@ -22,6 +22,8 @@ export const PanelSongLine: FC<PanelSongLineType> = ({
     name,
     duration,
     status,
+    singer,
+    cover,
     onClick,
 }) => {
     const { hovered, bind } = useHover()
@@ -38,20 +40,26 @@ export const PanelSongLine: FC<PanelSongLineType> = ({
             h={57}
             align="center"
             px={2}
-            bg={status ? 'gray.600' : undefined}
+            bg={status ? 'whiteAlpha.300' : undefined}
         >
-            <Flex align="center">
-                <Flex
-                    cursor="pointer"
-                    boxSize={8}
+            <Flex align="center" justify="center">
+                <Image
                     mr={4}
-                    align="center"
-                    justify="center"
+                    src={cover}
+                    boxSize={8}
+                    alt="song cover"
+                    borderRadius="sm"
+                    objectFit="cover"
                     onClick={onClick}
-                >
-                    <IconOrOrder />
-                </Flex>
-                <Text fontWeight="500">{name}</Text>
+                />
+                <Box>
+                    <Text fontSize="md" fontWeight="semibold">
+                        {name}
+                    </Text>
+                    <Text color="#FFFFFFB3" mt={-1}>
+                        {singer}
+                    </Text>
+                </Box>
             </Flex>
             <Spacer />
             <Text fontWeight="400" color="whiteAlpha.700">
