@@ -42,7 +42,7 @@ export const Panel: FC = ({}) => {
                         />
                     </Fade>
                 </Center>
-                <Flex direction="column" w="38%" overflow="auto" mb={5}>
+                <Flex direction="column" w="38%" overflow="auto" my={5}>
                     {songs?.map((s, i) => {
                         const isCurrent = s.id === selectedSong?.id
 
@@ -68,9 +68,7 @@ export const Panel: FC = ({}) => {
                             <Fragment key={s.id}>
                                 {!isCurrent && i !== 0 && (
                                     <Divider
-                                        sx={{
-                                            borderColor: 'whiteAlpha.400',
-                                        }}
+                                        sx={{ borderColor: 'whiteAlpha.400' }}
                                     />
                                 )}
                                 <PanelSongLine

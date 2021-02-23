@@ -4,7 +4,7 @@ import { Song } from '../generated/graphql'
 import { Msg, Player } from '../state/player/actionTypes'
 import {
     useAudioPlayer,
-    usePlayerDispatch,
+    usePlayer,
     useSelectedSong,
 } from '../state/player/context'
 import { AlbumSongLine } from './AlbumSongLine'
@@ -27,7 +27,7 @@ type AlbumSongsProps = {
 }
 
 export const AlbumSongs: FC<AlbumSongsProps> = ({ songs }) => {
-    const dispatch = usePlayerDispatch()
+    const [dispatch, { songs: playerSongs }] = usePlayer()
     const selectedSong = useSelectedSong()
     const { paused, loading, togglePlay } = useAudioPlayer()
 
@@ -46,7 +46,12 @@ export const AlbumSongs: FC<AlbumSongsProps> = ({ songs }) => {
 
                 const onClick = () => {
                     if (!isCurrent) {
-                        dispatch(Msg(Player.ChangePlayIdx, { id: s.id }))
+                        const isInPlaylist = playerSongs?.find(
+                            (ps) => ps.id === s.id
+                        )
+                        isInPlaylist
+                            ? dispatch(Msg(Player.ChangePlayIdx, { id: s.id }))
+                            : dispatch(Msg(Player.AddSongs, { songs: [s] }))
                     } else {
                         togglePlay()
                     }
