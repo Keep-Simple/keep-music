@@ -1,4 +1,4 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Fade } from '@chakra-ui/react'
 import React from 'react'
 import { AlbumHead } from '../../components/AlbumHead'
 import { AlbumSongs } from '../../components/AlbumSongs'
@@ -26,10 +26,12 @@ const Album = () => {
 
     if (data?.album) {
         return skeleton(
-            <Box px="6%" pb="5%">
-                <AlbumHead {...data.album} />
-                <AlbumSongs songs={data.album.songs || []} />
-            </Box>
+            <Fade in={!loading}>
+                <Box px="6%" pb="5%">
+                    <AlbumHead {...data.album} />
+                    <AlbumSongs songs={data.album.songs || []} />
+                </Box>
+            </Fade>
         )
     }
 }

@@ -49,7 +49,7 @@ export const PanelSongLine: FC<PanelSongLineType> = ({
             align="center"
             cursor="grabbing"
             px={2}
-            bg={status || isDragging ? 'whiteAlpha.300' : undefined}
+            bg={status || isDragging ? 'whiteAlpha.100' : undefined}
         >
             <Flex align="center" justify="center">
                 <Box

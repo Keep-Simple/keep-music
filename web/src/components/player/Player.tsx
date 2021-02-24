@@ -38,6 +38,7 @@ const Player = () => {
         <>
             <Box
                 pos="fixed"
+                userSelect="none"
                 bottom={0}
                 right={0}
                 left={0}

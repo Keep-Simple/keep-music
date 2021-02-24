@@ -1,4 +1,4 @@
-import { Center, Fade, Flex, Image } from '@chakra-ui/react'
+import { Box, Fade, Flex, Image } from '@chakra-ui/react'
 import { indexBy } from 'rambda'
 import React, { FC, useLayoutEffect, useMemo, useState } from 'react'
 import { useAlbumQuery, useAlbumsQuery } from '../../generated/graphql'
@@ -75,21 +75,24 @@ export const Panel: FC = ({}) => {
                 right: 0,
                 zIndex: 20,
                 transition: '.28s ease',
+                userSelect: 'none',
             }}
         >
             <Flex pt={12} px={20} pb="72px" h="92vh" bg="black">
-                <Center mr={14} w="62%">
+                <Box mr={14} w="62%">
                     <Fade in={imageLoaded}>
                         <Image
+                            mx="auto"
                             objectFit="cover"
                             maxH="70vh"
                             minH="50vh"
+                            minW="40vw"
                             src={mainImage}
                             onLoad={() => setImageLoad(true)}
                             onClick={() => togglePlay()}
                         />
                     </Fade>
-                </Center>
+                </Box>
                 <Flex direction="column" w="38%" overflow="auto" my={5}>
                     <PanelSongs songs={songsWithHandlers} />
                 </Flex>

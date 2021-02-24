@@ -12,6 +12,7 @@ import {
     Text,
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
+import { useWindowScroll } from 'react-use'
 // import { ReactComponent as Logo } from '../../static/logo.svg'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
 import { Msg, Player } from '../state/player/actionTypes'
@@ -23,6 +24,8 @@ export const NavBar: React.FC = () => {
     const apolloClient = useApolloClient()
     const [logout] = useLogoutMutation()
     const [dispatch, { showPanel }] = usePlayer()
+
+    const { y } = useWindowScroll()
 
     let body
 
@@ -41,8 +44,8 @@ export const NavBar: React.FC = () => {
         )
     } else {
         body = (
-            <Menu>
-                <Circle bg="gray.600" size="43px">
+            <Menu placement="top-start">
+                <Circle bg="blue.600" size="43px">
                     <MenuButton
                         as={Text}
                         px={4}
@@ -56,7 +59,12 @@ export const NavBar: React.FC = () => {
                         {data.me.username.charAt(0)}
                     </MenuButton>
                 </Circle>
-                <MenuList>
+                <MenuList
+                    borderWidth={0}
+                    transition="none"
+                    transform="none"
+                    _groupHover={{ bg: 'gray.300' }}
+                >
                     <NextLink href="/">
                         <MenuItem>Home Page</MenuItem>
                     </NextLink>
@@ -83,10 +91,16 @@ export const NavBar: React.FC = () => {
         <Flex
             p={3}
             mb={4}
-            bg="gray.800"
             justifyContent="center"
-            position="sticky"
-            zIndex={10}
+            position="fixed"
+            top={0}
+            left={0}
+            right={0}
+            transition=".2s ease-out"
+            bg={y > 74 ? 'black' : 'transparent'}
+            borderBottomColor={y > 74 ? 'whiteAlpha.100' : 'transparent'}
+            borderBottomWidth="1px"
+            zIndex={999}
             onClick={() => showPanel && dispatch(Msg(Player.TogglePanel))}
         >
             <Flex flex={1} justifyContent="space-between">

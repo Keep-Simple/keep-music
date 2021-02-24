@@ -23,7 +23,12 @@ export const AlbumSongLine: FC<
 
         return (
             icons[status!] || (
-                <Text as="span" fontSize="sm" fontWeight="500">
+                <Text
+                    as="span"
+                    fontSize="sm"
+                    fontWeight="500"
+                    color="whiteAlpha.700"
+                >
                     {order}
                 </Text>
             )
@@ -36,7 +41,7 @@ export const AlbumSongLine: FC<
             h={57}
             align="center"
             px={2}
-            bg={status ? 'gray.600' : undefined}
+            bg={status ? 'whiteAlpha.100' : undefined}
         >
             <Flex align="center">
                 <Flex

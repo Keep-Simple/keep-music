@@ -60,7 +60,12 @@ export const AlbumSongs: FC<AlbumSongsProps> = ({ songs }) => {
                 return (
                     <Fragment key={s.id}>
                         {!isCurrent && i !== 0 && (
-                            <Divider sx={{ borderColor: 'gray.500' }} />
+                            <Divider
+                                sx={{
+                                    borderColor: 'whiteAlpha.100',
+                                    opacity: 1,
+                                }}
+                            />
                         )}
                         <AlbumSongLine
                             {...s}

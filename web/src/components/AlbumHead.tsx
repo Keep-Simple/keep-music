@@ -37,7 +37,7 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
         songs?.reduce((acc, v) => (acc += v.duration), 0) || 0
     )
     return (
-        <Flex mb={10}>
+        <Flex mb={16}>
             <Image
                 src={cover}
                 alt="album cover"
@@ -64,7 +64,7 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
                     color="black"
                     w={136}
                     fontSize="sm"
-                    fontWeight="semibold"
+                    fontWeight="500"
                     h="36px"
                     borderRadius={2}
                     variant="none"
