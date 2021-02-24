@@ -56,7 +56,7 @@ export const PanelSongs: FC<{ songs: PanelSongLineType[] }> = ({ songs }) => {
                                                 <Divider
                                                     sx={{
                                                         borderColor:
-                                                            'whiteAlpha.400',
+                                                            'whiteAlpha.200',
                                                     }}
                                                 />
                                             )}

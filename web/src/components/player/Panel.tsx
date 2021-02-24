@@ -1,6 +1,6 @@
 import { Box, Fade, Flex, Image } from '@chakra-ui/react'
 import { indexBy } from 'rambda'
-import React, { FC, useLayoutEffect, useMemo, useState } from 'react'
+import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
 import { useAlbumQuery, useAlbumsQuery } from '../../generated/graphql'
 import { Msg, Player } from '../../state/player/actionTypes'
 import {
@@ -21,10 +21,7 @@ export const Panel: FC = ({}) => {
         variables: { id: selectedSong.albumId },
     })
 
-    const albumById = useMemo(
-        () => indexBy('id', data?.albums ?? [data2?.album]),
-        [data?.albums, data2?.album]
-    )
+    const albumById = indexBy('id', data?.albums ?? [data2?.album])
 
     const mainImage = albumById[selectedSong.albumId]?.cover
 
@@ -64,6 +61,10 @@ export const Panel: FC = ({}) => {
         } as const
     })
 
+    useEffect(() => {
+        document.body.style.overflow = showPanel ? 'hidden' : 'auto'
+    }, [showPanel])
+
     return (
         <div
             style={{
@@ -78,7 +79,7 @@ export const Panel: FC = ({}) => {
                 userSelect: 'none',
             }}
         >
-            <Flex pt={12} px={20} pb="72px" h="92vh" bg="black">
+            <Flex pt={12} px={20} pb="72px" h="94vh" bg="black">
                 <Box mr={14} w="62%">
                     <Fade in={imageLoaded}>
                         <Image

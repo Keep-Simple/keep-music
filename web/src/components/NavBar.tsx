@@ -97,8 +97,10 @@ export const NavBar: React.FC = () => {
             left={0}
             right={0}
             transition=".2s ease-out"
-            bg={y > 74 ? 'black' : 'transparent'}
-            borderBottomColor={y > 74 ? 'whiteAlpha.100' : 'transparent'}
+            bg={y > 74 || showPanel ? 'black' : 'transparent'}
+            borderBottomColor={
+                y > 74 && !showPanel ? 'whiteAlpha.100' : 'transparent'
+            }
             borderBottomWidth="1px"
             zIndex={999}
             onClick={() => showPanel && dispatch(Msg(Player.TogglePanel))}
