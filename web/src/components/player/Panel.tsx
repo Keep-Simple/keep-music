@@ -1,25 +1,30 @@
 import { Center, Fade, Flex, Image } from '@chakra-ui/react'
 import { indexBy } from 'rambda'
 import React, { FC, useLayoutEffect, useMemo, useState } from 'react'
-import { useAlbumsQuery } from '../../generated/graphql'
+import { useAlbumQuery, useAlbumsQuery } from '../../generated/graphql'
 import { Msg, Player } from '../../state/player/actionTypes'
 import {
     useAudioPlayer,
     usePlayer,
     useSelectedSong,
-} from '../../state/player/context'
+} from '../../state/player/contextHooks'
 import { PanelSongs } from './PanelSongs'
 
 export const Panel: FC = ({}) => {
-    let [dispatch, { showPanel, songs }] = usePlayer()
-    const selectedSong = useSelectedSong()
-    const { data } = useAlbumsQuery({ fetchPolicy: 'cache-only' })
     const { paused, loading, togglePlay } = useAudioPlayer()
     const [imageLoaded, setImageLoad] = useState(false)
+    const [dispatch, { showPanel, songs }] = usePlayer()
+    const selectedSong = useSelectedSong()
+    const { data } = useAlbumsQuery({ fetchPolicy: 'cache-only' })
+    const { data: data2 } = useAlbumQuery({
+        fetchPolicy: 'cache-only',
+        variables: { id: selectedSong.albumId },
+    })
 
-    const albumById = useMemo(() => indexBy('id', data?.albums ?? []), [
-        data?.albums,
-    ])
+    const albumById = useMemo(
+        () => indexBy('id', data?.albums ?? [data2?.album]),
+        [data?.albums, data2?.album]
+    )
 
     const mainImage = albumById[selectedSong.albumId]?.cover
 
@@ -48,7 +53,7 @@ export const Panel: FC = ({}) => {
                   )
         }
 
-        const album = albumById[s.albumId]
+        const album = albumById[s.albumId]!
 
         return {
             ...s,

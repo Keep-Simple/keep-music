@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { Msg, Player } from '../../state/player/actionTypes'
-import { usePlayer } from '../../state/player/context'
+import { usePlayer } from '../../state/player/contextHooks'
 import { Icons } from '../ui/Icons'
 
 export const PanelToggle = () => {

@@ -15,7 +15,7 @@ export type PanelSongLineType = Pick<
     onClick: () => void
     singer: string
     cover: string
-    isDragging: boolean
+    isDragging?: boolean
 }
 
 export const PanelSongLine: FC<PanelSongLineType> = ({

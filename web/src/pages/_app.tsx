@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 import React from 'react'
-import { PlayerProviders } from '../state/player/context'
+import { PlayerProviders } from '../state/player/PlayerProviders'
 import { ThemeProviders } from '../theme/themeProviders'
 
 const PlayerWithNoSSR = dynamic(() => import('../components/player/Player'), {

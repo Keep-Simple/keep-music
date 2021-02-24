@@ -5,7 +5,10 @@ import {
     ViewSongMutation,
     ViewSongMutationVariables,
 } from '../generated/graphql'
-import { useAudioPosition, useSelectedSong } from '../state/player/context'
+import {
+    useAudioPosition,
+    useSelectedSong,
+} from './../state/player/contextHooks'
 
 const defaultPlayProgress = {
     progress: 0,

@@ -1,10 +1,14 @@
 import { Wrap, WrapItem, WrapProps } from '@chakra-ui/react'
 import React, { FC } from 'react'
+import { Msg, Player } from '../../state/player/actionTypes'
+import { usePlayerDispatch } from '../../state/player/contextHooks'
 import { Icons } from '../ui/Icons'
 import { PanelToggle } from './PanelToggle'
+import { ToggleLoop } from './ToggleLoop'
 import { VolumeControl } from './VolumeControl'
 
 export const RightControls: FC<WrapProps> = (props) => {
+    const dispatch = usePlayerDispatch()
     const iconProps = {
         onClick: (e: React.MouseEvent) => e.stopPropagation(),
         p: 2,
@@ -24,10 +28,12 @@ export const RightControls: FC<WrapProps> = (props) => {
                 <VolumeControl />
             </WrapItem>
             <WrapItem {...iconProps}>
-                <Icons.Loop />
+                <ToggleLoop />
             </WrapItem>
             <WrapItem {...iconProps}>
-                <Icons.Shuffle />
+                <Icons.Shuffle
+                    onClick={() => dispatch(Msg(Player.ShuffleList))}
+                />
             </WrapItem>
             <WrapItem {...iconProps}>
                 <PanelToggle />

@@ -1,4 +1,5 @@
 import { uniqWith } from 'rambda'
+import { shuffle } from '../../utils/shuffleArray'
 import { reorder } from '../../utils/swapElements'
 import { Actions, Player } from './actionTypes'
 import { PlayerState } from './entityTypes'
@@ -8,6 +9,7 @@ export const initialPlayerState: PlayerState = {
     songs: [],
     showPlayer: false,
     showPanel: false,
+    loop: null,
     albumLoading: {
         state: false,
         id: undefined,
@@ -43,19 +45,32 @@ export function playerReducer(
             }
         }
         case Player.PlayNext: {
+            const curIdx = state.selectedSongIdx
+            let idx
+            switch (state.loop) {
+                case 'list':
+                    idx = (curIdx + 1) % state.songs.length
+                    break
+                case 'one':
+                    idx = curIdx
+                    break
+                case null:
+                    idx = Math.min(curIdx + 1, state.songs.length - 1)
+                    break
+            }
             return {
                 ...state,
-                selectedSongIdx:
-                    (state.selectedSongIdx + 1) % state.songs.length,
+                selectedSongIdx: idx,
             }
         }
         case Player.PlayPrev: {
-            let newIdx = state.selectedSongIdx - 1
+            const curIdx = state.selectedSongIdx
+            let newIdx = curIdx - 1
             newIdx = newIdx < 0 ? state.songs.length - 1 : newIdx
 
             return {
                 ...state,
-                selectedSongIdx: newIdx,
+                selectedSongIdx: state.loop === 'one' ? curIdx : newIdx,
             }
         }
         case Player.TogglePanel: {
@@ -83,6 +98,22 @@ export function playerReducer(
                 selectedSongIdx: newSongs.findIndex(
                     (s) => s.id === selectedSongId
                 ),
+            }
+        }
+        case Player.ShuffleList: {
+            const newSongs = shuffle(
+                state.songs.filter((_, idx) => idx !== state.selectedSongIdx)
+            )
+            return {
+                ...state,
+                songs: [state.songs[state.selectedSongIdx], ...newSongs],
+                selectedSongIdx: 0,
+            }
+        }
+        case Player.LoopState: {
+            return {
+                ...state,
+                loop: action.payload.loop,
             }
         }
         default:

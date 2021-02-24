@@ -6,7 +6,7 @@ import {
     SliderTrack,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useAudioPlayer } from '../../state/player/context'
+import { useAudioPlayer } from '../../state/player/contextHooks'
 import { useHover } from '../../utils/hooks/useHover'
 import { Icons } from '../ui/Icons'
 

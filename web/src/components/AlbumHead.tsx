@@ -9,7 +9,7 @@ import {
 import React, { FC } from 'react'
 import { AlbumQuery } from '../generated/graphql'
 import { Msg, Player } from '../state/player/actionTypes'
-import { usePlayerDispatch } from '../state/player/context'
+import { usePlayerDispatch } from '../state/player/contextHooks'
 import { secondToMinutesAndHours } from '../utils/formatSeconds'
 import { Icons } from './ui/Icons'
 import { StyledLink } from './ui/StyledLink'

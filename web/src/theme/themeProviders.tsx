@@ -1,12 +1,12 @@
 import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { Fonts } from './Fonts'
+import { Global } from './Global'
 import theme from './theme'
 
 export const ThemeProviders: FC = ({ children }) => {
     return (
         <ChakraProvider resetCSS theme={theme}>
-            <Fonts />
+            <Global />
             <ColorModeProvider
                 options={{
                     useSystemColorMode: false,

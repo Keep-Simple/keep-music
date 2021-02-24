@@ -8,7 +8,10 @@ import {
 import React, { useLayoutEffect, useState } from 'react'
 import { MdGraphicEq } from 'react-icons/md'
 import { useTrackSongView } from '../../services/playerAnalytics'
-import { useAudioPosition, useDraggingTime } from '../../state/player/context'
+import {
+    useAudioPosition,
+    useDraggingTime,
+} from '../../state/player/contextHooks'
 import { useHover } from '../../utils/hooks/useHover'
 
 export const ProgressBar = () => {

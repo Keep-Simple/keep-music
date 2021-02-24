@@ -6,7 +6,7 @@ import {
     useAudioPlayer,
     usePlayer,
     useSelectedSong,
-} from '../state/player/context'
+} from '../state/player/contextHooks'
 import { AlbumSongLine } from './AlbumSongLine'
 
 export type SongLineType = Pick<

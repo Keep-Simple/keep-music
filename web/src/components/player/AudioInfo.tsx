@@ -1,7 +1,7 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react'
 import React, { FC } from 'react'
 import { useAlbumQuery } from '../../generated/graphql'
-import { useSelectedSong } from '../../state/player/context'
+import { useSelectedSong } from '../../state/player/contextHooks'
 import { StyledLink } from '../ui/StyledLink'
 
 export const AudioInfo: FC = () => {

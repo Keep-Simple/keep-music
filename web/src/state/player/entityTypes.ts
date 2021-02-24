@@ -14,6 +14,7 @@ export type PlayerState = {
         state: boolean
         id?: number
     }
+    loop: 'one' | 'list' | null
 }
 
 export type AudioContextValue = {

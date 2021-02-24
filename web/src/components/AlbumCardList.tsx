@@ -12,7 +12,7 @@ import {
     useAudioPlayer,
     usePlayer,
     useSelectedSong,
-} from '../state/player/context'
+} from '../state/player/contextHooks'
 import { AlbumCard } from './AlbumCard'
 import AlertUI from './ui/Alert'
 import { Loading } from './ui/Loading'

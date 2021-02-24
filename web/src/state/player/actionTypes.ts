@@ -1,5 +1,5 @@
 import { ActionMap, createMsg } from '../../utils/typeHelpers'
-import { PlayerSong } from './entityTypes'
+import { PlayerSong, PlayerState } from './entityTypes'
 
 export enum Player {
     AddSongs = 'ADD_SONGS',
@@ -9,6 +9,8 @@ export enum Player {
     TogglePanel = 'TOGGLE_PANEL',
     ChangePlayIdx = 'CHANGE_PLAY_IDX',
     ReorderSong = 'CHANGE_SONG_ORDER',
+    ShuffleList = 'SHUFFLE_LIST',
+    LoopState = 'SET_LOOP_STATE',
 }
 
 type Messages = {
@@ -16,7 +18,9 @@ type Messages = {
     [Player.LoadAlbum]: { isLoading: boolean; id?: number }
     [Player.ChangePlayIdx]: { id: number }
     [Player.ReorderSong]: { oldIdx: number; newIdx: number }
+    [Player.LoopState]: { loop: PlayerState['loop'] }
     [Player.PlayNext]: undefined
+    [Player.ShuffleList]: undefined
     [Player.PlayPrev]: undefined
     [Player.TogglePanel]: undefined
 }
