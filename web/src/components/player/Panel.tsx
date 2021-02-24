@@ -1,6 +1,6 @@
-import { Center, Divider, Fade, Flex, Image, Slide } from '@chakra-ui/react'
+import { Center, Fade, Flex, Image } from '@chakra-ui/react'
 import { indexBy } from 'rambda'
-import React, { FC, Fragment, useLayoutEffect, useMemo, useState } from 'react'
+import React, { FC, useLayoutEffect, useMemo, useState } from 'react'
 import { useAlbumsQuery } from '../../generated/graphql'
 import { Msg, Player } from '../../state/player/actionTypes'
 import {
@@ -8,12 +8,12 @@ import {
     usePlayer,
     useSelectedSong,
 } from '../../state/player/context'
-import { PanelSongLine } from '../PanelSongLine'
+import { PanelSongs } from './PanelSongs'
 
 export const Panel: FC = ({}) => {
     let [dispatch, { showPanel, songs }] = usePlayer()
     const selectedSong = useSelectedSong()
-    const { data } = useAlbumsQuery()
+    const { data } = useAlbumsQuery({ fetchPolicy: 'cache-only' })
     const { paused, loading, togglePlay } = useAudioPlayer()
     const [imageLoaded, setImageLoad] = useState(false)
 
@@ -27,8 +27,51 @@ export const Panel: FC = ({}) => {
         setImageLoad(false)
     }, [mainImage])
 
+    const songsWithHandlers = songs?.map((s) => {
+        const isCurrent = s.id === selectedSong?.id
+
+        const status = isCurrent
+            ? loading
+                ? 'loading'
+                : paused
+                ? 'paused'
+                : 'playing'
+            : null
+
+        const onClick = () => {
+            isCurrent
+                ? togglePlay()
+                : dispatch(
+                      Msg(Player.ChangePlayIdx, {
+                          id: s.id,
+                      })
+                  )
+        }
+
+        const album = albumById[s.albumId]
+
+        return {
+            ...s,
+            onClick,
+            status,
+            cover: album?.cover,
+            singer: album?.author?.name,
+        } as const
+    })
+
     return (
-        <Slide direction="bottom" in={showPanel} style={{ zIndex: 20 }}>
+        <div
+            style={{
+                transform: !showPanel ? 'translateY(100%)' : undefined,
+                position: 'fixed',
+                maxWidth: '100vw',
+                bottom: 0,
+                left: 0,
+                right: 0,
+                zIndex: 20,
+                transition: '.28s ease',
+            }}
+        >
             <Flex pt={12} px={20} pb="72px" h="92vh" bg="black">
                 <Center mr={14} w="62%">
                     <Fade in={imageLoaded}>
@@ -43,46 +86,9 @@ export const Panel: FC = ({}) => {
                     </Fade>
                 </Center>
                 <Flex direction="column" w="38%" overflow="auto" my={5}>
-                    {songs?.map((s, i) => {
-                        const isCurrent = s.id === selectedSong?.id
-
-                        const status = isCurrent
-                            ? loading
-                                ? 'loading'
-                                : paused
-                                ? 'paused'
-                                : 'playing'
-                            : null
-
-                        const onClick = () => {
-                            isCurrent
-                                ? togglePlay()
-                                : dispatch(
-                                      Msg(Player.ChangePlayIdx, {
-                                          id: s.id,
-                                      })
-                                  )
-                        }
-
-                        return (
-                            <Fragment key={s.id}>
-                                {!isCurrent && i !== 0 && (
-                                    <Divider
-                                        sx={{ borderColor: 'whiteAlpha.400' }}
-                                    />
-                                )}
-                                <PanelSongLine
-                                    {...s}
-                                    status={status}
-                                    onClick={onClick}
-                                    cover={albumById[s.albumId].cover}
-                                    singer={albumById[s.albumId].author.name}
-                                />
-                            </Fragment>
-                        )
-                    })}
+                    <PanelSongs songs={songsWithHandlers} />
                 </Flex>
             </Flex>
-        </Slide>
+        </div>
     )
 }

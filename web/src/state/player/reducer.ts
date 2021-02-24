@@ -1,4 +1,5 @@
 import { uniqWith } from 'rambda'
+import { reorder } from '../../utils/swapElements'
 import { Actions, Player } from './actionTypes'
 import { PlayerState } from './entityTypes'
 
@@ -68,6 +69,19 @@ export function playerReducer(
                 ...state,
                 selectedSongIdx: state.songs.findIndex(
                     (s) => s.id === action.payload.id
+                ),
+            }
+        }
+        case Player.ReorderSong: {
+            const { oldIdx, newIdx } = action.payload
+            const selectedSongId = state.songs[state.selectedSongIdx].id
+            const newSongs = reorder(state.songs, oldIdx, newIdx)
+
+            return {
+                ...state,
+                songs: newSongs,
+                selectedSongIdx: newSongs.findIndex(
+                    (s) => s.id === selectedSongId
                 ),
             }
         }

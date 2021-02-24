@@ -8,12 +8,14 @@ export enum Player {
     PlayPrev = 'PLAY_PREV_SONG',
     TogglePanel = 'TOGGLE_PANEL',
     ChangePlayIdx = 'CHANGE_PLAY_IDX',
+    ReorderSong = 'CHANGE_SONG_ORDER',
 }
 
 type Messages = {
     [Player.AddSongs]: { songs: PlayerSong[] }
     [Player.LoadAlbum]: { isLoading: boolean; id?: number }
     [Player.ChangePlayIdx]: { id: number }
+    [Player.ReorderSong]: { oldIdx: number; newIdx: number }
     [Player.PlayNext]: undefined
     [Player.PlayPrev]: undefined
     [Player.TogglePanel]: undefined

@@ -1,18 +1,25 @@
 import { Box, Center, Flex, Image, Spacer, Text } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { Song } from '../generated/graphql'
-import { formatSeconds } from '../utils/formatSeconds'
-import { useHover } from '../utils/hooks/useHover'
-import { Icons } from './ui/Icons'
+import { Song } from '../../generated/graphql'
+import { formatSeconds } from '../../utils/formatSeconds'
+import { useHover } from '../../utils/hooks/useHover'
+import { Icons } from '../ui/Icons'
 
 export type PlayStatus = 'paused' | 'playing' | 'loading' | null
 
 export type PanelSongLineType = Pick<
     Song,
     'id' | 'name' | 'duration' | 'link' | 'albumId' | 'authorId'
-> & { status: PlayStatus; onClick: () => void; singer: string; cover: string }
+> & {
+    status: PlayStatus
+    onClick: () => void
+    singer: string
+    cover: string
+    isDragging: boolean
+}
 
 export const PanelSongLine: FC<PanelSongLineType> = ({
+    isDragging,
     name,
     duration,
     status,
@@ -40,8 +47,9 @@ export const PanelSongLine: FC<PanelSongLineType> = ({
             {...bind}
             h={57}
             align="center"
+            cursor="grabbing"
             px={2}
-            bg={status ? 'whiteAlpha.300' : undefined}
+            bg={status || isDragging ? 'whiteAlpha.300' : undefined}
         >
             <Flex align="center" justify="center">
                 <Box
@@ -54,12 +62,13 @@ export const PanelSongLine: FC<PanelSongLineType> = ({
                     <Image
                         src={cover}
                         alt="song cover"
+                        boxSize={8}
                         borderRadius="sm"
                         objectFit="cover"
                     />
                     <Center
                         pos="absolute"
-                        bg={hovered || status ? 'blackAlpha.300' : ''}
+                        bg={hovered || status ? 'blackAlpha.500' : ''}
                         top={0}
                         bottom={0}
                         right={0}

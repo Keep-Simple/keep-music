@@ -64,10 +64,11 @@ export const AlbumCardList = () => {
 
     return (
         <SimpleGrid
-            px={4}
+            px={20}
             justifyItems="center"
             minChildWidth={coverSize}
-            spacing={4}
+            spacingX={4}
+            spacingY={12}
             columns={[2, 2, 3, 4, 4, 5]}
         >
             {data?.albums?.map(({ id, author, name, cover }) => {
