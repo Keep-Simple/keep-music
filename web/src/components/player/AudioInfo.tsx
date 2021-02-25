@@ -1,15 +1,54 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react'
-import React, { FC } from 'react'
+import React, { FC, useMemo } from 'react'
+import { useMediaMeta, useMediaSession } from 'use-media-session'
 import { useAlbumQuery } from '../../generated/graphql'
-import { useSelectedSong } from '../../state/player/contextHooks'
+import { Msg, Player } from '../../state/player/actionTypes'
+import {
+    useAudioPlayer,
+    usePlayerDispatch,
+    useSelectedSong,
+} from '../../state/player/contextHooks'
 import { StyledLink } from '../ui/StyledLink'
 
 export const AudioInfo: FC = () => {
     const { name, views, authorId, albumId } = useSelectedSong()
+    const dispatch = usePlayerDispatch()
+    const { togglePlay, paused, loading, audioRef } = useAudioPlayer()
 
     const { data } = useAlbumQuery({
         variables: { id: albumId },
         skip: !albumId,
+    })
+
+    const artwork = useMemo(
+        () => [{ src: data?.album?.cover ?? '', sizes: '100x150' }],
+        [data?.album]
+    )
+
+    useMediaSession({
+        playbackState: loading ? (paused ? 'paused' : 'playing') : 'none',
+        onPause: () => togglePlay(),
+        onPlay: () => togglePlay(),
+        onSeekBackward: () => {
+            if (audioRef.current) {
+                audioRef.current.currentTime -= 15
+            }
+        },
+        onSeekForward: () => {
+            if (audioRef.current) {
+                audioRef.current.currentTime += 15
+            }
+        },
+        onStop: () => togglePlay(),
+        onNextTrack: () => dispatch(Msg(Player.PlayNext)),
+        onPreviousTrack: () => dispatch(Msg(Player.PlayPrev)),
+    })
+
+    useMediaMeta({
+        title: name,
+        album: data?.album?.name,
+        artist: data?.album?.author.name,
+        artwork,
     })
 
     return (

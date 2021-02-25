@@ -1,3 +1,4 @@
+import { HTMLMediaControls } from 'react-use/lib/factory/createHTMLMediaHook'
 import { Song } from '../../generated/graphql'
 
 export type PlayerSong = Pick<
@@ -25,6 +26,8 @@ export type AudioContextValue = {
     setVolume: (num: number) => void
     togglePlay: (is?: boolean) => void
     toggleMute: (is?: boolean) => void
+    audioRef: { current: HTMLAudioElement | null }
+    seek: HTMLMediaControls['seek']
 }
 
 export type AudioPositionContetValue = {

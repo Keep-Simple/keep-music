@@ -48,6 +48,8 @@ export const PlayerProviders: FC = ({ children }) => {
                 audioState.paused || is ? controls.play() : controls.pause(),
             toggleMute: (is) =>
                 audioState.muted || is ? controls.unmute() : controls.mute(),
+            audioRef: ref,
+            seek: controls.seek,
         }),
         [audioState.volume, audioState.muted, audioState.paused, loading]
     )
