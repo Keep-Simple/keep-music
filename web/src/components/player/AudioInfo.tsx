@@ -1,7 +1,8 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react'
-import React, { FC, useMemo } from 'react'
+import React, { FC, useEffect, useMemo } from 'react'
 import { useMediaMeta, useMediaSession } from 'use-media-session'
 import { useAlbumQuery } from '../../generated/graphql'
+import { useMedia } from '../../react-chromecast'
 import { Msg, Player } from '../../state/player/actionTypes'
 import {
     useAudioPlayer,
@@ -11,9 +12,16 @@ import {
 import { StyledLink } from '../ui/StyledLink'
 
 export const AudioInfo: FC = () => {
-    const { name, views, authorId, albumId } = useSelectedSong()
+    const { id, name, views, authorId, albumId, link } = useSelectedSong()
     const dispatch = usePlayerDispatch()
-    const { togglePlay, paused, loading, audioRef } = useAudioPlayer()
+    const {
+        togglePlay,
+        paused,
+        loading,
+        audioRef,
+        toggleMute,
+    } = useAudioPlayer()
+    const media = useMedia()
 
     const { data } = useAlbumQuery({
         variables: { id: albumId },
@@ -24,6 +32,22 @@ export const AudioInfo: FC = () => {
         () => [{ src: data?.album?.cover ?? '', sizes: '100x150' }],
         [data?.album]
     )
+
+    useEffect(() => {
+        const album = data?.album
+        if (!album) return
+
+        media?.playMedia({
+            cover: album.cover,
+            releaseYear: album.releaseYear,
+            albumName: album.name,
+            albumArtist: album.author.name,
+            src: link,
+            title: name,
+        })
+
+        toggleMute(true)
+    }, [id])
 
     useMediaSession({
         playbackState: loading ? (paused ? 'paused' : 'playing') : 'none',
@@ -49,6 +73,10 @@ export const AudioInfo: FC = () => {
         album: data?.album?.name,
         artist: data?.album?.author.name,
         artwork,
+    })
+
+    const GoogleCast = React.createElement('google-cast-launcher', {
+        id: 'castbutton',
     })
 
     return (
@@ -80,6 +108,7 @@ export const AudioInfo: FC = () => {
                     {` • ${views} views`}
                 </Text>
             </Box>
+            {GoogleCast}
         </Flex>
     )
 }

@@ -8,6 +8,7 @@ import React, {
 } from 'react'
 import { useAudio } from 'react-use'
 import { DEFAULT_VOLUME } from '../../constants'
+import CastProvider from '../../react-chromecast'
 import { Actions, Msg, Player } from './actionTypes'
 import {
     DraggingTimeContext,
@@ -40,16 +41,18 @@ export const PlayerProviders: FC = ({ children }) => {
     const audioValue: AudioContextValue = useMemo(
         () => ({
             loading,
+            audioRef: ref,
             setVolume: controls.volume,
+            seek: controls.seek,
             volume: audioState.volume,
             muted: audioState.muted,
             paused: audioState.paused,
-            togglePlay: (is) =>
-                audioState.paused || is ? controls.play() : controls.pause(),
-            toggleMute: (is) =>
-                audioState.muted || is ? controls.unmute() : controls.mute(),
-            audioRef: ref,
-            seek: controls.seek,
+            togglePlay: (is) => {
+                is ?? audioState.paused ? controls.play() : controls.pause()
+            },
+            toggleMute: (is) => {
+                is ?? !audioState.muted ? controls.mute() : controls.unmute()
+            },
         }),
         [audioState.volume, audioState.muted, audioState.paused, loading]
     )
@@ -72,7 +75,7 @@ export const PlayerProviders: FC = ({ children }) => {
             switch (action.type) {
                 case Player.PlayPrev:
                     if (audioRef.currentTime > 10) {
-                        controls.seek(0)
+                        audioPositionValue.seek(0)
                         break
                     }
                 default:
@@ -87,7 +90,7 @@ export const PlayerProviders: FC = ({ children }) => {
         setLoading(true)
     }, [currentSong.id])
 
-    useEffect(() => controls.volume(DEFAULT_VOLUME), [])
+    useEffect(() => audioValue.setVolume(DEFAULT_VOLUME), [])
 
     return (
         <PlayerContext.Provider value={playerState}>
@@ -95,8 +98,10 @@ export const PlayerProviders: FC = ({ children }) => {
                 <PlayerAudioPosition.Provider value={audioPositionValue}>
                     <DraggingTimeContext.Provider value={draggingState}>
                         <PlayerDispatchContext.Provider value={dispatchWithMID}>
-                            {audio}
-                            {children}
+                            <CastProvider>
+                                {audio}
+                                {children}
+                            </CastProvider>
                         </PlayerDispatchContext.Provider>
                     </DraggingTimeContext.Provider>
                 </PlayerAudioPosition.Provider>
