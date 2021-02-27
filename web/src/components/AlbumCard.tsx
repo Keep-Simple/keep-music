@@ -56,12 +56,10 @@ export const AlbumCard: FC<AlbumCardProps> = ({
     return (
         <Box w={coverSize} userSelect="none">
             <NextLink href={`/album/${id}`}>
-                <Box {...bind} pos="relative" bg="transparent">
+                <Box {...bind} pos="relative">
                     <Box
                         transition="all .1s ease"
                         cursor="pointer"
-                        bg="transparent"
-                        zIndex={12}
                         boxShadow={
                             isHover
                                 ? 'inset 0px 101px 82px 3px rgba(0,0,0,0.4)'

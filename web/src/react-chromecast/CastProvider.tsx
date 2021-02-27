@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react'
 import { Helmet } from 'react-helmet'
-import castContext from '../context/castContext'
+import castContext from './castContext'
 
 const CastProvider: FC = ({ children }) => {
     const [
@@ -13,6 +13,7 @@ const CastProvider: FC = ({ children }) => {
         setRemotePlayerController,
     ] = useState<cast.framework.RemotePlayerController>()
     const [castCtx, setCastCtx] = useState<cast.framework.CastContext>()
+    const [deviceName, setDeviceName] = useState('')
 
     const [connected, setConnected] = useState(false)
 
@@ -31,10 +32,12 @@ const CastProvider: FC = ({ children }) => {
                 remotePlayer
             )
 
-            const connectHandler = (
-                ev: cast.framework.RemotePlayerChangedEvent
-            ) => {
-                setConnected(ev.value)
+            const connectHandler = ({
+                value,
+            }: cast.framework.RemotePlayerChangedEvent) => {
+                const device = castCtx.getCurrentSession()?.getCastDevice()
+                setConnected(value)
+                setDeviceName(value ? device?.friendlyName || '' : '')
             }
 
             remotePlayerController.addEventListener(
@@ -69,6 +72,7 @@ const CastProvider: FC = ({ children }) => {
                     remotePlayer,
                     connected,
                     remotePlayerController,
+                    deviceName,
                 }}
             >
                 {children}
@@ -76,7 +80,5 @@ const CastProvider: FC = ({ children }) => {
         </>
     )
 }
-
-export const useRemoteAudio = () => {}
 
 export default CastProvider

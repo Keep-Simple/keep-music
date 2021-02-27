@@ -41,10 +41,6 @@ export const AudioInfo: FC = () => {
         artwork,
     })
 
-    const GoogleCast = React.createElement('google-cast-launcher', {
-        id: 'castbutton',
-    })
-
     return (
         <Flex align="center" justify="center">
             <Image
@@ -74,7 +70,6 @@ export const AudioInfo: FC = () => {
                     {` • ${views} views`}
                 </Text>
             </Box>
-            {GoogleCast}
         </Flex>
     )
 }

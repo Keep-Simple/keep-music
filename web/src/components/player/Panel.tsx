@@ -1,18 +1,23 @@
-import { Box, Fade, Flex, Image } from '@chakra-ui/react'
+import { Box, Fade, Flex, Image, Text } from '@chakra-ui/react'
 import { indexBy } from 'rambda'
 import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
 import { useAlbumQuery, useAlbumsQuery } from '../../generated/graphql'
+import { useCastContext } from '../../react-chromecast/castContext'
 import { Msg, Player } from '../../state/player/actionTypes'
 import {
     useAudioPlayer,
     usePlayer,
     useSelectedSong,
 } from '../../state/player/contextHooks'
+import { useHover } from '../../utils/hooks/useHover'
+import { GoogleCastButton } from './GoogleCastButton'
 import { PanelSongs } from './PanelSongs'
 
 export const Panel: FC = ({}) => {
     const { paused, loading, togglePlay } = useAudioPlayer()
+    const { deviceName } = useCastContext()
     const [imageLoaded, setImageLoad] = useState(false)
+    const { hovered, bind } = useHover()
     const [dispatch, { showPanel, songs }] = usePlayer()
     const selectedSong = useSelectedSong()
     const { data } = useAlbumsQuery({ fetchPolicy: 'cache-only' })
@@ -65,39 +70,81 @@ export const Panel: FC = ({}) => {
         document.body.style.overflow = showPanel ? 'hidden' : 'auto'
     }, [showPanel])
 
+    const ImageHoveredItems = () => {
+        return deviceName ? (
+            <Flex
+                pos="absolute"
+                bg="black"
+                borderRadius="md"
+                align="center"
+                opacity={0.85}
+                bottom={6}
+                left={4}
+                p={2}
+            >
+                <GoogleCastButton />
+                <Text ml={3}>
+                    {`Playing on `}
+                    <Text fontWeight="bold" as="span">
+                        {deviceName}
+                    </Text>
+                </Text>
+            </Flex>
+        ) : hovered ? (
+            <Box pos="absolute" right={6} top={6} color="white">
+                <GoogleCastButton disconnectedColor="white" />
+            </Box>
+        ) : null
+    }
+
     return (
-        <div
-            style={{
-                transform: !showPanel ? 'translateY(100%)' : undefined,
-                position: 'fixed',
-                maxWidth: '100vw',
-                bottom: 0,
-                left: 0,
-                right: 0,
-                zIndex: 20,
-                transition: '.28s ease',
-                userSelect: 'none',
-            }}
+        <Box
+            transform={!showPanel ? 'translateY(100%)' : undefined} // not using framer-motion to fix react-beatufil dnd issue with transfrom property
+            bg="black"
+            pos="fixed"
+            maxWidth="100vw"
+            bottom={0}
+            left={0}
+            right={0}
+            zIndex={20}
+            transition=".28s ease"
+            userSelect="none"
         >
-            <Flex pt={12} px={20} pb="72px" h="94vh" bg="black">
+            <Flex pt={16} pl={20} pr={24} pb="72px" h="94vh">
                 <Box mr={14} w="62%">
                     <Fade in={imageLoaded}>
-                        <Image
+                        <Box
                             mx="auto"
-                            objectFit="cover"
-                            maxH="70vh"
-                            minH="50vh"
-                            minW="40vw"
-                            src={mainImage}
+                            w="fit-content"
+                            h="fit-content"
+                            transition="all .1s ease"
+                            pos="relative"
                             onLoad={() => setImageLoad(true)}
                             onClick={() => togglePlay()}
-                        />
+                            boxShadow={
+                                hovered
+                                    ? 'inset 0px 101px 82px 3px rgba(0,0,0,0.6)'
+                                    : 'initial'
+                            }
+                            {...bind}
+                        >
+                            <Image
+                                zIndex={-2}
+                                src={mainImage}
+                                objectFit="cover"
+                                pos="relative"
+                                maxH="70vh"
+                                minH="50vh"
+                                minW="40vw"
+                            />
+                            <ImageHoveredItems />
+                        </Box>
                     </Fade>
                 </Box>
-                <Flex direction="column" w="38%" overflow="auto" my={5}>
+                <Flex direction="column" w="34%" overflow="auto">
                     <PanelSongs songs={songsWithHandlers} />
                 </Flex>
             </Flex>
-        </div>
+        </Box>
     )
 }

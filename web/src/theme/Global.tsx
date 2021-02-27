@@ -15,13 +15,12 @@ export const Global = () => (
 
         ::-webkit-scrollbar-track {
           background-color: rgba(0, 0, 0, 0.3);
-          // border: 1px solid #60606099;
         }
 
         ::-webkit-scrollbar-thumb {
           background-color: #606060;
-          outline: 1px solid slategrey;
         }
+
       `}
     />
 )

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDebounce } from 'react-use'
-import { DEFAULT_VOLUME } from '../../constants'
-import { useCastContext } from '../context/castContext'
+import { DEFAULT_VOLUME } from '../constants'
+import { useCastContext } from './castContext'
 
 export const useCastPlayer = ({ loop = false }) => {
     const {
@@ -189,21 +189,3 @@ export const useCastPlayer = ({ loop = false }) => {
         },
     }
 }
-
-// sync local and remote volume
-// remotePlayer.volumeLevel =
-//     localPlayer.audioRef.current?.volume || volume
-// remotePlayerController.setVolumeLevel()
-
-// const addMedia = useCallback(
-//     async (src: string) => {
-//         // if (!castReceiver && !media) return
-//         // @ts-ignore
-//         const mediaInfo = new castCtx()?.getCastState().media.MediaInfo(src)
-//         // @ts-ignore
-//         const request = new chrome.cast.media.LoadRequest(mediaInfo)
-//         const queueItem = new castReceiver.media.QueueItem(mediaInfo)
-//         await media.queueAppendItem(queueItem)
-//     },
-//     [media]
-// )
