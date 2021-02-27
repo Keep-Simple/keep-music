@@ -1,1 +1,1 @@
-export const DEFAULT_VOLUME = 0.5
+export const DEFAULT_VOLUME = 0.3

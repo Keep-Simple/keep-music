@@ -6,12 +6,16 @@ import {
     SliderTrack,
 } from '@chakra-ui/react'
 import React from 'react'
-import { useAudioPlayer } from '../../state/player/contextHooks'
+import {
+    useAudioPlayer,
+    useAudioPosition,
+} from '../../state/player/contextHooks'
 import { useHover } from '../../utils/hooks/useHover'
 import { Icons } from '../ui/Icons'
 
 export const VolumeControl = () => {
-    const { toggleMute, setVolume, muted, volume } = useAudioPlayer()
+    const { toggleMute, setVolume, muted } = useAudioPlayer()
+    const { volume } = useAudioPosition()
     const { hovered, bind } = useHover()
 
     const iconProps = {

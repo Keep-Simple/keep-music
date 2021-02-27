@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic'
 import React from 'react'
-import { PlayerProviders } from '../state/player/PlayerProviders'
+import PlayerProviders from '../state/player/PlayerProviders'
 import '../theme/styles.css'
 import { ThemeProviders } from '../theme/themeProviders'
 

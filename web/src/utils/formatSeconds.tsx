@@ -1,6 +1,6 @@
 import { formatDuration, intervalToDuration } from 'date-fns'
 
-export function formatSeconds(sec: number) {
+export function formatSeconds(sec = 0) {
     const { hours, minutes, seconds } = intervalToDuration({
         start: 0,
         end: sec * 1000,

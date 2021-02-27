@@ -1,2 +1,2 @@
 export { default } from './components/CastProvider'
-export { default as useMedia } from './hooks/useMedia'
+export { useCastPlayer } from './hooks/useCastPlayer'

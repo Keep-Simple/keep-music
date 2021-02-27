@@ -1,15 +1,7 @@
-import React, {
-    FC,
-    useCallback,
-    useEffect,
-    useMemo,
-    useReducer,
-    useState,
-} from 'react'
-import { useAudio } from 'react-use'
+import dynamic from 'next/dynamic'
+import React, { FC, useEffect, useReducer, useState } from 'react'
 import { DEFAULT_VOLUME } from '../../constants'
-import CastProvider from '../../react-chromecast'
-import { Actions, Msg, Player } from './actionTypes'
+import { withApollo } from '../../utils/withApollo'
 import {
     DraggingTimeContext,
     PlayerAudio,
@@ -17,95 +9,57 @@ import {
     PlayerContext,
     PlayerDispatchContext,
 } from './context'
-import { AudioContextValue, AudioPositionContetValue } from './entityTypes'
 import { initialPlayerState, playerReducer } from './reducer'
+import { useRemoteOrLocalAudio } from './useRemoteOrLocalAudio'
 
-export const PlayerProviders: FC = ({ children }) => {
-    const draggingState = useState(0)
-    const [loading, setLoading] = useState(false)
+const CastProviderNoSSR = dynamic(() => import('../../react-chromecast'), {
+    ssr: false,
+})
+
+const PlayerStateProvider: FC = ({ children }) => {
     const [playerState, dispatch] = useReducer(
         playerReducer,
         initialPlayerState
     )
 
-    const currentSong = playerState.songs[playerState.selectedSongIdx] ?? {}
-
-    const [audio, audioState, controls, ref] = useAudio({
-        src: currentSong.link,
-        autoPlay: true,
-        loop: playerState.loop === 'one',
-        onEnded: () => dispatch(Msg(Player.PlayNext)),
-        onCanPlay: () => setLoading(false),
-    })
-
-    const audioValue: AudioContextValue = useMemo(
-        () => ({
-            loading,
-            audioRef: ref,
-            setVolume: controls.volume,
-            seek: controls.seek,
-            volume: audioState.volume,
-            muted: audioState.muted,
-            paused: audioState.paused,
-            togglePlay: (is) => {
-                is ?? audioState.paused ? controls.play() : controls.pause()
-            },
-            toggleMute: (is) => {
-                is ?? !audioState.muted ? controls.mute() : controls.unmute()
-            },
-        }),
-        [audioState.volume, audioState.muted, audioState.paused, loading]
+    return (
+        <PlayerContext.Provider value={playerState}>
+            <PlayerDispatchContext.Provider value={dispatch}>
+                <CastProviderNoSSR>{children}</CastProviderNoSSR>
+            </PlayerDispatchContext.Provider>
+        </PlayerContext.Provider>
     )
+}
 
-    const audioPositionValue: AudioPositionContetValue = {
-        loadProgress: !loading
-            ? Math.floor(
-                  (audioState.buffered[0]?.end / audioState.duration) * 100
-              ) || 0
-            : 0,
-        progress: Math.floor((audioState.time / audioState.duration) * 100),
-        position: Math.floor(audioState.time),
-        seek: controls.seek,
-        duration: audioState.duration,
-    }
+const AudioPlayerStateProvider: FC = ({ children }) => {
+    const draggingState = useState(0)
 
-    const dispatchWithMID = useCallback((action: Actions) => {
-        const audioRef = ref.current
-        if (audioRef) {
-            switch (action.type) {
-                case Player.PlayPrev:
-                    if (audioRef.currentTime > 10) {
-                        audioPositionValue.seek(0)
-                        break
-                    }
-                default:
-                    dispatch(action)
-            }
-        } else {
-            dispatch(action)
-        }
-    }, [])
-
-    useEffect(() => {
-        setLoading(true)
-    }, [currentSong.id])
+    const {
+        audioPositionValue,
+        audioValue,
+        localPlayerAudioNode,
+    } = useRemoteOrLocalAudio()
 
     useEffect(() => audioValue.setVolume(DEFAULT_VOLUME), [])
 
     return (
-        <PlayerContext.Provider value={playerState}>
-            <PlayerAudio.Provider value={audioValue}>
-                <PlayerAudioPosition.Provider value={audioPositionValue}>
-                    <DraggingTimeContext.Provider value={draggingState}>
-                        <PlayerDispatchContext.Provider value={dispatchWithMID}>
-                            <CastProvider>
-                                {audio}
-                                {children}
-                            </CastProvider>
-                        </PlayerDispatchContext.Provider>
-                    </DraggingTimeContext.Provider>
-                </PlayerAudioPosition.Provider>
-            </PlayerAudio.Provider>
-        </PlayerContext.Provider>
+        <PlayerAudio.Provider value={audioValue}>
+            <PlayerAudioPosition.Provider value={audioPositionValue}>
+                <DraggingTimeContext.Provider value={draggingState}>
+                    {localPlayerAudioNode}
+                    {children}
+                </DraggingTimeContext.Provider>
+            </PlayerAudioPosition.Provider>
+        </PlayerAudio.Provider>
     )
 }
+
+const PlayerProviders: FC = ({ children }) => {
+    return (
+        <PlayerStateProvider>
+            <AudioPlayerStateProvider>{children}</AudioPlayerStateProvider>
+        </PlayerStateProvider>
+    )
+}
+
+export default withApollo({ ssr: true })(PlayerProviders)
