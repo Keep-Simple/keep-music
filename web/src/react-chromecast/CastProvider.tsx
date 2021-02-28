@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from 'react'
-import { Helmet } from 'react-helmet'
+import Head from 'next/head'
+import React, { FC, useEffect, useState } from 'react'
 import castContext from './castContext'
 
 const CastProvider: FC = ({ children }) => {
@@ -63,9 +63,9 @@ const CastProvider: FC = ({ children }) => {
 
     return (
         <>
-            <Helmet>
+            <Head>
                 <script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1" />
-            </Helmet>
+            </Head>
             <castContext.Provider
                 value={{
                     castCtx,

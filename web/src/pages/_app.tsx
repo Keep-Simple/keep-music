@@ -1,4 +1,5 @@
 import dynamic from 'next/dynamic'
+import Head from 'next/head'
 import React from 'react'
 import PlayerProviders from '../state/player/PlayerProviders'
 import { ThemeProviders } from '../theme/themeProviders'
@@ -9,12 +10,17 @@ const PlayerWithNoSSR = dynamic(() => import('../components/player/Player'), {
 
 function MyApp({ Component, pageProps }: any) {
     return (
-        <ThemeProviders>
-            <PlayerProviders>
-                <Component {...pageProps} />
-                <PlayerWithNoSSR />
-            </PlayerProviders>
-        </ThemeProviders>
+        <>
+            <Head>
+                <title>keep-music</title>
+            </Head>
+            <ThemeProviders>
+                <PlayerProviders>
+                    <Component {...pageProps} />
+                    <PlayerWithNoSSR />
+                </PlayerProviders>
+            </ThemeProviders>
+        </>
     )
 }
 

@@ -6,7 +6,20 @@ export default class Document extends NextDocument {
     render() {
         return (
             <Html lang="en">
-                <Head />
+                <Head>
+                    <link
+                        rel="icon"
+                        type="image/png"
+                        sizes="32x32"
+                        href="/favicon32.ico"
+                    />
+                    <link
+                        rel="icon"
+                        type="image/png"
+                        sizes="16x16"
+                        href="/favicon16.ico"
+                    />
+                </Head>
                 <body>
                     <ColorModeScript
                         initialColorMode={theme.config.initialColorMode}

@@ -1,8 +1,8 @@
 import { useApolloClient } from '@apollo/client'
 import {
+    Box,
     Circle,
     Flex,
-    Heading,
     Menu,
     MenuButton,
     MenuDivider,
@@ -12,8 +12,9 @@ import {
     Text,
 } from '@chakra-ui/react'
 import NextLink from 'next/link'
+import React from 'react'
 import { useWindowScroll } from 'react-use'
-// import { ReactComponent as Logo } from '../../static/logo.svg'
+import { Icons } from '../components/ui/Icons'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
 import { Msg, Player } from '../state/player/actionTypes'
 import { usePlayer } from '../state/player/contextHooks'
@@ -107,9 +108,9 @@ export const NavBar: React.FC = () => {
         >
             <Flex flex={1} justifyContent="space-between">
                 <StyledLink href="/">
-                    <Heading>keep-music</Heading>
-                    {/* <Logo /> */}
-                    {/* <Image src={logoSrc} boxSize="70px" /> */}
+                    <Box cursor="pointer">
+                        <Icons.AppLogo />
+                    </Box>
                 </StyledLink>
                 <Flex alignItems="center">{body}</Flex>
             </Flex>

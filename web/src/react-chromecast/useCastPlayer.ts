@@ -16,7 +16,7 @@ export const useCastPlayer = ({ loop = false }) => {
     const [loading, setLoading] = useState(false)
     const [paused, setPaused] = useState(false)
     const [muted, setMuted] = useState(false)
-    const [error, setError] = useState()
+    const [, setError] = useState()
     const [debouncedMuted, setDebouncedMute] = useState(false)
 
     useDebounce(() => setDebouncedMute(muted), 40, [muted])
