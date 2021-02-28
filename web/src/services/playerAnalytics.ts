@@ -8,7 +8,7 @@ import {
 import {
     useAudioPosition,
     useSelectedSong,
-} from './../state/player/contextHooks'
+} from '../state/player/contextsHooks'
 
 const defaultPlayProgress = {
     progress: 0,

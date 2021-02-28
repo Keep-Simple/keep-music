@@ -1,8 +1,8 @@
 import { Flex, Spacer, Text } from '@chakra-ui/react'
 import React, { FC } from 'react'
+import { PlayerSong } from '../state/player/types/entityTypes'
 import { formatSeconds } from '../utils/formatSeconds'
 import { useHover } from '../utils/hooks/useHover'
-import { SongLineType } from './AlbumSongs'
 import { Icons } from './ui/Icons'
 
 export type PlayStatus = 'paused' | 'playing' | 'loading' | null
@@ -14,7 +14,7 @@ const icons = {
 }
 
 export const AlbumSongLine: FC<
-    SongLineType & { status: PlayStatus; onClick: () => void }
+    PlayerSong & { status: PlayStatus; onClick: () => void }
 > = ({ name, duration, order, status, onClick }) => {
     const { hovered, bind } = useHover()
 

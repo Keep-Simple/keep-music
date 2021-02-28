@@ -8,19 +8,24 @@ import {
 } from '@chakra-ui/react'
 import React, { FC } from 'react'
 import { AlbumQuery } from '../generated/graphql'
-import { Msg, Player } from '../state/player/actionTypes'
-import { usePlayerDispatch } from '../state/player/contextHooks'
+import { usePlayerDispatch } from '../state/player/contextsHooks'
+import { Msg, Player } from '../state/player/types/actionTypes'
+import { PlayerSong } from '../state/player/types/entityTypes'
 import { secondToMinutesAndHours } from '../utils/formatSeconds'
 import { Icons } from './ui/Icons'
 import { StyledLink } from './ui/StyledLink'
 
-export const AlbumHead: FC<AlbumQuery['album']> = ({
+type Props = AlbumQuery['album'] & {
+    albumSongs: PlayerSong[]
+}
+
+export const AlbumHead: FC<Props> = ({
     cover,
     author,
     releaseYear,
     tracksNumber,
     name,
-    songs,
+    albumSongs,
 }) => {
     const dispatch = usePlayerDispatch()
 
@@ -28,13 +33,13 @@ export const AlbumHead: FC<AlbumQuery['album']> = ({
         useBreakpointValue({ base: 160, md: 200, lg: 240, xl: 264 }) ?? 160
 
     const playAlbum = () => {
-        if (songs) {
-            dispatch(Msg(Player.AddSongs, { songs }))
+        if (albumSongs) {
+            dispatch(Msg(Player.AddSongs, { songs: albumSongs }))
         }
     }
 
     const albumDuration = secondToMinutesAndHours(
-        songs?.reduce((acc, v) => (acc += v.duration), 0) || 0
+        albumSongs?.reduce((acc, v) => (acc += v.duration), 0) || 0
     )
     return (
         <Flex mb={16}>

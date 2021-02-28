@@ -3,7 +3,7 @@ import React from 'react'
 import {
     useAudioPosition,
     useDraggingTime,
-} from '../../state/player/contextHooks'
+} from '../../state/player/contextsHooks'
 import { formatSeconds } from '../../utils/formatSeconds'
 
 export const TimeLabel = () => {

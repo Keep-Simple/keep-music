@@ -9,7 +9,7 @@ import React from 'react'
 import {
     useAudioPlayer,
     useAudioPosition,
-} from '../../state/player/contextHooks'
+} from '../../state/player/contextsHooks'
 import { useHover } from '../../utils/hooks/useHover'
 import { Icons } from '../ui/Icons'
 

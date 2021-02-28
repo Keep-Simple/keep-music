@@ -1,8 +1,8 @@
 import { uniqWith } from 'rambda'
 import { shuffle } from '../../utils/shuffleArray'
 import { reorder } from '../../utils/swapElements'
-import { Actions, Player } from './actionTypes'
-import { PlayerState } from './entityTypes'
+import { Actions, Player } from './types/actionTypes'
+import { PlayerState } from './types/entityTypes'
 
 export const initialPlayerState: PlayerState = {
     selectedSongIdx: 0,

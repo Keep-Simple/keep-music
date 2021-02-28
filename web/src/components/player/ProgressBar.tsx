@@ -11,7 +11,7 @@ import { useTrackSongView } from '../../services/playerAnalytics'
 import {
     useAudioPosition,
     useDraggingTime,
-} from '../../state/player/contextHooks'
+} from '../../state/player/contextsHooks'
 import { useHover } from '../../utils/hooks/useHover'
 
 export const ProgressBar = () => {

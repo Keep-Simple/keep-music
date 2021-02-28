@@ -2,16 +2,24 @@ import { Box, Flex, Image, Text } from '@chakra-ui/react'
 import React, { FC, useMemo } from 'react'
 import { useMediaMeta, useMediaSession } from 'use-media-session'
 import { useAlbumQuery } from '../../generated/graphql'
-import { Msg, Player } from '../../state/player/actionTypes'
 import {
     useAudioPlayer,
     usePlayerDispatch,
     useSelectedSong,
-} from '../../state/player/contextHooks'
+} from '../../state/player/contextsHooks'
+import { Msg, Player } from '../../state/player/types/actionTypes'
 import { StyledLink } from '../ui/StyledLink'
 
 export const AudioInfo: FC = () => {
-    const { name, views, authorId, albumId } = useSelectedSong()
+    const {
+        name,
+        views,
+        authorId,
+        albumId,
+        cover,
+        albumName,
+        author,
+    } = useSelectedSong()
     const dispatch = usePlayerDispatch()
     const { togglePlay, paused, loading } = useAudioPlayer()
 
@@ -20,10 +28,9 @@ export const AudioInfo: FC = () => {
         skip: !albumId,
     })
 
-    const artwork = useMemo(
-        () => [{ src: data?.album?.cover ?? '', sizes: '100x150' }],
-        [data?.album]
-    )
+    const artwork = useMemo(() => [{ src: cover ?? '', sizes: '100x150' }], [
+        cover,
+    ])
 
     useMediaSession({
         playbackState: loading ? (paused ? 'paused' : 'playing') : 'none',
@@ -36,8 +43,8 @@ export const AudioInfo: FC = () => {
 
     useMediaMeta({
         title: name,
-        album: data?.album?.name,
-        artist: data?.album?.author.name,
+        album: albumName,
+        artist: author,
         artwork,
     })
 

@@ -7,12 +7,12 @@ import {
     AlbumQueryVariables,
     useAlbumsQuery,
 } from '../generated/graphql'
-import { Msg, Player } from '../state/player/actionTypes'
 import {
     useAudioPlayer,
     usePlayer,
     useSelectedSong,
-} from '../state/player/contextHooks'
+} from '../state/player/contextsHooks'
+import { Msg, Player } from '../state/player/types/actionTypes'
 import { AlbumCard } from './AlbumCard'
 import AlertUI from './ui/Alert'
 import { Loading } from './ui/Loading'
@@ -50,7 +50,15 @@ export const AlbumCardList = () => {
                 description: 'Try opening album page directly',
             })
         } else {
-            dispatch(Msg(Player.AddSongs, { songs: data.album.songs || [] }))
+            const songs =
+                data.album.songs?.map((s) => ({
+                    ...s,
+                    cover: data.album!.cover,
+                    author: data.album!.author.name,
+                    albumName: data.album!.name,
+                })) ?? []
+
+            dispatch(Msg(Player.AddSongs, { songs }))
         }
         dispatch(Msg(Player.LoadAlbum, { isLoading: false }))
     }, [])

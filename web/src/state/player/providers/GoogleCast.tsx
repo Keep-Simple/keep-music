@@ -1,8 +1,9 @@
 import Head from 'next/head'
 import React, { FC, useEffect, useState } from 'react'
-import castContext from './castContext'
+import { isServer } from '../../../utils/isServer'
+import { GoogleCastContext } from '../contexts'
 
-const CastProvider: FC = ({ children }) => {
+export const CastProvider: FC = ({ children }) => {
     const [
         remotePlayer,
         setRemotePlayer,
@@ -56,7 +57,6 @@ const CastProvider: FC = ({ children }) => {
                 )
         }
 
-        // castCtx?.addEventListener(cast.framework.CastContextEventType.SESSION_STATE_CHANGED, ({sessionState}) => sessionState )
         window['__onGCastApiAvailable'] = (isAvailable: boolean) =>
             isAvailable && initializeCastPlayer()
     }, [])
@@ -64,9 +64,11 @@ const CastProvider: FC = ({ children }) => {
     return (
         <>
             <Head>
-                <script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1" />
+                {!isServer() && (
+                    <script src="//www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework=1" />
+                )}
             </Head>
-            <castContext.Provider
+            <GoogleCastContext.Provider
                 value={{
                     castCtx,
                     remotePlayer,
@@ -76,9 +78,7 @@ const CastProvider: FC = ({ children }) => {
                 }}
             >
                 {children}
-            </castContext.Provider>
+            </GoogleCastContext.Provider>
         </>
     )
 }
-
-export default CastProvider

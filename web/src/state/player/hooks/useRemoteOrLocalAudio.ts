@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useAudio } from 'react-use'
-import { useAlbumQuery } from '../../generated/graphql'
-import { useCastPlayer } from '../../react-chromecast'
-import { useCastContext } from '../../react-chromecast/castContext'
-import { Msg, Player } from './actionTypes'
-import { usePlayer, useSelectedSong } from './contextHooks'
-import { AudioContextValue, AudioPositionContetValue } from './entityTypes'
+import { useCastContext, usePlayer, useSelectedSong } from '../contextsHooks'
+import { Msg, Player } from '../types/actionTypes'
+import {
+    AudioContextValue,
+    AudioPositionContetValue,
+} from '../types/entityTypes'
+import { useCastPlayer } from './useCastPlayer'
 
 export const useRemoteOrLocalAudio = () => {
     const selectedSong = useSelectedSong()
@@ -14,12 +15,8 @@ export const useRemoteOrLocalAudio = () => {
     const [playNextOnCast, setPlayNext] = useState(false)
     const { connected } = useCastContext()
 
-    const { data } = useAlbumQuery({
-        variables: { id: selectedSong?.albumId },
-        skip: !selectedSong?.albumId,
-    })
-
     const remotePlayer = useCastPlayer({ loop: loop === 'one' })
+
     const localPlayer = useAudio({
         src: !connected ? selectedSong.link : '',
         autoPlay: true,
@@ -29,19 +26,19 @@ export const useRemoteOrLocalAudio = () => {
     })
 
     useEffect(() => {
-        if (!connected || !selectedSong?.id || !data?.album) return
+        if (!connected || !selectedSong?.id) return
 
-        const { author, name, cover } = data.album
+        const { author, albumName, cover, name, link } = selectedSong
 
         remotePlayer.controls.load({
-            src: selectedSong.link,
-            albumArtist: author.name,
             cover,
-            albumName: name,
-            title: selectedSong.name,
+            albumName,
+            src: link,
+            albumArtist: author,
+            title: name,
             startTime: localPlayer[1].time || 0,
         })
-    }, [selectedSong.id, connected, data?.album])
+    }, [selectedSong.id, connected])
 
     const audioValue: AudioContextValue = useMemo(
         () => ({

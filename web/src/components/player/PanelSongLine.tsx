@@ -1,20 +1,15 @@
 import { Box, Center, Flex, Image, Spacer, Text } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { Song } from '../../generated/graphql'
+import { PlayerSong } from '../../state/player/types/entityTypes'
 import { formatSeconds } from '../../utils/formatSeconds'
 import { useHover } from '../../utils/hooks/useHover'
 import { Icons } from '../ui/Icons'
 
 export type PlayStatus = 'paused' | 'playing' | 'loading' | null
 
-export type PanelSongLineType = Pick<
-    Song,
-    'id' | 'name' | 'duration' | 'link' | 'albumId' | 'authorId'
-> & {
+export type PanelSongLineType = PlayerSong & {
     status: PlayStatus
     onClick: () => void
-    singer: string
-    cover: string
     isDragging?: boolean
 }
 
@@ -23,7 +18,7 @@ export const PanelSongLine: FC<PanelSongLineType> = ({
     name,
     duration,
     status,
-    singer,
+    author,
     cover,
     onClick,
 }) => {
@@ -82,7 +77,7 @@ export const PanelSongLine: FC<PanelSongLineType> = ({
                         {name}
                     </Text>
                     <Text color="#FFFFFFB3" mt={-1}>
-                        {singer}
+                        {author}
                     </Text>
                 </Box>
             </Flex>

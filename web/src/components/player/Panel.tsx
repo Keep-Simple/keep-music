@@ -1,14 +1,12 @@
 import { Box, Fade, Flex, Image, Text } from '@chakra-ui/react'
-import { indexBy } from 'rambda'
 import React, { FC, useEffect, useLayoutEffect, useState } from 'react'
-import { useAlbumQuery, useAlbumsQuery } from '../../generated/graphql'
-import { useCastContext } from '../../react-chromecast/castContext'
-import { Msg, Player } from '../../state/player/actionTypes'
 import {
     useAudioPlayer,
+    useCastContext,
     usePlayer,
     useSelectedSong,
-} from '../../state/player/contextHooks'
+} from '../../state/player/contextsHooks'
+import { Msg, Player } from '../../state/player/types/actionTypes'
 import { useHover } from '../../utils/hooks/useHover'
 import { GoogleCastButton } from './GoogleCastButton'
 import { PanelSongs } from './PanelSongs'
@@ -20,19 +18,10 @@ export const Panel: FC = ({}) => {
     const { hovered, bind } = useHover()
     const [dispatch, { showPanel, songs }] = usePlayer()
     const selectedSong = useSelectedSong()
-    const { data } = useAlbumsQuery({ fetchPolicy: 'cache-only' })
-    const { data: data2 } = useAlbumQuery({
-        fetchPolicy: 'cache-only',
-        variables: { id: selectedSong.albumId },
-    })
-
-    const albumById = indexBy('id', data?.albums ?? [data2?.album])
-
-    const mainImage = albumById[selectedSong.albumId]?.cover
 
     useLayoutEffect(() => {
         setImageLoad(false)
-    }, [mainImage])
+    }, [selectedSong.cover])
 
     const songsWithHandlers = songs?.map((s) => {
         const isCurrent = s.id === selectedSong?.id
@@ -55,14 +44,10 @@ export const Panel: FC = ({}) => {
                   )
         }
 
-        const album = albumById[s.albumId]!
-
         return {
             ...s,
             onClick,
             status,
-            cover: album?.cover,
-            singer: album?.author?.name,
         } as const
     })
 
@@ -130,7 +115,7 @@ export const Panel: FC = ({}) => {
                         >
                             <Image
                                 zIndex={-2}
-                                src={mainImage}
+                                src={selectedSong.cover}
                                 objectFit="cover"
                                 pos="relative"
                                 maxH="70vh"

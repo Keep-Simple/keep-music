@@ -6,8 +6,8 @@ import {
     Droppable,
     DropResult,
 } from 'react-beautiful-dnd'
-import { Msg, Player } from '../../state/player/actionTypes'
-import { usePlayerDispatch } from '../../state/player/contextHooks'
+import { usePlayerDispatch } from '../../state/player/contextsHooks'
+import { Msg, Player } from '../../state/player/types/actionTypes'
 import { PanelSongLine, PanelSongLineType } from './PanelSongLine'
 
 export const PanelSongs: FC<{ songs: PanelSongLineType[] }> = ({ songs }) => {

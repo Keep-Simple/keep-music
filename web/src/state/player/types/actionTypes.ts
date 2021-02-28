@@ -1,4 +1,4 @@
-import { ActionMap, createMsg } from '../../utils/typeHelpers'
+import { ActionMap, createMsg } from '../../../utils/typeHelpers'
 import { PlayerSong, PlayerState } from './entityTypes'
 
 export enum Player {

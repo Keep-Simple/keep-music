@@ -1,29 +1,16 @@
 import { Divider, Flex } from '@chakra-ui/react'
 import React, { FC, Fragment } from 'react'
-import { Song } from '../generated/graphql'
-import { Msg, Player } from '../state/player/actionTypes'
 import {
     useAudioPlayer,
     usePlayer,
     useSelectedSong,
-} from '../state/player/contextHooks'
+} from '../state/player/contextsHooks'
+import { Msg, Player } from '../state/player/types/actionTypes'
+import { PlayerSong } from '../state/player/types/entityTypes'
 import { AlbumSongLine } from './AlbumSongLine'
 
-export type SongLineType = Pick<
-    Song,
-    | 'id'
-    | 'name'
-    | 'order'
-    | 'duration'
-    | 'views'
-    | 'format'
-    | 'link'
-    | 'albumId'
-    | 'authorId'
->
-
 type AlbumSongsProps = {
-    songs: SongLineType[]
+    songs: PlayerSong[]
 }
 
 export const AlbumSongs: FC<AlbumSongsProps> = ({ songs }) => {

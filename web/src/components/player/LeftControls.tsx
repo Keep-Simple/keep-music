@@ -1,10 +1,10 @@
 import { Wrap, WrapItem, WrapProps } from '@chakra-ui/react'
 import React, { FC } from 'react'
-import { Msg, Player } from '../../state/player/actionTypes'
 import {
     useAudioPlayer,
     usePlayerDispatch,
-} from '../../state/player/contextHooks'
+} from '../../state/player/contextsHooks'
+import { Msg, Player } from '../../state/player/types/actionTypes'
 import { Icons } from '../ui/Icons'
 
 export const LeftControls: FC<WrapProps> = (props) => {

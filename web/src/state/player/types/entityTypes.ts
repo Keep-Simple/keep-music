@@ -1,10 +1,17 @@
 import { HTMLMediaControls } from 'react-use/lib/factory/createHTMLMediaHook'
-import { Song } from '../../generated/graphql'
+import { Song } from '../../../generated/graphql'
 
 export type PlayerSong = Pick<
     Song,
-    'name' | 'id' | 'albumId' | 'duration' | 'link' | 'views' | 'authorId'
->
+    | 'name'
+    | 'id'
+    | 'albumId'
+    | 'duration'
+    | 'link'
+    | 'views'
+    | 'authorId'
+    | 'order'
+> & { albumName: string; author: string; cover: string }
 
 export type PlayerState = {
     songs: PlayerSong[]

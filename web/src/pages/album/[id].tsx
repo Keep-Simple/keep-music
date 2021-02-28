@@ -25,11 +25,19 @@ const Album = () => {
     if (!data && loading) return skeleton(<Loading />)
 
     if (data?.album) {
+        const songs =
+            data.album.songs?.map((s) => ({
+                ...s,
+                cover: data.album!.cover,
+                author: data.album!.author.name,
+                albumName: data.album!.name,
+            })) ?? []
+
         return skeleton(
             <Fade in={!loading}>
                 <Box px="6%" pb="5%">
-                    <AlbumHead {...data.album} />
-                    <AlbumSongs songs={data.album.songs || []} />
+                    <AlbumHead {...data.album} albumSongs={songs} />
+                    <AlbumSongs songs={songs} />
                 </Box>
             </Fade>
         )

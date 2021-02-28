@@ -2,7 +2,6 @@ import { ApolloClient, InMemoryCache } from '@apollo/client'
 import { NextPageContext } from 'next'
 import { TypedTypePolicies } from '../generated/apollo-helpers'
 import { createWithApollo } from './createWithApollo'
-import { isServer } from './isServer'
 
 const typePolicies: TypedTypePolicies = {
     Query: {
@@ -19,10 +18,11 @@ const typePolicies: TypedTypePolicies = {
 
 export const createClient = (ctx?: NextPageContext) =>
     new ApolloClient({
+        ssrMode: !!ctx,
         uri: process.env.NEXT_PUBLIC_API_URL as string,
         credentials: 'include',
         headers: {
-            cookie: isServer() ? ctx?.req?.headers.cookie || '' : '',
+            cookie: ctx?.req?.headers.cookie || '',
         },
         cache: new InMemoryCache({
             typePolicies,

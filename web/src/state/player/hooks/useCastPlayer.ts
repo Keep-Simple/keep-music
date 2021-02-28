@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDebounce } from 'react-use'
-import { DEFAULT_VOLUME } from '../constants'
-import { useCastContext } from './castContext'
+import { DEFAULT_VOLUME } from '../../../constants'
+import { useCastContext } from '../contextsHooks'
 
 export const useCastPlayer = ({ loop = false }) => {
     const {

@@ -16,8 +16,8 @@ import React from 'react'
 import { useWindowScroll } from 'react-use'
 import { Icons } from '../components/ui/Icons'
 import { useLogoutMutation, useMeQuery } from '../generated/graphql'
-import { Msg, Player } from '../state/player/actionTypes'
-import { usePlayer } from '../state/player/contextHooks'
+import { usePlayer } from '../state/player/contextsHooks'
+import { Msg, Player } from '../state/player/types/actionTypes'
 import { StyledLink } from './ui/StyledLink'
 
 export const NavBar: React.FC = () => {
