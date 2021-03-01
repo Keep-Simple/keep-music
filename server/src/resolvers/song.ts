@@ -32,14 +32,14 @@ export class SongInputBase {
     byteSize: number
 }
 
-@InputType()
-class SongInput extends SongInputBase {
-    @Field()
-    authorId: number
+// @InputType()
+// class SongInput extends SongInputBase {
+//     @Field()
+//     authorId: number
 
-    @Field()
-    albumId: number
-}
+//     @Field()
+//     albumId: number
+// }
 
 @Resolver(Song)
 export class SongResolver {

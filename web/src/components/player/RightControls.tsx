@@ -23,6 +23,9 @@ export const RightControls: FC<WrapProps> = (props) => {
         rerender()
     }, 4000)
 
+    const showGoogleCastButton =
+        document.getElementById('castbutton')?.style.display !== 'none'
+
     return (
         <Wrap
             spacing={2}
@@ -44,12 +47,13 @@ export const RightControls: FC<WrapProps> = (props) => {
                 />
             </WrapItem>
 
-            {document.getElementById('castbutton')?.style.display !==
-                'none' && (
-                <WrapItem {...iconProps}>
-                    <GoogleCastButton size={6} />
-                </WrapItem>
-            )}
+            <WrapItem
+                {...iconProps}
+                display={showGoogleCastButton ? 'initial' : 'none'}
+            >
+                <GoogleCastButton size={6} />
+            </WrapItem>
+
             <WrapItem {...iconProps}>
                 <PanelToggle />
             </WrapItem>

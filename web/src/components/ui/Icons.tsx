@@ -69,7 +69,7 @@ function AppLogo(props: React.SVGProps<SVGSVGElement>) {
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 423 90"
             className="appLogo_svg__iconLeft"
-            width="200px"
+            width="160px"
             {...props}
         >
             <path

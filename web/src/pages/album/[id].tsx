@@ -1,13 +1,13 @@
 import { Box, Fade } from '@chakra-ui/react'
+import { AlbumHead } from 'components/AlbumHead'
+import { AlbumSongs } from 'components/AlbumSongs'
+import AlertUI from 'components/ui/Alert'
+import { Layout } from 'components/ui/Layout'
+import { Loading } from 'components/ui/Loading'
+import { useAlbumQuery } from 'generated/graphql'
 import React from 'react'
-import { AlbumHead } from '../../components/AlbumHead'
-import { AlbumSongs } from '../../components/AlbumSongs'
-import AlertUI from '../../components/ui/Alert'
-import { Layout } from '../../components/ui/Layout'
-import { Loading } from '../../components/ui/Loading'
-import { useAlbumQuery } from '../../generated/graphql'
-import { useGetQueryId } from '../../utils/hooks/useGetQueryId'
-import { withApollo } from '../../utils/withApollo'
+import { useGetQueryId } from 'utils/hooks/useGetQueryId'
+import { withApollo } from 'utils/withApollo'
 
 const Album = () => {
     const id = useGetQueryId()
@@ -35,7 +35,7 @@ const Album = () => {
 
         return skeleton(
             <Fade in={!loading}>
-                <Box px="6%" pb="5%">
+                <Box px={56} pb="5%">
                     <AlbumHead {...data.album} albumSongs={songs} />
                     <AlbumSongs songs={songs} />
                 </Box>

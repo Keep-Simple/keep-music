@@ -4,3 +4,4 @@ dist
 !*.example
 yarn.lock
 package-lock.json
+ormconfig.json

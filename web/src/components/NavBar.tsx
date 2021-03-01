@@ -46,7 +46,7 @@ export const NavBar: React.FC = () => {
     } else {
         body = (
             <Menu placement="top-start">
-                <Circle bg="blue.600" size="43px">
+                <Circle bg="blue.600" size={8}>
                     <MenuButton
                         as={Text}
                         px={4}

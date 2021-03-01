@@ -18,7 +18,7 @@ const main = async () => {
         type: 'postgres',
         url: process.env.DATABASE_URL,
         logging: true,
-        synchronize: !__prod__,
+        // synchronize: !__prod__,
         entities: [path.join(__dirname, './entities/*.js')],
         migrations: [path.join(__dirname, './migrations/*')],
     })
@@ -52,7 +52,7 @@ const main = async () => {
                 httpOnly: true,
                 sameSite: 'lax', // csrf
                 secure: __prod__, // only works in https in prod
-                domain: __prod__ ? '.mydomain.com' : undefined,
+                domain: __prod__ ? '.nicksimple.com' : undefined,
             },
             secret: process.env.SESSION_SECRET,
             saveUninitialized: false,
