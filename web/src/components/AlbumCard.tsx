@@ -26,6 +26,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
     const { hovered: isHover, bind } = useHover()
     const { hovered: isIconHover, bind: iconBind } = useHover()
     const [focused, setFocused] = useState(false)
+    const [imgLoaded, setImgLoaded] = useState(false)
 
     const Icon = useMemo(() => {
         switch (playStatus) {
@@ -57,28 +58,33 @@ export const AlbumCard: FC<AlbumCardProps> = ({
         <Box w={coverSize} userSelect="none">
             <NextLink href={`/album/${id}`}>
                 <Box {...bind} pos="relative">
-                    <Box
-                        transition="all .1s ease"
-                        cursor="pointer"
-                        boxShadow={
-                            isHover
-                                ? 'inset 0px 101px 82px 3px rgba(0,0,0,0.4)'
-                                : 'initial'
-                        }
-                    >
-                        <Image
-                            borderRadius={4}
-                            mb={2}
-                            zIndex={-2}
-                            htmlWidth={coverSize}
-                            htmlHeight={coverSize}
-                            src={cover}
+                    <Fade in={imgLoaded}>
+                        <Box
+                            transition="all .1s ease"
+                            cursor="pointer"
+                            boxShadow={
+                                isHover
+                                    ? 'inset 0px 101px 82px 3px rgba(0,0,0,0.4)'
+                                    : 'initial'
+                            }
                             boxSize={coverSize}
-                            pos="relative"
-                            alt="album cover"
-                            objectFit="cover"
-                        />
-                    </Box>
+                        >
+                            <Image
+                                borderRadius={4}
+                                mb={2}
+                                zIndex={-2}
+                                border="none"
+                                outline="none"
+                                pos="relative"
+                                objectFit="cover"
+                                htmlWidth={coverSize}
+                                htmlHeight={coverSize}
+                                src={cover}
+                                boxSize={coverSize}
+                                onLoad={() => setImgLoaded(true)}
+                            />
+                        </Box>
+                    </Fade>
                     <Fade in={isHover || !!playStatus}>
                         <Circle
                             {...iconBind}

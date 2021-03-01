@@ -29,11 +29,12 @@ export const AlbumCardList = () => {
         notifyOnNetworkStatusChange: true,
     })
 
-    const coverSize = useBreakpointValue({
-        base: 160,
-        md: 190,
-        xl: 226,
-    }) as number
+    const coverSize =
+        useBreakpointValue({
+            base: 160,
+            md: 190,
+            xl: 226,
+        }) ?? 226
 
     const playAlbum = useCallback(async (id: number) => {
         dispatch(Msg(Player.LoadAlbum, { isLoading: true, id }))
