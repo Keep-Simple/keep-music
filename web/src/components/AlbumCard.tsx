@@ -57,7 +57,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
     return (
         <Box w={coverSize} userSelect="none">
             <NextLink href={`/album/${id}`}>
-                <Box {...bind} pos="relative">
+                <Box {...bind} pos="relative" boxSize={coverSize} mb={4}>
                     <Fade in={imgLoaded}>
                         <Box
                             transition="all .1s ease"
@@ -67,7 +67,6 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                                     ? 'inset 0px 101px 82px 3px rgba(0,0,0,0.4)'
                                     : 'initial'
                             }
-                            boxSize={coverSize}
                         >
                             <Image
                                 borderRadius={4}
