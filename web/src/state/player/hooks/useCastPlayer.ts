@@ -136,7 +136,7 @@ export const useCastPlayer = ({ loop = false }) => {
                 remotePlayerController.setVolumeLevel()
             }
         },
-        [mediaSession]
+        [remotePlayer, remotePlayerController]
     )
 
     const mute = useCallback(
