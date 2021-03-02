@@ -41,11 +41,11 @@ export const SelectField: React.FC<SelectFieldProps> = ({
                         borderRadius: 5,
                         colors: {
                             ...theme.colors,
-                            primary: chakraTheme.colors.blue['300'],
+                            primary: chakraTheme.colors.gray['300'],
                             primary25: chakraTheme.colors.gray['700'],
                             primary50: chakraTheme.colors.gray['700'],
                             primary75: chakraTheme.colors.gray['700'],
-                            neutral0: chakraTheme.colors.gray['800'],
+                            neutral0: chakraTheme.colors.black,
                             neutral5: chakraTheme.colors.gray['800'],
                             neutral20: chakraTheme.colors.gray['700'],
                             neutral80: chakraTheme.colors.gray['100'],

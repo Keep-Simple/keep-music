@@ -58,30 +58,29 @@ export const AlbumCard: FC<AlbumCardProps> = ({
         <Box w={coverSize} userSelect="none">
             <NextLink href={`/album/${id}`}>
                 <Box {...bind} pos="relative" boxSize={coverSize} mb={4}>
-                    <Fade in={imgLoaded}>
-                        <Box
-                            transition="all .1s ease"
-                            cursor="pointer"
-                            boxShadow={
-                                isHover
-                                    ? 'inset 0px 101px 82px 3px rgba(0,0,0,0.4)'
-                                    : 'initial'
-                            }
-                        >
-                            <Image
-                                borderRadius={4}
-                                mb={2}
-                                zIndex={-2}
-                                pos="relative"
-                                objectFit="cover"
-                                htmlWidth={coverSize}
-                                htmlHeight={coverSize}
-                                src={cover}
-                                boxSize={coverSize}
-                                onLoad={() => setImgLoaded(true)}
-                            />
-                        </Box>
-                    </Fade>
+                    <Box
+                        transition="all .1s ease"
+                        cursor="pointer"
+                        boxSize={coverSize}
+                        boxShadow={
+                            isHover
+                                ? 'inset 0px 101px 82px 3px rgba(0,0,0,0.4)'
+                                : 'initial'
+                        }
+                    >
+                        <Image
+                            borderRadius={4}
+                            mb={2}
+                            zIndex={-2}
+                            pos="relative"
+                            objectFit="cover"
+                            opacity={imgLoaded ? 1 : 0}
+                            transition=".1s ease"
+                            src={cover}
+                            boxSize={coverSize}
+                            onLoad={() => setImgLoaded(true)}
+                        />
+                    </Box>
                     <Fade in={isHover || !!playStatus}>
                         <Circle
                             {...iconBind}

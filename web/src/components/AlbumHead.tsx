@@ -15,7 +15,7 @@ import { secondToMinutesAndHours } from '../utils/formatSeconds'
 import { Icons } from './ui/Icons'
 import { StyledLink } from './ui/StyledLink'
 
-type Props = AlbumQuery['album'] & {
+type Props = Partial<AlbumQuery['album']> & {
     albumSongs: PlayerSong[]
 }
 
@@ -55,8 +55,8 @@ export const AlbumHead: FC<Props> = ({
                 </Heading>
                 <Text fontWeight="400" color="whiteAlpha.700">
                     {`Album • `}
-                    <Text as={StyledLink} href={`/author/${author.id}`}>
-                        {author.name}
+                    <Text as={StyledLink} href={`/author/${author?.id}`}>
+                        {author?.name}
                     </Text>
                     {` • ${releaseYear}`}
                 </Text>
