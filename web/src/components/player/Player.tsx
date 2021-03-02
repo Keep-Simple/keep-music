@@ -36,39 +36,38 @@ const Player = () => {
 
     return (
         <>
-            <Box
-                pos="fixed"
-                userSelect="none"
-                bottom={0}
-                right={0}
-                left={0}
-                zIndex={100}
-                onClick={() => dispatch(Msg(IPlayer.TogglePanel))}
+            <motion.div
+                animate={showPlayer && { translateY: '0%' }}
+                initial={{
+                    translateY: '118%',
+                    position: 'fixed',
+                    userSelect: 'none',
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                    zIndex: 100,
+                    onClick: () => dispatch(Msg(IPlayer.TogglePanel)),
+                }}
             >
-                <motion.div
-                    animate={showPlayer && { translateY: '0%' }}
-                    initial={{ translateY: '118%' }}
-                >
-                    <Flex id="player-bar" bg="gray.700" h="72px" align="center">
-                        <Flex flexGrow={1} align="center" ml={2}>
-                            <LeftControls mr={2} />
-                            <TimeLabel />
-                        </Flex>
-
-                        <Box flexGrow={2.1}>
-                            <AudioInfo />
-                        </Box>
-
-                        <Box flexGrow={1}>
-                            <RightControls />
-                        </Box>
+                <Flex id="player-bar" bg="gray.700" h="72px" align="center">
+                    <Flex flexGrow={1} align="center" ml={2}>
+                        <LeftControls mr={2} />
+                        <TimeLabel />
                     </Flex>
 
-                    <Box pos="absolute" top="-10px" left={-3} right={3}>
-                        <ProgressBar />
+                    <Box flexGrow={2.1}>
+                        <AudioInfo />
                     </Box>
-                </motion.div>
-            </Box>
+
+                    <Box flexGrow={1}>
+                        <RightControls />
+                    </Box>
+                </Flex>
+
+                <Box pos="absolute" top="-10px" left={-3} right={3}>
+                    <ProgressBar />
+                </Box>
+            </motion.div>
 
             <Panel />
         </>
