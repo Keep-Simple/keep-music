@@ -1,8 +1,9 @@
-import { Box } from '@chakra-ui/react'
+import { Box, Fade } from '@chakra-ui/react'
 import { AlbumHead } from 'components/AlbumHead'
 import { AlbumSongs } from 'components/AlbumSongs'
 import AlertUI from 'components/ui/Alert'
 import { Layout } from 'components/ui/Layout'
+import { Loading } from 'components/ui/Loading'
 import { useAlbumQuery } from 'generated/graphql'
 import React from 'react'
 import { useGetQueryId } from 'utils/hooks/useGetQueryId'
@@ -21,20 +22,26 @@ const Album = () => {
     if (!loading && !data)
         return skeleton(<AlertUI message="No such album found" status="info" />)
 
-    const songs =
-        data?.album?.songs?.map((s) => ({
-            ...s,
-            cover: data.album!.cover,
-            author: data.album!.author.name,
-            albumName: data.album!.name,
-        })) ?? []
+    if (!data && loading) return skeleton(<Loading />)
 
-    return skeleton(
-        <Box px={56} pb="5%">
-            <AlbumHead {...data?.album} albumSongs={songs} loading={loading} />
-            <AlbumSongs songs={songs} loading={loading} />
-        </Box>
-    )
+    if (data?.album) {
+        const songs =
+            data.album.songs?.map((s) => ({
+                ...s,
+                cover: data.album!.cover,
+                author: data.album!.author.name,
+                albumName: data.album!.name,
+            })) ?? []
+
+        return skeleton(
+            <Fade in={!loading}>
+                <Box px={56} pb="5%">
+                    <AlbumHead {...data.album} albumSongs={songs} />
+                    <AlbumSongs songs={songs} />
+                </Box>
+            </Fade>
+        )
+    }
 }
 
 export default withApollo({ ssr: true })(Album)

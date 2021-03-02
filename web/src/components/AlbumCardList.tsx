@@ -1,7 +1,6 @@
 import { useApolloClient } from '@apollo/client'
-import { Box, SimpleGrid, useBreakpointValue, useToast } from '@chakra-ui/react'
+import { SimpleGrid, useBreakpointValue, useToast } from '@chakra-ui/react'
 import React, { useCallback } from 'react'
-import Skeleton from 'react-loading-skeleton'
 import {
     AlbumDocument,
     AlbumQuery,
@@ -16,6 +15,7 @@ import {
 import { Msg, Player } from '../state/player/types/actionTypes'
 import { AlbumCard } from './AlbumCard'
 import AlertUI from './ui/Alert'
+import { Loading } from './ui/Loading'
 
 export const AlbumCardList = () => {
     const client = useApolloClient()
@@ -69,6 +69,8 @@ export const AlbumCardList = () => {
     if (!loading && !data?.albums)
         return <AlertUI message="No Albums out here" status="info" />
 
+    if (!data?.albums && loading) return <Loading />
+
     return (
         <SimpleGrid
             px={20}
@@ -78,53 +80,42 @@ export const AlbumCardList = () => {
             spacingY={12}
             columns={[2, 2, 3, 4, 4, 5]}
         >
-            {loading
-                ? Array.from(Array(12)).map((_, i) => (
-                      <Box key={i}>
-                          <Skeleton
-                              height={coverSize}
-                              width={coverSize}
-                              style={{ marginBottom: 16 }}
-                          />
-                          <Skeleton count={2} />
-                      </Box>
-                  ))
-                : data?.albums?.map(({ id, author, name, cover }) => {
-                      const isCurrentPlaying = selectedSong?.albumId === id
-                      const isCurrentLoading = albumLoading.id === id
+            {data?.albums?.map(({ id, author, name, cover }) => {
+                const isCurrentPlaying = selectedSong?.albumId === id
+                const isCurrentLoading = albumLoading.id === id
 
-                      const status = isCurrentLoading
-                          ? 'loading'
-                          : isCurrentPlaying
-                          ? player.loading
-                              ? 'loading'
-                              : player.paused
-                              ? 'paused'
-                              : 'playing'
-                          : null
+                const status = isCurrentLoading
+                    ? 'loading'
+                    : isCurrentPlaying
+                    ? player.loading
+                        ? 'loading'
+                        : player.paused
+                        ? 'paused'
+                        : 'playing'
+                    : null
 
-                      const onIconClick = () => {
-                          if (!status) {
-                              return playAlbum(id)
-                          }
-                          if (['paused', 'playing'].includes(status)) {
-                              return player.togglePlay()
-                          }
-                      }
+                const onIconClick = () => {
+                    if (!status) {
+                        return playAlbum(id)
+                    }
+                    if (['paused', 'playing'].includes(status)) {
+                        return player.togglePlay()
+                    }
+                }
 
-                      return (
-                          <AlbumCard
-                              key={id}
-                              id={id}
-                              playStatus={status}
-                              onIconClick={onIconClick}
-                              coverSize={coverSize}
-                              name={name}
-                              cover={cover}
-                              author={author}
-                          />
-                      )
-                  })}
+                return (
+                    <AlbumCard
+                        key={id}
+                        id={id}
+                        playStatus={status}
+                        onIconClick={onIconClick}
+                        coverSize={coverSize}
+                        name={name}
+                        cover={cover}
+                        author={author}
+                    />
+                )
+            })}
         </SimpleGrid>
     )
 }

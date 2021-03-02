@@ -1,6 +1,5 @@
 import { Divider, Flex } from '@chakra-ui/react'
 import React, { FC, Fragment } from 'react'
-import Skeleton from 'react-loading-skeleton'
 import {
     useAudioPlayer,
     usePlayer,
@@ -12,20 +11,12 @@ import { AlbumSongLine } from './AlbumSongLine'
 
 type AlbumSongsProps = {
     songs: PlayerSong[]
-    loading: boolean
 }
 
-export const AlbumSongs: FC<AlbumSongsProps> = ({
-    songs,
-    loading: songsLoading,
-}) => {
+export const AlbumSongs: FC<AlbumSongsProps> = ({ songs }) => {
     const [dispatch, { songs: playerSongs }] = usePlayer()
     const selectedSong = useSelectedSong()
     const { paused, loading, togglePlay } = useAudioPlayer()
-
-    if (songsLoading) {
-        return <Skeleton height={57} count={7} />
-    }
 
     return (
         <Flex direction="column">
