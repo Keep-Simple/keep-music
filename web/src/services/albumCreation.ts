@@ -2,7 +2,9 @@ import { SongInputBase } from '../generated/graphql'
 import { createUppy } from '../utils/createUppy'
 
 class AlbumCreationService {
-    private coverUrl?: string = undefined
+    public songsUppy!: ReturnType<typeof createUppy>
+    public coverUppy!: ReturnType<typeof createUppy>
+    private coverUrl = ''
     private songs: SongInputBase[] = []
 
     private fileNameRegex = new RegExp(
@@ -10,21 +12,9 @@ class AlbumCreationService {
         'mu'
     )
 
-    songsUppy = createUppy({
-        autoProceed: false,
-        folder: 'songs',
-        filesType: 'music',
-        id: 'albumSongs',
-        maxFiles: 30,
-    })
-
-    coverUppy = createUppy({
-        autoProceed: false,
-        folder: 'albumCovers',
-        filesType: 'photo',
-        id: 'albumCover',
-        maxFiles: 1,
-    })
+    constructor() {
+        this.setupUppies()
+    }
 
     async upload() {
         this.onCoverUpload()
@@ -79,9 +69,28 @@ class AlbumCreationService {
 
     private resetState() {
         this.songs = []
-        this.coverUrl = undefined
-        this.coverUppy.reset()
-        this.songsUppy.reset()
+        this.coverUrl = ''
+        this.coverUppy.close()
+        this.songsUppy.close()
+        this.setupUppies()
+    }
+
+    private setupUppies() {
+        this.songsUppy = createUppy({
+            autoProceed: false,
+            folder: 'songs',
+            filesType: 'music',
+            id: 'albumSongs',
+            maxFiles: 30,
+        })
+
+        this.coverUppy = createUppy({
+            autoProceed: false,
+            folder: 'albumCovers',
+            filesType: 'photo',
+            id: 'albumCover',
+            maxFiles: 1,
+        })
     }
 
     private onCoverUpload() {
