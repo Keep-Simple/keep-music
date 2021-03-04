@@ -23,8 +23,7 @@ export const CastProvider: FC = ({ children }) => {
             const castCtx = cast.framework.CastContext.getInstance()
 
             castCtx.setOptions({
-                receiverApplicationId:
-                    chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+                receiverApplicationId: '4B7711C2',
                 autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED,
             })
 
