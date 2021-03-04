@@ -17,6 +17,6 @@ export function formatSeconds(sec = 0) {
 
 export function secondToMinutesAndHours(sec: number) {
     const hours = Math.floor(sec / 3600)
-    const minutes = Math.floor(sec / 60)
+    const minutes = Math.floor(sec / 60) - hours * 60
     return formatDuration({ hours, minutes }, { format: ['hours', 'minutes'] })
 }

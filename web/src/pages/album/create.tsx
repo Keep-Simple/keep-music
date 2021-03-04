@@ -12,7 +12,7 @@ import {
 import { Dashboard } from '@uppy/react'
 import { Form, Formik } from 'formik'
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import * as yup from 'yup'
 import { InputField } from '../../components/ui/InputField'
 import { Layout } from '../../components/ui/Layout'
@@ -49,7 +49,10 @@ const CreateAlbum = ({}) => {
         xl: 300,
     }) as number
 
-    albumCreationService.onCoverAdd((base64Url) => setCover(base64Url))
+    useEffect(() => {
+        albumCreationService.onCoverAdd((base64Url) => setCover(base64Url))
+        return () => albumCreationService.offCoverAdd()
+    }, [])
 
     const [createAlbum] = useCreateAlbumMutation({
         update(cache, { data }) {

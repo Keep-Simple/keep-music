@@ -76,7 +76,11 @@ export class AlbumResolver {
     @Mutation(() => Album)
     @UseMiddleware(isAuth)
     async createAlbum(@Arg('input') input: AlbumInput): Promise<Album> {
-        const { authorId, songs } = input
+        let { authorId, songs, cover } = input
+
+        if (!cover) {
+            input.cover = undefined
+        }
 
         if (songs) {
             input.songs = songs.map((s) => ({ ...s, authorId }))

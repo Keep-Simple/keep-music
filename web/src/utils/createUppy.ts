@@ -5,7 +5,6 @@ import '@uppy/dashboard/dist/style.css'
 import '@uppy/drag-drop/dist/style.css'
 import ImageEditor from '@uppy/image-editor'
 import '@uppy/image-editor/dist/style.css'
-// import '@uppy/status-bar/dist/style.css'
 import CloudinaryPlugin from '@zifahm/uppy-cloudinary'
 import { createClient } from './withApollo'
 
