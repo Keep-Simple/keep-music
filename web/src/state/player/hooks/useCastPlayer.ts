@@ -3,6 +3,15 @@ import { useDebounce } from 'react-use'
 import { DEFAULT_VOLUME } from '../../../constants'
 import { useCastContext } from '../contextsHooks'
 
+type LoadMediaType = {
+    src: string
+    title: string
+    albumName: string
+    cover: string
+    albumArtist: string
+    startTime?: number
+}
+
 export const useCastPlayer = ({
     loop = false,
     onEnd = () => {},
@@ -26,11 +35,10 @@ export const useCastPlayer = ({
 
     // play next song on cast player
     useEffect(() => {
-        console.log('in')
         if (
             remotePlayer &&
             connected &&
-            currentTime + 2 >= remotePlayer.duration
+            currentTime + 2 >= (remotePlayer.duration || 100)
         ) {
             if (!goingToPlayNext) {
                 setPlayNext(true)
@@ -57,9 +65,7 @@ export const useCastPlayer = ({
         if (!remotePlayerController || !remotePlayer) return
 
         const timeHandler = ({ value }: any) => setCurrentTime(value)
-
         const loadHandler = ({ value }: any) => setLoading(value)
-
         const volumeHandler = ({ value }: any) => setVolume(value)
         const pauseHandler = ({ value }: any) => setPaused(value)
         const muteHandler = ({ value }: any) => setMuted(value)
@@ -110,24 +116,13 @@ export const useCastPlayer = ({
     }, [remotePlayerController, remotePlayer])
 
     const loadMedia = useCallback(
-        (media: {
-            src: string
-            title: string
-            albumName: string
-            cover: string
-            albumArtist: string
-            startTime?: number
-        }) => {
+        ({ src, cover, startTime = 0, ...metaProps }: LoadMediaType) => {
             const session = castCtx?.getCurrentSession()
             if (!session || !connected) return
 
-            const mediaInfo = new chrome.cast.media.MediaInfo(
-                media.src,
-                'audio'
-            )
+            const mediaInfo = new chrome.cast.media.MediaInfo(src, 'audio')
 
             let metaData = new chrome.cast.media.MusicTrackMediaMetadata()
-            const { src, cover, ...metaProps } = media
 
             metaData = {
                 ...metaData,
@@ -140,7 +135,8 @@ export const useCastPlayer = ({
 
             const request = new chrome.cast.media.LoadRequest(mediaInfo)
             request.autoplay = true
-            request.currentTime = media.startTime || 0
+            request.currentTime = startTime
+            setCurrentTime(startTime)
 
             session.loadMedia(request).then(
                 () => setMediaSession(session.getMediaSession()),

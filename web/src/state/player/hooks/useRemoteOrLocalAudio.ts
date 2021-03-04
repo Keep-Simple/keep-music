@@ -12,7 +12,7 @@ export const useRemoteOrLocalAudio = () => {
     const selectedSong = useSelectedSong()
     const [dispatch, { loop }] = usePlayer()
     const [loading, setLoading] = useState(false)
-    const { connected } = useCastContext()
+    const { connected, remotePlayer: castPlayer } = useCastContext()
 
     const onSongEnd = useCallback(() => dispatch(Msg(Player.PlayNext)), [])
     const onSongStart = useCallback(() => setLoading(false), [])
@@ -35,6 +35,13 @@ export const useRemoteOrLocalAudio = () => {
     useEffect(() => {
         selectedSong.id && setLoading(true)
     }, [selectedSong.id])
+
+    useEffect(() => {
+        const savedTime = castPlayer?.savedPlayerState?.currentTime
+        if (!connected && savedTime) {
+            localPlayer[2].seek(savedTime)
+        }
+    }, [connected, castPlayer])
 
     useEffect(() => {
         if (!connected || !selectedSong?.id) return

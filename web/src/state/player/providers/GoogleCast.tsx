@@ -13,9 +13,9 @@ export const CastProvider: FC = ({ children }) => {
         remotePlayerController,
         setRemotePlayerController,
     ] = useState<cast.framework.RemotePlayerController>()
+
     const [castCtx, setCastCtx] = useState<cast.framework.CastContext>()
     const [deviceName, setDeviceName] = useState('')
-
     const [connected, setConnected] = useState(false)
 
     useEffect(() => {
