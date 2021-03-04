@@ -22,14 +22,29 @@ export const useCastPlayer = ({
     const [muted, setMuted] = useState(false)
     const [, setError] = useState()
     const [debouncedMuted, setDebouncedMute] = useState(false)
+    const [goingToPlayNext, setPlayNext] = useState(false)
 
     // play next song on cast player
     useEffect(() => {
-        if (connected && currentTime + 2 >= (remotePlayer?.duration || 100)) {
-            const id = setTimeout(onEnd, 1100)
-            return clearTimeout(id)
+        console.log('in')
+        if (
+            remotePlayer &&
+            connected &&
+            currentTime + 2 >= remotePlayer.duration
+        ) {
+            if (!goingToPlayNext) {
+                setPlayNext(true)
+                setTimeout(() => {
+                    onEnd()
+                    setTimeout(() => setPlayNext(false), 3000)
+                }, 1100)
+            }
         }
-    }, [remotePlayer, currentTime, connected, onEnd])
+    }, [currentTime, connected, onEnd, goingToPlayNext])
+
+    useEffect(() => {
+        loading && onStart()
+    }, [loading])
 
     useDebounce(() => setDebouncedMute(muted), 40, [muted])
 
@@ -43,10 +58,7 @@ export const useCastPlayer = ({
 
         const timeHandler = ({ value }: any) => setCurrentTime(value)
 
-        const loadHandler = ({ value }: any) => {
-            setLoading(value)
-            value && onStart()
-        }
+        const loadHandler = ({ value }: any) => setLoading(value)
 
         const volumeHandler = ({ value }: any) => setVolume(value)
         const pauseHandler = ({ value }: any) => setPaused(value)
