@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useAudio } from 'react-use'
 import { useCastContext, usePlayer, useSelectedSong } from '../contextsHooks'
 import { Msg, Player } from '../types/actionTypes'
@@ -12,18 +12,29 @@ export const useRemoteOrLocalAudio = () => {
     const selectedSong = useSelectedSong()
     const [dispatch, { loop }] = usePlayer()
     const [loading, setLoading] = useState(false)
-    const [playNextOnCast, setPlayNext] = useState(false)
     const { connected } = useCastContext()
 
-    const remotePlayer = useCastPlayer({ loop: loop === 'one' })
+    const onSongEnd = useCallback(() => dispatch(Msg(Player.PlayNext)), [])
+    const onSongStart = useCallback(() => setLoading(false), [])
+    const isLoop = loop === 'one'
+
+    const remotePlayer = useCastPlayer({
+        loop: isLoop,
+        onEnd: onSongEnd,
+        onStart: onSongStart,
+    })
 
     const localPlayer = useAudio({
         src: !connected ? selectedSong.link : '',
         autoPlay: true,
-        onEnded: () => dispatch(Msg(Player.PlayNext)),
-        loop: loop === 'one',
-        onCanPlay: () => setLoading(false),
+        onEnded: onSongEnd,
+        loop: isLoop,
+        onCanPlay: onSongStart,
     })
+
+    useEffect(() => {
+        selectedSong.id && setLoading(true)
+    }, [selectedSong.id])
 
     useEffect(() => {
         if (!connected || !selectedSong?.id) return
@@ -104,19 +115,6 @@ export const useRemoteOrLocalAudio = () => {
             : localPlayer[1].volume,
         duration: selectedSong.duration,
     }
-
-    // play next song on cast player
-    useEffect(() => {
-        if (
-            connected &&
-            !playNextOnCast &&
-            audioPositionValue.position + 2 >= selectedSong.duration
-        ) {
-            setPlayNext(true)
-            setTimeout(() => dispatch(Msg(Player.PlayNext)), 1100)
-            setTimeout(() => setPlayNext(false), 3000)
-        }
-    }, [audioPositionValue.position, selectedSong, connected])
 
     return {
         audioPositionValue,

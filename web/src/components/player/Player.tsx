@@ -3,6 +3,7 @@ import { motion } from 'framer-motion'
 import React, { useEffect } from 'react'
 import { useAudioPlayer, usePlayer } from '../../state/player/contextsHooks'
 import { Msg, Player as IPlayer } from '../../state/player/types/actionTypes'
+import { useHover } from '../../utils/hooks/useHover'
 import { withApollo } from '../../utils/withApollo'
 import { AudioInfo } from './AudioInfo'
 import { LeftControls } from './LeftControls'
@@ -13,6 +14,7 @@ import { TimeLabel } from './TimeLabel'
 
 const Player = () => {
     const [dispatch, { showPlayer }] = usePlayer()
+    const { hovered, bind } = useHover()
     const { togglePlay } = useAudioPlayer()
 
     useEffect(() => {
@@ -37,6 +39,7 @@ const Player = () => {
     return (
         <>
             <Box
+                {...bind}
                 pos="fixed"
                 userSelect="none"
                 bottom={0}
@@ -64,8 +67,8 @@ const Player = () => {
                         </Box>
                     </Flex>
 
-                    <Box pos="absolute" top="-10px" left={-3} right={3}>
-                        <ProgressBar />
+                    <Box pos="absolute" top="-8px" left={0} right={0}>
+                        <ProgressBar hovered={hovered} />
                     </Box>
                 </motion.div>
             </Box>

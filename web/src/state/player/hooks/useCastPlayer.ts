@@ -3,7 +3,11 @@ import { useDebounce } from 'react-use'
 import { DEFAULT_VOLUME } from '../../../constants'
 import { useCastContext } from '../contextsHooks'
 
-export const useCastPlayer = ({ loop = false }) => {
+export const useCastPlayer = ({
+    loop = false,
+    onEnd = () => {},
+    onStart = () => {},
+}) => {
     const {
         remotePlayer,
         remotePlayerController,
@@ -19,6 +23,14 @@ export const useCastPlayer = ({ loop = false }) => {
     const [, setError] = useState()
     const [debouncedMuted, setDebouncedMute] = useState(false)
 
+    // play next song on cast player
+    useEffect(() => {
+        if (connected && currentTime + 2 >= (remotePlayer?.duration || 100)) {
+            const id = setTimeout(onEnd, 1100)
+            return clearTimeout(id)
+        }
+    }, [remotePlayer, currentTime, connected, onEnd])
+
     useDebounce(() => setDebouncedMute(muted), 40, [muted])
 
     const [
@@ -30,7 +42,12 @@ export const useCastPlayer = ({ loop = false }) => {
         if (!remotePlayerController || !remotePlayer) return
 
         const timeHandler = ({ value }: any) => setCurrentTime(value)
-        const loadHandler = ({ value }: any) => setLoading(value)
+
+        const loadHandler = ({ value }: any) => {
+            setLoading(value)
+            value && onStart()
+        }
+
         const volumeHandler = ({ value }: any) => setVolume(value)
         const pauseHandler = ({ value }: any) => setPaused(value)
         const muteHandler = ({ value }: any) => setMuted(value)

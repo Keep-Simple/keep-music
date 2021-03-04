@@ -6,22 +6,19 @@ import {
     SliderTrack,
 } from '@chakra-ui/react'
 import React, { useLayoutEffect, useState } from 'react'
-import { MdGraphicEq } from 'react-icons/md'
 import { useTrackSongView } from '../../services/playerAnalytics'
 import {
     useAudioPosition,
     useDraggingTime,
 } from '../../state/player/contextsHooks'
-import { useHover } from '../../utils/hooks/useHover'
 
-export const ProgressBar = () => {
+export const ProgressBar = ({ hovered = false }) => {
     useTrackSongView()
     const { duration, seek, position, loadProgress } = useAudioPosition()
     const [_position, _setPosition] = useDraggingTime()
 
     const [dragging, setDragging] = useState(false)
     const [sync, setSync] = useState(true)
-    const { bind, hovered } = useHover()
 
     useLayoutEffect(() => {
         if (!dragging) {
@@ -44,43 +41,45 @@ export const ProgressBar = () => {
     const height = hovered ? '4px' : '2px'
 
     return (
-        <Box {...bind} onClick={(e) => e.stopPropagation()}>
-            <Slider
-                focusThumbOnChange={false}
-                aria-label="progress-slider"
-                value={_position}
-                max={duration || 100}
-                onChangeStart={(value) => {
-                    setDragging(true)
+        <Slider
+            focusThumbOnChange={false}
+            aria-label="progress-slider"
+            value={_position}
+            max={duration || 100}
+            onChangeStart={(value) => {
+                setDragging(true)
+                _setPosition(value)
+            }}
+            onChangeEnd={(value) => {
+                if (dragging) {
+                    setDragging(false)
+                    setSync(false)
                     _setPosition(value)
-                }}
-                onChangeEnd={(value) => {
-                    if (dragging) {
-                        setDragging(false)
-                        setSync(false)
-                        _setPosition(value)
-                    }
-                }}
-                onChange={(value) => {
-                    if (value === position) {
-                        setDragging(false)
-                    }
-                    _setPosition(value)
-                }}
-            >
-                <SliderTrack bg="#FFFFFF1A" h={height}>
-                    <SliderFilledTrack bg="red.500" zIndex={1} />
-                    <Box
-                        bg="#FFFFFF1A"
-                        w={`${Math.ceil(loadProgress)}%`}
-                        h={height}
-                        pos="relative"
-                    />
-                </SliderTrack>
-                <SliderThumb boxSize={5}>
-                    <Box color="red.500" as={MdGraphicEq} />
-                </SliderThumb>
-            </Slider>
-        </Box>
+                }
+            }}
+            onChange={(value) => {
+                if (value === position) {
+                    setDragging(false)
+                }
+                _setPosition(value)
+            }}
+            onClick={(e) => e.stopPropagation()}
+        >
+            <SliderTrack bg="#FFFFFF1A" h={height}>
+                <SliderFilledTrack bg="red.500" zIndex={1} />
+                <Box
+                    bg="#FFFFFF1A"
+                    w={`${Math.ceil(loadProgress)}%`}
+                    h={height}
+                    pos="relative"
+                />
+            </SliderTrack>
+            <SliderThumb
+                bg="red.500"
+                opacity={hovered ? 1 : 0}
+                transition="opacity .3s ease"
+                _focus={{ opacity: 1 }}
+            />
+        </Slider>
     )
 }
