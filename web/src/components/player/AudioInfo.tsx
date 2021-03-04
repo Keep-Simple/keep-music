@@ -1,4 +1,5 @@
 import { Box, Flex, Image, Text } from '@chakra-ui/react'
+import Head from 'next/head'
 import React, { FC, useMemo } from 'react'
 import { useMediaMeta, useMediaSession } from 'use-media-session'
 import { useAlbumQuery } from '../../generated/graphql'
@@ -49,34 +50,39 @@ export const AudioInfo: FC = () => {
     })
 
     return (
-        <Flex align="center" justify="center">
-            <Image
-                mr={4}
-                src={data?.album?.cover}
-                boxSize="40px"
-                alt="song cover"
-                borderRadius="sm"
-                objectFit="cover"
-            />
-            <Box>
-                <Text fontSize="md" fontWeight="semibold">
-                    {name}
-                </Text>
-                <Text
-                    color="#FFFFFFB3"
-                    mt={-1}
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    <StyledLink href={`/author/${authorId}`}>
-                        {data?.album?.author?.name}
-                    </StyledLink>
-                    {` • `}
-                    <StyledLink href={`/album/${albumId}`}>
-                        {data?.album?.name}
-                    </StyledLink>
-                    {` • ${views} views`}
-                </Text>
-            </Box>
-        </Flex>
+        <>
+            <Head>
+                <title>{name ? `${name} •` : ''} keep-music</title>
+            </Head>
+            <Flex align="center" justify="center">
+                <Image
+                    mr={4}
+                    src={data?.album?.cover}
+                    boxSize="40px"
+                    alt="song cover"
+                    borderRadius="sm"
+                    objectFit="cover"
+                />
+                <Box>
+                    <Text fontSize="md" fontWeight="semibold">
+                        {name}
+                    </Text>
+                    <Text
+                        color="#FFFFFFB3"
+                        mt={-1}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <StyledLink href={`/author/${authorId}`}>
+                            {data?.album?.author?.name}
+                        </StyledLink>
+                        {` • `}
+                        <StyledLink href={`/album/${albumId}`}>
+                            {data?.album?.name}
+                        </StyledLink>
+                        {` • ${views} views`}
+                    </Text>
+                </Box>
+            </Flex>
+        </>
     )
 }
