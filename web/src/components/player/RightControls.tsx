@@ -42,9 +42,9 @@ export const RightControls: FC<WrapProps> = (props) => {
                 <ToggleLoop />
             </WrapItem>
             <WrapItem {...iconProps}>
-                <Icons.Shuffle
-                    onClick={() => dispatch(Msg(Player.ShuffleList))}
-                />
+                <a onClick={() => dispatch(Msg(Player.ShuffleList))}>
+                    <Icons.Shuffle />
+                </a>
             </WrapItem>
 
             <WrapItem

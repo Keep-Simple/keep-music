@@ -11,18 +11,12 @@ export const LeftControls: FC<WrapProps> = (props) => {
     const dispatch = usePlayerDispatch()
     const { togglePlay, paused, loading } = useAudioPlayer()
 
-    const iconProps = {
-        onClick: () => togglePlay(),
-        boxSize: '40px',
-    }
-
     const wrapperProps = {
-        onClick: (e: React.MouseEvent) => e.stopPropagation(),
         p: 2,
         cursor: 'pointer',
     }
 
-    const MainIcon = () => {
+    const PlayPauseIcon = () => {
         if (loading)
             return (
                 <Icons.Loading
@@ -31,27 +25,45 @@ export const LeftControls: FC<WrapProps> = (props) => {
                     color="gray.500"
                 />
             )
+
         return paused ? (
-            <Icons.Play {...iconProps} />
+            <Icons.Play boxSize="40px" />
         ) : (
-            <Icons.Pause {...iconProps} />
+            <Icons.Pause boxSize="40px" />
         )
     }
 
     return (
         <Wrap spacing={2} align="center" {...props}>
             <WrapItem {...wrapperProps}>
-                <Icons.PrevSong
-                    onClick={() => dispatch(Msg(Player.PlayPrev))}
-                />
+                <a
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        dispatch(Msg(Player.PlayPrev))
+                    }}
+                >
+                    <Icons.PrevSong />
+                </a>
             </WrapItem>
             <WrapItem {...wrapperProps}>
-                <MainIcon />
+                <a
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        togglePlay()
+                    }}
+                >
+                    <PlayPauseIcon />
+                </a>
             </WrapItem>
             <WrapItem {...wrapperProps}>
-                <Icons.NextSong
-                    onClick={() => dispatch(Msg(Player.PlayNext))}
-                />
+                <a
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        dispatch(Msg(Player.PlayNext))
+                    }}
+                >
+                    <Icons.NextSong />
+                </a>
             </WrapItem>
         </Wrap>
     )

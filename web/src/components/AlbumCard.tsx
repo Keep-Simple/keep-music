@@ -112,7 +112,7 @@ export const AlbumCard: FC<AlbumCardProps> = ({
                                 onIconClick()
                             }}
                         >
-                            {Icon}
+                            <a>{Icon}</a>
                         </Circle>
                     </Fade>
                 </Box>

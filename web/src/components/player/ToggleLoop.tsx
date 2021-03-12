@@ -8,29 +8,33 @@ export const ToggleLoop = () => {
     switch (loop) {
         case 'one':
             return (
-                <Icons.LoopSingle
-                    color="white"
+                <a
                     onClick={() =>
                         dispatch(Msg(Player.LoopState, { loop: null }))
                     }
-                />
+                >
+                    <Icons.LoopSingle color="white" />
+                </a>
             )
         case 'list':
             return (
-                <Icons.Loop
-                    color="white"
+                <a
                     onClick={() =>
                         dispatch(Msg(Player.LoopState, { loop: 'one' }))
                     }
-                />
+                >
+                    <Icons.Loop color="white" />
+                </a>
             )
         case null:
             return (
-                <Icons.Loop
+                <a
                     onClick={() =>
                         dispatch(Msg(Player.LoopState, { loop: 'list' }))
                     }
-                />
+                >
+                    <Icons.Loop />
+                </a>
             )
     }
 }

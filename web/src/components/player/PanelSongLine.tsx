@@ -62,6 +62,7 @@ export const PanelSongLine: FC<PanelSongLineType> = ({
                         objectFit="cover"
                     />
                     <Center
+                        as="a"
                         pos="absolute"
                         bg={hovered || status ? 'blackAlpha.500' : ''}
                         top={0}

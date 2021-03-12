@@ -1,4 +1,4 @@
-import { Flex, Spacer, Text } from '@chakra-ui/react'
+import { Center, Flex, Spacer, Text } from '@chakra-ui/react'
 import React, { FC } from 'react'
 import { PlayerSong } from '../state/player/types/entityTypes'
 import { formatSeconds } from '../utils/formatSeconds'
@@ -44,16 +44,11 @@ export const AlbumSongLine: FC<
             bg={status ? 'whiteAlpha.100' : undefined}
         >
             <Flex align="center">
-                <Flex
-                    cursor="pointer"
-                    boxSize={8}
-                    mr={4}
-                    align="center"
-                    justify="center"
-                    onClick={onClick}
-                >
-                    <IconOrOrder />
-                </Flex>
+                <Center cursor="pointer" boxSize={8} mr={4} onClick={onClick}>
+                    <a>
+                        <IconOrOrder />
+                    </a>
+                </Center>
                 <Text fontWeight="500">{name}</Text>
             </Flex>
             <Spacer />

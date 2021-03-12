@@ -21,7 +21,6 @@ export const VolumeControl = () => {
     const iconProps = {
         ml: 5,
         cursor: 'pointer',
-        onClick: () => toggleMute(),
     }
 
     return (
@@ -44,11 +43,13 @@ export const VolumeControl = () => {
                 <SliderThumb boxSize={3} />
             </Slider>
 
-            {muted ? (
-                <Icons.MutedSound {...iconProps} />
-            ) : (
-                <Icons.Sound {...iconProps} />
-            )}
+            <a onClick={() => toggleMute()}>
+                {muted ? (
+                    <Icons.MutedSound {...iconProps} />
+                ) : (
+                    <Icons.Sound {...iconProps} />
+                )}
+            </a>
         </Flex>
     )
 }
