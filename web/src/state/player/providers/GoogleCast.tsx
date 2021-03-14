@@ -20,6 +20,8 @@ export const CastProvider: FC = ({ children }) => {
 
     useEffect(() => {
         const initializeCastPlayer = () => {
+            if (!chrome.cast) return
+
             const castCtx = cast.framework.CastContext.getInstance()
 
             castCtx.setOptions({

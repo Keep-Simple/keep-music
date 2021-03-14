@@ -9,7 +9,11 @@ import { PanelToggle } from './PanelToggle'
 import { ToggleLoop } from './ToggleLoop'
 import { VolumeControl } from './VolumeControl'
 
-export const RightControls: FC<WrapProps> = (props) => {
+type Props = WrapProps & {
+    isDesktopView?: boolean
+}
+
+export const RightControls: FC<Props> = ({ isDesktopView, ...props }) => {
     const dispatch = usePlayerDispatch()
     const rerender = useUpdate()
     const iconProps = {
@@ -35,17 +39,21 @@ export const RightControls: FC<WrapProps> = (props) => {
             mr={3}
             {...props}
         >
-            <WrapItem {...iconProps}>
-                <VolumeControl />
-            </WrapItem>
-            <WrapItem {...iconProps}>
-                <ToggleLoop />
-            </WrapItem>
-            <WrapItem {...iconProps}>
-                <a onClick={() => dispatch(Msg(Player.ShuffleList))}>
-                    <Icons.Shuffle />
-                </a>
-            </WrapItem>
+            {isDesktopView && (
+                <>
+                    <WrapItem {...iconProps}>
+                        <VolumeControl />
+                    </WrapItem>
+                    <WrapItem {...iconProps}>
+                        <ToggleLoop />
+                    </WrapItem>
+                    <WrapItem {...iconProps}>
+                        <a onClick={() => dispatch(Msg(Player.ShuffleList))}>
+                            <Icons.Shuffle />
+                        </a>
+                    </WrapItem>
+                </>
+            )}
 
             <WrapItem
                 {...iconProps}

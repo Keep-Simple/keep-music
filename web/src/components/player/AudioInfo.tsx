@@ -11,7 +11,9 @@ import {
 import { Msg, Player } from '../../state/player/types/actionTypes'
 import { StyledLink } from '../ui/StyledLink'
 
-export const AudioInfo: FC = () => {
+export const AudioInfo: FC<{ isDesktopView?: boolean }> = ({
+    isDesktopView,
+}) => {
     const {
         name,
         views,
@@ -21,6 +23,7 @@ export const AudioInfo: FC = () => {
         albumName,
         author,
     } = useSelectedSong()
+
     const dispatch = usePlayerDispatch()
     const { togglePlay, paused, loading } = useAudioPlayer()
 
@@ -55,22 +58,25 @@ export const AudioInfo: FC = () => {
                 <title>{name ? `${name} •` : ''} keep-music</title>
             </Head>
             <Flex align="center" justify="center">
-                <Image
-                    mr={4}
-                    src={data?.album?.cover}
-                    boxSize="40px"
-                    alt="song cover"
-                    borderRadius="sm"
-                    objectFit="cover"
-                />
+                {isDesktopView && (
+                    <Image
+                        mr={4}
+                        src={data?.album?.cover}
+                        boxSize="40px"
+                        alt="song cover"
+                        borderRadius="sm"
+                        objectFit="cover"
+                    />
+                )}
                 <Box>
-                    <Text fontSize="md" fontWeight="semibold">
+                    <Text fontSize="md" fontWeight="semibold" isTruncated>
                         {name}
                     </Text>
                     <Text
                         color="#FFFFFFB3"
                         mt={-1}
                         onClick={(e) => e.stopPropagation()}
+                        isTruncated
                     >
                         <StyledLink href={`/author/${authorId}`}>
                             {data?.album?.author?.name}

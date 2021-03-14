@@ -1,4 +1,4 @@
-import { Box, Flex } from '@chakra-ui/react'
+import { Box, Flex, useBreakpointValue } from '@chakra-ui/react'
 import { motion } from 'framer-motion'
 import React, { useEffect } from 'react'
 import { useAudioPlayer, usePlayer } from '../../state/player/contextsHooks'
@@ -16,6 +16,7 @@ const Player = () => {
     const [dispatch, { showPlayer }] = usePlayer()
     const { hovered, bind } = useHover()
     const { togglePlay } = useAudioPlayer()
+    const isDesktopView = useBreakpointValue({ base: false, md: true })
 
     useEffect(() => {
         const onSpacebar = (e: KeyboardEvent) => {
@@ -54,16 +55,19 @@ const Player = () => {
                 >
                     <Flex id="player-bar" bg="gray.700" h="72px" align="center">
                         <Flex flexGrow={1} align="center" ml={2}>
-                            <LeftControls mr={2} />
-                            <TimeLabel />
+                            <LeftControls
+                                mr={2}
+                                isDesktopView={isDesktopView}
+                            />
+                            {isDesktopView && <TimeLabel />}
                         </Flex>
 
-                        <Box flexGrow={2.1}>
-                            <AudioInfo />
+                        <Box flexGrow={isDesktopView ? 2.1 : 1}>
+                            <AudioInfo isDesktopView={isDesktopView} />
                         </Box>
 
                         <Box flexGrow={1}>
-                            <RightControls />
+                            <RightControls isDesktopView={isDesktopView} />
                         </Box>
                     </Flex>
 

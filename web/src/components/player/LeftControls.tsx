@@ -1,4 +1,4 @@
-import { Wrap, WrapItem, WrapProps } from '@chakra-ui/react'
+import { Box, HStack, StackProps } from '@chakra-ui/react'
 import React, { FC } from 'react'
 import {
     useAudioPlayer,
@@ -7,12 +7,14 @@ import {
 import { Msg, Player } from '../../state/player/types/actionTypes'
 import { Icons } from '../ui/Icons'
 
-export const LeftControls: FC<WrapProps> = (props) => {
+type Props = StackProps & { isDesktopView?: boolean }
+
+export const LeftControls: FC<Props> = ({ isDesktopView, ...props }) => {
     const dispatch = usePlayerDispatch()
     const { togglePlay, paused, loading } = useAudioPlayer()
 
     const wrapperProps = {
-        p: 2,
+        p: isDesktopView ? 2 : 0,
         cursor: 'pointer',
     }
 
@@ -34,8 +36,8 @@ export const LeftControls: FC<WrapProps> = (props) => {
     }
 
     return (
-        <Wrap spacing={2} align="center" {...props}>
-            <WrapItem {...wrapperProps}>
+        <HStack spacing={2} align="center" {...props}>
+            <Box {...wrapperProps}>
                 <a
                     onClick={(e) => {
                         e.stopPropagation()
@@ -44,8 +46,8 @@ export const LeftControls: FC<WrapProps> = (props) => {
                 >
                     <Icons.PrevSong />
                 </a>
-            </WrapItem>
-            <WrapItem {...wrapperProps}>
+            </Box>
+            <Box {...wrapperProps}>
                 <a
                     onClick={(e) => {
                         e.stopPropagation()
@@ -54,8 +56,8 @@ export const LeftControls: FC<WrapProps> = (props) => {
                 >
                     <PlayPauseIcon />
                 </a>
-            </WrapItem>
-            <WrapItem {...wrapperProps}>
+            </Box>
+            <Box {...wrapperProps}>
                 <a
                     onClick={(e) => {
                         e.stopPropagation()
@@ -64,7 +66,7 @@ export const LeftControls: FC<WrapProps> = (props) => {
                 >
                     <Icons.NextSong />
                 </a>
-            </WrapItem>
-        </Wrap>
+            </Box>
+        </HStack>
     )
 }
