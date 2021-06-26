@@ -69,7 +69,7 @@ export const AudioInfo: FC<{ isDesktopView?: boolean }> = ({
                     />
                 )}
                 <Box>
-                    <Text fontSize="md" fontWeight="semibold" isTruncated>
+                    <Text fontSize="md" fontWeight="semibold">
                         {name}
                     </Text>
                     <Text
