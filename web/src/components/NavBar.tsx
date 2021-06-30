@@ -60,12 +60,7 @@ export const NavBar: React.FC = () => {
                         {data.me.username.charAt(0)}
                     </MenuButton>
                 </Circle>
-                <MenuList
-                    borderWidth={0}
-                    transition="none"
-                    transform="none"
-                    _groupHover={{ bg: 'gray.300' }}
-                >
+                <MenuList borderWidth={0} shadow="none">
                     <NextLink href="/">
                         <MenuItem>Home Page</MenuItem>
                     </NextLink>
